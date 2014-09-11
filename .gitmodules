@@ -1,0 +1,3 @@
+[submodule "submodules/bookreader"]
+	path = submodules/bookreader
+	url = git@github.com:pwhipp/bookreader.git
