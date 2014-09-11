@@ -139,8 +139,8 @@ the postgres service:
 This is for public facing servers only.
 
          ~ $ sudo apt-get install nginx
-         ~ $ sudo ln -s /home/dsnac/production/deploy/production_nginx /etc/nginx/sites-available/production
-         ~ $ sudo ln -s /etc/nginx/sites-available/production /etc/nginx/sites-enabled/production
+         ~ $ sudo ln -s /home/dsnac/production/deploy/production/nginx /etc/nginx/sites-available/dsnac_production
+         ~ $ sudo ln -s /etc/nginx/sites-available/dsnac_production /etc/nginx/sites-enabled/dsnac_production
          ~ $ sudo service nginx restart
-         ~ $ sudo cp /home/dsnac/production/deploy/production_upstart.conf /etc/init/dsnac_production.conf
+         ~ $ sudo cp /home/dsnac/production/deploy/production/upstart.conf /etc/init/dsnac_production.conf
          ~ $ sudo service dsnac_production start
