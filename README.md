@@ -82,11 +82,9 @@ These commands assume the settings and virtualenv - edit them as necessary.
 
          (dsnac)~/production $ add2virtualenv .
          (dsnac)~/production $ setvirtualenvproject
-         (dsnac)~/production $ echo "export DJANGO_SETTINGS_MODULE=dsnac.settings.dev" >> ~/.virtualenvs/dsnac/bin/postactivate
+         (dsnac)~/production $ echo "export DJANGO_SETTINGS_MODULE=core.settings.dev" >> ~/.virtualenvs/dsnac/bin/postactivate
          (dsnac)~/production $ deactivate
          ~/production $ workon dsnac
-         ~/production $ activate
-         (dsnac)~/production $
 
 ## Set up postgresql
 
