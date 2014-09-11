@@ -1,0 +1,15 @@
+.project
+.idea/
+__pycache__/*
+*.py[cod]
+gunicorn_logs/
+*.db
+.DS_Store
+.coverage
+static_collected/
+interchange/
+scss/
+.sass-cache/
+media/
+scratch.py
+src/
