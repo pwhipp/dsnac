@@ -6,6 +6,7 @@ These instructions are for Ubuntu 14.04 LTS. They should work on other Linux env
 
         ~ $ sudo apt-get install postgresql postgresql-contrib postgresql-server-dev-9.3 git python-dev python-setuptools
         ~ $ sudo apt-get install libjpeg-dev libpng-dev libfreetype6-dev
+        ~ $ sudo apt-get install libxml2-dev libxslt-dev
 
 1. Fix image libraries
 
