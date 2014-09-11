@@ -107,7 +107,8 @@ INSTALLED_APPS = (
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
-    'bookreader')
+    'bookreader',
+    'bookrepo')
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its

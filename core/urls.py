@@ -7,6 +7,7 @@ from django.contrib import admin
 from mezzanine.core.views import direct_to_template
 
 import bookreader.urls
+import bookrepo.urls
 
 
 admin.autodiscover()
@@ -17,6 +18,7 @@ urlpatterns += patterns(
     '',
     url("^$", direct_to_template, {"template": "index.html"}, name="home"),
     ("^bookreader", include(bookreader.urls)),
+    ("^bookrepo", include(bookrepo.urls)),
     ("^", include("mezzanine.urls")))
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error
