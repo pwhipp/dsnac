@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% comment %}
+This is closer to how the reader 'should' be integrated but we're looking at a possible
+version problem with jquery and some significant clashes with CSS class usage.
+
+For now I'm just using the 'standard' bookreader page with a link back to the home page.
+The advantage of this template is that it fully integrates the site navigation and presentation.
+{% endcomment %}
+{% block meta_title %}BookReader demo{% endblock meta_title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static "BookReader/BookReader.css" %}"/>
+    <!-- Custom CSS overrides -->
+    <link rel="stylesheet" type="text/css" href="{% static "bookreader/css/BookReaderDemo.css" %}"/>
+{% endblock extra_css%}
+
+{% block extra_js %}
+    {% comment %}<script type="text/javascript" src="{% static "BookReader/jquery-1.4.2.min.js" %}"></script>{% endcomment %}
+    <script type="text/javascript" src="{% static "BookReader/jquery-ui-1.8.5.custom.min.js" %}"></script>
+
+    <script type="text/javascript" src="{% static "BookReader/dragscrollable.js" %}"></script>
+    <script type="text/javascript" src="{% static "BookReader/jquery.colorbox-min.js" %}"></script>
+    <script type="text/javascript" src="{% static "BookReader/jquery.ui.ipad.js" %}"></script>
+    <script type="text/javascript" src="{% static "BookReader/jquery.bt.min.js" %}"></script>
+
+    <script type="text/javascript" src="{% static "BookReader/BookReader.js" %}"></script>
+{% endblock extra_js%}
+
+{% block title %}BookReader demo{% endblock title%}
+
+{% block main %}
+    <div id="BookReader">
+        Internet Archive BookReader Demo    <br/>
+
+        <noscript>
+            <p>
+                The BookReader requires JavaScript to be enabled. Please check that your browser supports JavaScript and that it is enabled in the browser settings.  You can also try one of the <a href="http://www.archive.org/details/goodytwoshoes00newyiala"> other formats of the book</a>.
+            </p>
+        </noscript>
+    </div>
+
+    <script type="text/javascript" src="{% static "bookreader/js/demo.js" %}"></script>
+
+{% endblock main%}

@@ -1,16 +1,15 @@
-{% extends "base.html" %}
 {% load staticfiles %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
-{% block meta_title %}BookReader demo{% endblock meta_title %}
-
-{% block extra_css %}
+<html>
+<head>
+    <title>bookreader demo</title>
+    
     <link rel="stylesheet" type="text/css" href="{% static "BookReader/BookReader.css" %}"/>
     <!-- Custom CSS overrides -->
     <link rel="stylesheet" type="text/css" href="{% static "bookreader/css/BookReaderDemo.css" %}"/>
-{% endblock extra_css%}
 
-{% block extra_js %}
-    {% comment %}<script type="text/javascript" src="{% static "BookReader/jquery-1.4.2.min.js" %}"></script>{% endcomment %}
+    <script type="text/javascript" src="{% static "BookReader/jquery-1.4.2.min.js" %}"></script>
     <script type="text/javascript" src="{% static "BookReader/jquery-ui-1.8.5.custom.min.js" %}"></script>
 
     <script type="text/javascript" src="{% static "BookReader/dragscrollable.js" %}"></script>
@@ -19,21 +18,20 @@
     <script type="text/javascript" src="{% static "BookReader/jquery.bt.min.js" %}"></script>
 
     <script type="text/javascript" src="{% static "BookReader/BookReader.js" %}"></script>
-{% endblock extra_js%}
+</head>
+<body style="background-color: ##939598;">
 
-{% block title %}BookReader demo{% endblock title%}
+<div id="BookReader">
+    Internet Archive BookReader Demo    <br/>
+    
+    <noscript>
+    <p>
+        The BookReader requires JavaScript to be enabled. Please check that your browser supports JavaScript and that it is enabled in the browser settings.  You can also try one of the <a href="http://www.archive.org/details/goodytwoshoes00newyiala"> other formats of the book</a>.
+    </p>
+    </noscript>
+</div>
 
-{% block main %}
-    <div id="BookReader">
-        Internet Archive BookReader Demo    <br/>
+<script type="text/javascript" src="{% static "bookreader/js/demo.js" %}"></script>
 
-        <noscript>
-            <p>
-                The BookReader requires JavaScript to be enabled. Please check that your browser supports JavaScript and that it is enabled in the browser settings.  You can also try one of the <a href="http://www.archive.org/details/goodytwoshoes00newyiala"> other formats of the book</a>.
-            </p>
-        </noscript>
-    </div>
-
-    <script type="text/javascript" src="{% static "bookreader/js/demo.js" %}"></script>
-
-{% endblock main%}
+</body>
+</html>
