@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
-from bookrepo.import_books import map_book_folders, get_basic_book_data
+from bookrepo.import_books import map_book_folders, get_book_meta_data
 
 
 class BookListView(TemplateView):
@@ -20,7 +20,7 @@ class BookListView(TemplateView):
 
     @staticmethod
     def get_books():
-        return list(map_book_folders(function=get_basic_book_data))
+        return list(map_book_folders(function=get_book_meta_data))
 
 
 def page(request, book_identifier, page_number):
@@ -90,10 +90,11 @@ def create_jpg_from_jp2(book_identifier, page_number):
     """
     jp2_file_path = jp2_path(book_identifier, page_number)
     jpg_file_path = jpg_path(book_identifier, page_number)
-    print(jp2_file_path)
     if not os.path.exists(jp2_file_path):
+        print('{0} not found'.format(jp2_file_path))
         raise Http404
     if subprocess.call(['convert', jp2_file_path, '-resize', '800>', jpg_file_path]) == 0:
         return jpg_file_path
     else:
+        print('{0} conversion failed'.format(jp2_file_path))
         raise Http404

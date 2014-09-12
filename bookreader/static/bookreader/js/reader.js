@@ -75,8 +75,8 @@ br.getPageNum = function(index) {
     return index+1;
 }
 
-// Total number of leafs
-br.numLeafs = 15;
+// Total number of leafs (from django setting in template)
+br.numLeafs = bookNumLeafs;
 
 // Book title and the URL used for the book title link
 br.bookTitle= 'SNAC BookReader';

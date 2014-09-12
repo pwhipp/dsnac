@@ -47,31 +47,46 @@ def map_book_folders(path=None, function=None):
 
     if function is None:
 
-        def print_identity(book_dir):
-            book_ident = os.path.basename(book_dir)
-            print('found book with identifier="{0}"'.format(book_ident))
+        def return_identity(book_dir):
+            return os.path.basename(book_dir)
 
-        function = print_identity
+        function = return_identity
 
     return (function(dirpath) for dirpath, _, filenames in os.walk(path)
             if is_book_folder(dirpath, filenames))
 
 
-def get_basic_book_data(book_folder):
+def get_book_meta_data(book_folder=None, book_identifier=None):
     """
-    Not bothering to do this yet - Reading directly from the xml in the view context
-    :param book_folder:
-    :return:
+    Return a dict containing basic book info - this will be replaced by a model or some such.
+    Either book_folder or book_identifier must be supplied
+    :param book_folder: string
+    :param book_identifier: string
+    :return: dict
     """
-    book_identifier = os.path.basename(book_folder)
+    if book_folder is None and book_identifier is None:
+        raise Exception('Both args None for get_book_meta_data')
+
+    if book_folder is None:
+        book_folder = os.path.join(settings.BOOKS_ROOT, book_identifier)
+    elif book_identifier is None:
+        book_identifier = os.path.basename(book_folder)
 
     with open(os.path.join(book_folder, meta_file_bname(book_identifier)), 'r') as f:
         xml = BeautifulSoup(f, 'xml')
+        if xml.imagecount.text:
+            num_leafs = int(xml.imagecount.text)
+        else:
+            # count them :(
+            num_leafs = len(os.listdir(os.path.join(
+                book_folder,
+                jp2_folder(book_identifier))))
         return dict(
             identifier=book_identifier,
             title=xml.title.text,
             creator=xml.creator.text,
-            date=xml.date.text)
+            date=xml.date.text,
+            num_leafs=num_leafs)
 
 
 def is_source_book_folder(dirpath, filenames):
@@ -115,3 +130,20 @@ def _migrate_books():
                             shutil.copyfile(jp2_source_file_path, jp2_target_file_path)
             finally:
                 shutil.rmtree(jp2_source_dir)
+
+
+def _fix_mispelled_jp2s():
+    """
+    One off - some of the jp2 files have the wrong spelling!! correct them using the book identifier
+    :return:
+    """
+    def fix_spellings(book_folder):
+        book_identifier = os.path.basename(book_folder)
+        jp2_folder_path = os.path.join(book_folder, jp2_folder(book_identifier))
+        for jp2_name in os.listdir(jp2_folder_path):
+            if book_identifier not in jp2_name:
+                old_path = os.path.join(jp2_folder_path, jp2_name)
+                new_path = os.path.join(jp2_folder_path, book_identifier+jp2_name[-9:])
+                shutil.move(old_path, new_path)
+
+    return list(map_book_folders(function=fix_spellings))
