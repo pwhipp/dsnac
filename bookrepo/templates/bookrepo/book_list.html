@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load mezzanine_tags %}
+{% block meta_title %}Book List{% endblock meta_title%}
+{% block title %}Book List{% endblock title%}
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title (click to read)</th>
+            <th>Creator</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+
+            <tr>
+                <td><a href="{% url 'bookreader' book_identifier=book.identifier %}">{{ book.title }}</a></td>
+                <td>{{ book.creator }}</td>
+                <td>{{ book.date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock main%}

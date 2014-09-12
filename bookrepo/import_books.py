@@ -5,7 +5,6 @@ import os
 import shutil
 from zipfile import ZipFile
 import tempfile
-import sys
 
 from bs4 import BeautifulSoup
 
@@ -41,7 +40,7 @@ def map_book_folders(path=None, function=None):
     Path is searched recursively.
     A 'book' is any folder containing a <folder_name>_meta.xml file.
     :param path: file path to books
-    :return:
+    :return: list of function results
     """
     if path is None:
         path = settings.BOOKS_ROOT
@@ -54,12 +53,11 @@ def map_book_folders(path=None, function=None):
 
         function = print_identity
 
-    for dirpath, dirnames, filenames in os.walk(path):
-        if is_book_folder(dirpath, filenames):
-            function(dirpath)
+    return (function(dirpath) for dirpath, _, filenames in os.walk(path)
+            if is_book_folder(dirpath, filenames))
 
 
-def import_book_meta_data(book_folder):
+def get_basic_book_data(book_folder):
     """
     Not bothering to do this yet - Reading directly from the xml in the view context
     :param book_folder:
@@ -69,18 +67,11 @@ def import_book_meta_data(book_folder):
 
     with open(os.path.join(book_folder, meta_file_bname(book_identifier)), 'r') as f:
         xml = BeautifulSoup(f, 'xml')
-        print(xml.title.text, xml.creator.text, xml.date.text)
-
-
-def import_book_folder_meta_data(path=None):
-    """
-    Import all of the books on path. books are updated by identity.
-    Path is searched recursively.
-    A 'book' is any folder containing a <folder_name>_meta.xml file.
-    :param path: file path to books
-    :return:
-    """
-    map_book_folders(path, import_book_meta_data)
+        return dict(
+            identifier=book_identifier,
+            title=xml.title.text,
+            creator=xml.creator.text,
+            date=xml.date.text)
 
 
 def is_source_book_folder(dirpath, filenames):

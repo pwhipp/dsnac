@@ -22,11 +22,9 @@ br.getPageURI = function(index, reduce, rotate) {
     // reduce and rotate are ignored in this simple implementation, but we
     // could e.g. look at reduce and load images from a different directory
     // or pass the information to an image server
-    var leafStr = '000';            
+    // bookIdentifier is obtained from a variable set in the html by Django
     var imgStr = (index+1).toString();
-    var re = new RegExp("0{"+imgStr.length+"}$");
-    // var url = 'http://www.archive.org/download/BookReader/img/page'+leafStr.replace(re, imgStr) + '.jpg';
-    var url = '/bookrepo/annexationofpunj00econuoft/34/';
+    var url = '/bookrepo/'+bookIdentifier+'/'+imgStr+'/';
     return url;
 }
 

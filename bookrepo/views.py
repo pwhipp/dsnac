@@ -2,8 +2,25 @@ import os
 import subprocess
 
 from django.http import HttpResponse, Http404
+from django.views.generic import TemplateView
 
 from mezzanine.conf import settings
+from mezzanine.utils.views import paginate
+
+from bookrepo.import_books import map_book_folders, get_basic_book_data
+
+
+class BookListView(TemplateView):
+    template_name = 'bookrepo/book_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BookListView, self).get_context_data(**kwargs)
+        context['books'] = paginate(self.get_books(), self.request.GET.get("page", 1), 20, settings.MAX_PAGING_LINKS)
+        return context
+
+    @staticmethod
+    def get_books():
+        return list(map_book_folders(function=get_basic_book_data))
 
 
 def page(request, book_identifier, page_number):
@@ -37,14 +54,16 @@ def page_basename(book_identifier, page_number):
 
 def jpg_path(book_identifier, page_number):
     return os.path.join(settings.BOOKS_ROOT,
+                        book_identifier,
                         'jpgs',
-                        page_basename(book_identifier, page_number)+'jpg')
+                        page_basename(book_identifier, page_number)+'.jpg')
 
 
 def jp2_path(book_identifier, page_number):
     return os.path.join(settings.BOOKS_ROOT,
+                        book_identifier,
                         '{0}_jp2'.format(book_identifier),
-                        page_basename(book_identifier, page_number)+'jpg')
+                        page_basename(book_identifier, page_number)+'.jp2')
 
 
 def get_jpg_file_path(book_identifier, page_number):
@@ -71,6 +90,7 @@ def create_jpg_from_jp2(book_identifier, page_number):
     """
     jp2_file_path = jp2_path(book_identifier, page_number)
     jpg_file_path = jpg_path(book_identifier, page_number)
+    print(jp2_file_path)
     if not os.path.exists(jp2_file_path):
         raise Http404
     if subprocess.call(['convert', jp2_file_path, '-resize', '800>', jpg_file_path]) == 0:
