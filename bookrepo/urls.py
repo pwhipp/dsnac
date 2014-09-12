@@ -6,4 +6,4 @@ import bookrepo.views as bv
 
 urlpatterns = patterns(
     '',
-    url("^/(?P<book_name>.+)/(?P<page_number>\d+)/$", bv.page, name="bookrepo_page"))
+    url("^/(?P<book_identifier>.+)/(?P<page_number>\d+)/$", bv.page, name="bookrepo_page"))

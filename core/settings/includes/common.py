@@ -74,6 +74,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+FILEBROWSER_DIRECTORY = ''
+BOOKS_ROOT = os.path.join(MEDIA_ROOT, 'books')
+
 # Package/module name to import the root urlpatterns from for the project.
 ROOT_URLCONF = 'core.urls'
 
