@@ -18,7 +18,7 @@ DATABASES = {
         "HOST": "",
         "PORT": ""}}
 
-SITE_TITLE = 'The Proposal Generator'
+SITE_TITLE = 'Sikh National Archives of Canada'
 SITE_TAGLINE = ''
 
 ###################
