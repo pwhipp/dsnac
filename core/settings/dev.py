@@ -13,5 +13,5 @@ DATABASES = {
 
 VIRTUALENV = 'dsnac'
 
-SITE_TITLE = 'Canadian Sikh Archives'
+SITE_TITLE = 'Sikh National Archives of Canada'
 SITE_TAGLINE = None
