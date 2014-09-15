@@ -17,7 +17,7 @@ USE_SOUTH = True
 ADMINS = (('Paul Whipp', 'paul.whipp@gmail.com'),)
 MANAGERS = ADMINS
 
-ALLOWED_HOSTS = ['canadiansikharchives.com']
+ALLOWED_HOSTS = ['sikhnationalarchives.com']
 
 TIME_ZONE = 'America/Montreal'
 
