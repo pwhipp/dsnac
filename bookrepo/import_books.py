@@ -14,6 +14,7 @@ from mezzanine.conf import settings
 
 import bookrepo.models as bm
 
+
 def meta_file_bname(book_identifier):
     """
     Return the meta xml file base name for book_identifier
@@ -77,6 +78,13 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
 
     with open(os.path.join(book_folder, meta_file_bname(book_identifier)), 'r') as f:
         xml = BeautifulSoup(f, 'xml')
+
+        def get_text(att, default=None):
+            try:
+                return getattr(getattr(xml, att), 'text')
+            except AttributeError:
+                return default
+
         if xml.imagecount.text:
             num_leafs = int(xml.imagecount.text)
         else:
@@ -86,10 +94,11 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
                 jp2_folder(book_identifier))))
         return dict(
             identifier=book_identifier,
-            title=xml.title.text,
-            creator=xml.creator.text,
-            contributor=xml.contributor.text,
-            published=xml.date.text,
+            title=get_text('title'),
+            creator=get_text('creator', 'Unknown'),
+            contributor=get_text('contributor', 'Unknown'),
+            published=get_text('date'),
+            subject=get_text('subject', 'Unspecified'),
             pages=num_leafs,
             reference=None)
 
@@ -216,7 +225,7 @@ def import_scanned_books():
     :return:
     """
     def import_scanned_book(book_folder):
-        update_orm_book(get_book_meta_data(book_folder))
+        return update_orm_book(get_book_meta_data(book_folder))
 
     return list(map_book_folders(function=import_scanned_book))
 
@@ -256,10 +265,7 @@ def import_book_csv(path):
             if num_matches == 0:
                 bm.Book(identifier=create_book_identifier(meta_info), defaults=meta_info).save()
             elif num_matches == 1:
-                book = matching_books[0]
-                for attr, value in meta_info.iteritems():
-                    setattr(book, attr, value)
-                book.save()
+                update_orm_book(meta_info, matching_books[0])
             else:
                 print('Multiple matching books for "{0}"'.format(meta_info['title']))
 
@@ -308,9 +314,36 @@ def _book_identifier_part(s):
     return word_string[:12]
 
 
-def update_orm_book(meta_info):
-    book, created = bm.Book.objects.get_or_create(identifier=meta_info['identifier'], defaults=meta_info)
+def update_orm_book(meta_info, book=None):
+    """
+    Update orm_book, creating it if necessary.
+    :param meta_info:
+    :param book: book object, if already known
+    :return: None
+    """
+
+    # Sort out foreign key objects
+    for attr, model_class in (('creator', bm.Creator),
+                              ('contributor', bm.Contributor),
+                              ('subject', bm.Subject)):
+        try:
+            value_str = meta_info.pop(attr)
+            if value_str:
+                value_obj, created = model_class.objects.get_or_create(name=value_str)
+                if created:
+                    value_obj.save()
+                meta_info[attr] = value_obj
+        except KeyError:
+            pass
+
+    if book is None:
+        book, created = bm.Book.objects.get_or_create(identifier=meta_info['identifier'], defaults=meta_info)
+    else:
+        created = False
+
     if not created:
         for attr, value in meta_info.iteritems():
             setattr(book, attr, value)
     book.save()
+
+    return book

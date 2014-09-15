@@ -48,6 +48,9 @@ class Book(RichText, Displayable):
     contributor = models.ForeignKey(
         Contributor, null=True,
         help_text='The organisation or individual who contributed the book to the library')
+    subject = models.ForeignKey(
+        Subject, null=True,
+        help_text='The subject categorization used in the library')
     reference = models.CharField(
         max_length=16, null=True,
         help_text='Library reference number')

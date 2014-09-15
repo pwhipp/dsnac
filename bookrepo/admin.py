@@ -4,8 +4,8 @@ import bookrepo.models as bm
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'title', 'creator', 'published', 'pages', 'scanned', 'ebook')
-    list_filter = ('creator', 'scanned', 'ebook')
+    list_display = ('identifier', 'title', 'creator', 'subject', 'published', 'pages', 'scanned', 'ebook')
+    list_filter = ('creator', 'subject', 'scanned', 'ebook')
     search_fields = ('title', 'creator')
     fieldsets = ((None, {'fields': ('identifier',
                                     'title',
