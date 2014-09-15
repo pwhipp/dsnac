@@ -4,7 +4,9 @@
 // Copyright(c)2008-2009 Internet Archive. Software license AGPL version 3.
 
 // Create the BookReader object
-br = new BookReader();
+br = new SNAC_BookReader();
+
+br.logoURL = '/';
 
 // Return the width of a given page.  Here we assume all images are 800 pixels wide
 br.getPageWidth = function(index) {
