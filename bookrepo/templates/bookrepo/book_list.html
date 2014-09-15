@@ -17,7 +17,7 @@
             <tr>
                 <td><a href="{% url 'bookreader' book_identifier=book.identifier %}">{{ book.title }}</a></td>
                 <td>{{ book.creator }}</td>
-                <td>{{ book.date }}</td>
+                <td>{{ book.published }}</td>
             </tr>
         {% endfor %}
         </tbody>

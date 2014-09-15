@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 
 from mezzanine.conf import settings
 
+import bookrepo.models as bm
 
 def meta_file_bname(book_identifier):
     """
@@ -87,8 +88,10 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
             identifier=book_identifier,
             title=xml.title.text,
             creator=xml.creator.text,
-            date=xml.date.text,
-            num_leafs=num_leafs)
+            contributor=xml.contributor.text,
+            published=xml.date.text,
+            pages=num_leafs,
+            reference=None)
 
 
 def is_source_book_folder(dirpath, filenames):
@@ -207,6 +210,27 @@ def _make_page_dict():
     return dict(list(map_book_folders(function=_make_dict_tuple)))
 
 
+def import_scanned_books():
+    """
+    Import the scanned books into the ORM
+    :return:
+    """
+    def import_scanned_book(book_folder):
+        update_orm_book(get_book_meta_data(book_folder))
+
+    return list(map_book_folders(function=import_scanned_book))
+
+
+def map_csv_row(row):
+    csv_map = {
+        'Title': 'title',
+        'Author': 'creator',
+        'ReferenceNo': 'reference',
+        'PublishDate': 'published',
+        'Pages': 'pages'}
+    return {csv_map[k]: row[k] for k in csv_map}
+
+
 def import_book_csv(path):
     """
     Import specified book csv
@@ -215,8 +239,78 @@ def import_book_csv(path):
     """
     with open(path, 'rb') as f:
         reader = csv.DictReader(f)
-        max_len = 0
         for row in reader:
-            if len(row['Title']) > max_len:
-                max_len = len(row['Title'])
-        return max_len
+            meta_info = map_csv_row(row)
+
+            if row['Subtitle']:
+                meta_info['title'] = '{0}: {1}'.format(
+                    meta_info['title'],
+                    row['Subtitle'])
+
+            matching_books = bm.Book.objects.filter(
+                title=meta_info['title'],
+                creator__name=meta_info['creator'])
+
+            num_matches = matching_books.count() if matching_books else 0
+
+            if num_matches == 0:
+                bm.Book(identifier=create_book_identifier(meta_info), defaults=meta_info).save()
+            elif num_matches == 1:
+                book = matching_books[0]
+                for attr, value in meta_info.iteritems():
+                    setattr(book, attr, value)
+                book.save()
+            else:
+                print('Multiple matching books for "{0}"'.format(meta_info['title']))
+
+
+def create_book_identifier(meta_info):
+    """
+    Create a new identifier suitable for use as a unique folder name
+    :param meta_info:
+    :return:
+    """
+    title_part = _book_identifier_part(meta_info['title'])
+    creator_part = _book_identifier_part(meta_info['creator'])
+    number = 0
+    while True:
+        identifier = '{0}{1:>02}{2}'.format(title_part, number, creator_part)
+
+        try:
+            bm.Book.objects.get(identifier=identifier)
+        except bm.Book.DoesNotExist:
+            return identifier
+
+        number += 1
+        if number > 99:
+            raise Exception('99 similar books!?')
+
+
+def _book_identifier_part(s):
+    """
+    Return up to 12 characters of s made up of non common words
+    :param s:
+    :return:
+    """
+    common_words = [
+        'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not',
+        'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her',
+        'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up',
+        'out', 'if', 'about', 'who', 'get', 'which', 'go', 'when', 'make', 'can', 'like', 'time',
+        'no', 'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your', 'good', 'some', 'could',
+        'them', 'see', 'other', 'tan', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
+        'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even',
+        'want', 'because', 'any', 'these', 'give', 'day', 'us']
+
+    words = [w.lower() for w in s.split()]
+    words = [w for w in words if w not in common_words]
+    word_string = ''.join(words)
+    return word_string[:12]
+
+
+def update_orm_book(meta_info):
+    book, created = bm.Book.objects.get_or_create(identifier=meta_info['identifier'], defaults=meta_info)
+    if not created:
+        for attr, value in meta_info.iteritems():
+            setattr(book, attr, value)
+    book.save()

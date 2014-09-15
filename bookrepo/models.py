@@ -1,5 +1,7 @@
 from django.db import models
 
+from mezzanine.core.models import RichText, Displayable
+
 
 class UniqueNamed(models.Model):
     name = models.CharField(max_length=512, unique=True)
@@ -7,6 +9,9 @@ class UniqueNamed(models.Model):
     class Meta:
         abstract = True
         ordering = ['name']
+
+    def __unicode__(self):
+        return u"{0}".format(self.name)
 
 
 class Creator(UniqueNamed):
@@ -30,11 +35,11 @@ class Subject(UniqueNamed):
     pass
 
 
-class Book(models.Model):
+class Book(RichText, Displayable):
     """
     A particular edition of a book that is held in the library.
     """
-    identity = models.CharField(
+    identifier = models.CharField(
         max_length=32, unique=True,
         help_text='Unique identifier for this book edition - used as folder name for book related scan and OCR files')
     title = models.CharField(
@@ -52,3 +57,8 @@ class Book(models.Model):
     published = models.CharField(
         max_lenth=32,
         help_text='Date of publication (text for now)')
+    pages = models.IntegerField(
+        default=0,
+        help_text="Number of scanned or actual pages (scanned pages takes precedence)")
+    scanned = models.BooleanField(default=False)
+    ebook = models.BooleanField(default=False)
