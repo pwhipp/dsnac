@@ -42,9 +42,6 @@ class Book(RichText, Displayable):
     identifier = models.CharField(
         max_length=32, unique=True,
         help_text='Unique identifier for this book edition - used as folder name for book related scan and OCR files')
-    title = models.CharField(
-        max_length=256, null=True,
-        help_text='Full title of book, including subtitle (if any)')
     creator = models.ForeignKey(
         Creator, null=True,
         help_text='The creator of the book, usually the author or authors but may be the editor or a committee.')
@@ -55,7 +52,7 @@ class Book(RichText, Displayable):
         max_length=16, null=True,
         help_text='Library reference number')
     published = models.CharField(
-        max_lenth=32,
+        max_length=32,
         help_text='Date of publication (text for now)')
     pages = models.IntegerField(
         default=0,
