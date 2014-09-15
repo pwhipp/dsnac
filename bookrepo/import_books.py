@@ -6,6 +6,7 @@ import shutil
 from zipfile import ZipFile
 import tempfile
 import subprocess
+import csv
 
 from bs4 import BeautifulSoup
 
@@ -177,6 +178,10 @@ thumbnail_page = {
 
 
 def _add_thumbnail_covers():
+    """
+    Create initial thumbnail covers for existing scanned books
+    :return:
+    """
     from bookrepo.views import page_jpg_path
 
     def add_thumbnail_cover(book_folder):
@@ -190,10 +195,28 @@ def _add_thumbnail_covers():
 
 
 def _make_page_dict():
+    """
+    Make a starting page dictionary - one off.
+    :return:
+    """
 
     def _make_dict_tuple(book_folder):
         book_identifier = os.path.basename(book_folder)
         return book_identifier, 1
 
-
     return dict(list(map_book_folders(function=_make_dict_tuple)))
+
+
+def import_book_csv(path):
+    """
+    Import specified book csv
+    :param path:
+    :return:
+    """
+    with open(path, 'rb') as f:
+        reader = csv.DictReader(f)
+        max_len = 0
+        for row in reader:
+            if len(row['Title']) > max_len:
+                max_len = len(row['Title'])
+        return max_len
