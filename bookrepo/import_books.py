@@ -5,6 +5,7 @@ import os
 import shutil
 from zipfile import ZipFile
 import tempfile
+import subprocess
 
 from bs4 import BeautifulSoup
 
@@ -147,3 +148,52 @@ def _fix_mispelled_jp2s():
                 shutil.move(old_path, new_path)
 
     return list(map_book_folders(function=fix_spellings))
+
+
+def thumbnail_jpg_path(book_identifier):
+    return os.path.join(settings.BOOKS_ROOT,
+                        book_identifier,
+                        book_identifier+'_cover_thumbnail.jpg')
+
+thumbnail_page = {
+    u'annexationofpunj00econuoft': 5,
+    u'bandabraveorlife00soha': 7,
+    u'catalogueofcoins01lahouoft': 5,
+    u'crisisinpunjabfr00coop': 7,
+    u'gurugobindsingh00sher': 9,
+    u'gurunanaklifeand00singuoft': 7,
+    u'inthesikhsanct00vaswuoft': 3,
+    u'lawrencesofpunja01gibb': 11,
+    u'originofsikhpowe00prinuoft': 7,
+    u'panjabcastes00ibbe': 9,
+    u'plantsofpunjabde00bamb': 11,
+    u'punjab': 7,
+    u'punjabimusalmans00wikeuoft': 5,
+    u'ranjitsinghsikh00grif': 11,
+    u'shorthistoryofsi00paynrich': 7,
+    u'sikhsofpunjab00parruoft': 9,
+    u'talesofpunjabtol00stee': 9,
+    u'workingplanforch00punjrich': 1}
+
+
+def _add_thumbnail_covers():
+    from bookrepo.views import page_jpg_path
+
+    def add_thumbnail_cover(book_folder):
+        book_identifier = os.path.basename(book_folder)
+        thumbnail_path = thumbnail_jpg_path(book_identifier)
+        jpg_page_path = page_jpg_path(book_identifier, thumbnail_page[book_identifier])  # we know it exists
+        subprocess.call(['convert', jpg_page_path, '-resize', '150x225', thumbnail_path])
+        return thumbnail_path
+
+    return list(map_book_folders(function=add_thumbnail_cover))
+
+
+def _make_page_dict():
+
+    def _make_dict_tuple(book_folder):
+        book_identifier = os.path.basename(book_folder)
+        return book_identifier, 1
+
+
+    return dict(list(map_book_folders(function=_make_dict_tuple)))
