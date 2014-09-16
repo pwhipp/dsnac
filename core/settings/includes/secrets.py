@@ -5,3 +5,4 @@
 SECRET_KEY = "fieGahshah2aingeuph6ohsohyou9Eezo"
 NEVERCACHE_KEY = "Wolaichoo5ieY7eezaing4ya6shu9iec"
 DBPASSWORD = "miem4Vo6"
+GMAIL_PASSWORD = 'Archive1984#'
