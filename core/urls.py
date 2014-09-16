@@ -10,6 +10,8 @@ from mezzanine.conf import settings
 import bookreader.urls
 import bookrepo.urls
 
+from theme.views import HomeView
+
 
 admin.autodiscover()
 
@@ -24,7 +26,7 @@ if settings.DEBUG:
 
 urlpatterns += patterns(
     '',
-    url("^$", direct_to_template, {"template": "index.html"}, name="home"),
+    url("^$", HomeView.as_view(), name="home"),
     ("^bookreader", include(bookreader.urls)),
     ("^bookrepo", include(bookrepo.urls)),
     ("^", include("mezzanine.urls")))
