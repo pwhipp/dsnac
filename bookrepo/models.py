@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from django.core.urlresolvers import reverse
 
 from mezzanine.core.models import RichText, Displayable
 from mezzanine.conf import settings
@@ -67,6 +68,10 @@ class Book(RichText, Displayable):
         help_text="Number of physical copies held by the library")
     scanned = models.BooleanField(default=False)
     ebook = models.BooleanField(default=False)
+    search_fields = ('title', 'creator__name', 'content')
+
+    def get_absolute_url(self):
+        return reverse("bookrepo_detail", args=(self.identifier,))
 
     def cover_thumbnail_url(self):
         """

@@ -174,6 +174,10 @@ OPTIONAL_APPS = (
 )
 
 
+SEARCH_MODEL_CHOICES = (
+    'bookrepo.Book',
+    'pages.Page',
+    'blog.BlogPost')
 ####################
 # DYNAMIC SETTINGS #
 ####################
