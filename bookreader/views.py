@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from bookrepo.import_books import get_book_meta_data
+from bookrepo.models import Book
 
 
 class BookReaderView(TemplateView):
@@ -10,5 +10,5 @@ class BookReaderView(TemplateView):
         context = super(BookReaderView, self).get_context_data(**kwargs)
         book_identifier = self.kwargs['book_identifier']
         context['book_identifier'] = book_identifier
-        context['book_num_leafs'] = get_book_meta_data(book_identifier=book_identifier)['pages']
+        context['book_num_leafs'] = Book.objects.get(identifier=book_identifier).num_pages
         return context

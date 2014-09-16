@@ -57,8 +57,14 @@ class Book(RichText, Displayable):
     published = models.CharField(
         max_length=32,
         help_text='Date of publication (text for now)')
-    pages = models.IntegerField(
+    num_pages = models.IntegerField(
         default=0,
         help_text="Number of scanned or actual pages (scanned pages takes precedence)")
+    num_copies = models.IntegerField(
+        default=1,
+        help_text="Number of physical copies held by the library")
     scanned = models.BooleanField(default=False)
     ebook = models.BooleanField(default=False)
+
+# Override inherited verbose content name
+Book._meta.get_field('content').help_text = 'Brief description of the books content for searching and web display'

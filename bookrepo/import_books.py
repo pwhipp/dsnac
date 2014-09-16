@@ -7,6 +7,7 @@ from zipfile import ZipFile
 import tempfile
 import subprocess
 import csv
+import re
 
 from bs4 import BeautifulSoup
 
@@ -81,7 +82,11 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
 
         def get_text(att, default=None):
             try:
-                return getattr(getattr(xml, att), 'text')
+                text = getattr(getattr(xml, att), 'text')
+                if text:
+                    return text
+                else:
+                    return default
             except AttributeError:
                 return default
 
@@ -97,9 +102,9 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
             title=get_text('title'),
             creator=get_text('creator', 'Unknown'),
             contributor=get_text('contributor', 'Unknown'),
-            published=get_text('date'),
+            published=get_text('date', ''),
             subject=get_text('subject', 'Unspecified'),
-            pages=num_leafs,
+            num_pages=num_leafs,
             reference=None)
 
 
@@ -225,7 +230,9 @@ def import_scanned_books():
     :return:
     """
     def import_scanned_book(book_folder):
-        return update_orm_book(get_book_meta_data(book_folder))
+        meta_info = get_book_meta_data(book_folder)
+        meta_info['scanned'] = True
+        return update_orm_book(meta_info)
 
     return list(map_book_folders(function=import_scanned_book))
 
@@ -236,7 +243,8 @@ def map_csv_row(row):
         'Author': 'creator',
         'ReferenceNo': 'reference',
         'PublishDate': 'published',
-        'Pages': 'pages'}
+        'Pages': 'num_pages',
+        'Copies': 'num_copies'}
     return {csv_map[k]: row[k] for k in csv_map}
 
 
@@ -263,11 +271,12 @@ def import_book_csv(path):
             num_matches = matching_books.count() if matching_books else 0
 
             if num_matches == 0:
-                bm.Book(identifier=create_book_identifier(meta_info), defaults=meta_info).save()
+                meta_info['identifier'] = create_book_identifier(meta_info)
+                update_orm_book(meta_info)
             elif num_matches == 1:
                 update_orm_book(meta_info, matching_books[0])
             else:
-                print('Multiple matching books for "{0}"'.format(meta_info['title']))
+                raise Exception('Multiple matching books for "{0}"'.format(meta_info['title']))
 
 
 def create_book_identifier(meta_info):
@@ -308,6 +317,8 @@ def _book_identifier_part(s):
         'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even',
         'want', 'because', 'any', 'these', 'give', 'day', 'us']
 
+    s = re.sub(r'\W+', '', s)  # Removes any punctuation
+
     words = [w.lower() for w in s.split()]
     words = [w for w in words if w not in common_words]
     word_string = ''.join(words)
@@ -335,6 +346,14 @@ def update_orm_book(meta_info, book=None):
                 meta_info[attr] = value_obj
         except KeyError:
             pass
+
+    # Sort out numbers
+    for attr, default in (('num_pages', 0), ('num_copies', 1)):
+        if attr in meta_info:
+            try:
+                meta_info[attr] = int(meta_info[attr])
+            except ValueError:
+                meta_info[attr] = default
 
     if book is None:
         book, created = bm.Book.objects.get_or_create(identifier=meta_info['identifier'], defaults=meta_info)

@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
+import bookrepo.models as bm
 from bookrepo.import_books import map_book_folders, get_book_meta_data, thumbnail_jpg_path
 
 
@@ -20,7 +21,7 @@ class BookListView(TemplateView):
 
     @staticmethod
     def get_books():
-        return list(map_book_folders(function=get_book_meta_data))
+        return bm.Book.objects.all()
 
 
 def thumbnail(request, book_identifier):
