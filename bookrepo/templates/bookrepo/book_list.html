@@ -6,7 +6,7 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Title (click to read)</th>
+            <th>Title (click to for detailed info)</th>
             <th>Creator</th>
             <th>Date</th>
         </tr>
@@ -15,7 +15,7 @@
         {% for book in books %}
 
             <tr>
-                <td><a href="{% url 'bookreader' book_identifier=book.identifier %}">{{ book.title }}</a></td>
+                <td><a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a></td>
                 <td>{{ book.creator }}</td>
                 <td>{{ book.published }}</td>
             </tr>

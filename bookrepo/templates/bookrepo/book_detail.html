@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load mezzanine_tags %}
+{% block meta_title %}{{ book.title }}{% endblock meta_title%}
+{% block title %}{{ book.title }}{% endblock title%}
+{% block main %}
+    <div class="row">
+        <div class="col-md-3">
+            <p>cover here</p>
+
+            <a href="{% url 'bookreader' book_identifier=book.identifier %}">Read now button</a>
+            <p>borrow button</p>
+        </div>
+        <div class="col-md-9">
+            <table class="table table-striped">
+                <tbody>
+                <tr>
+                    <th>Creator</th>
+                    <td>{{ book.creator }}</td>
+                </tr>
+                <tr>
+                    <th>Published</th>
+                    <td>{{ book.published }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ book.content|safe }}</td>
+                </tr>
+                <tr>
+                    <th>Pages</th>
+                    <td>{{ book.pages }}</td>
+                </tr>
+                <tr>
+                    <th>Copies</th>
+                    <td>{{ book.num_copies }}</td>
+                </tr>
+                <tr>
+                    <th>Scanned</th>
+                    <td>{% if book.scanned %}Yes{% else %}Not yet{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Ebook</th>
+                    <td>{% if book.ebook %}Yes{% else %}Not yet{% endif %}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock main %}

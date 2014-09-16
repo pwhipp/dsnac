@@ -2,13 +2,14 @@ import os
 import subprocess
 
 from django.http import HttpResponse, Http404
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
+from django.shortcuts import get_object_or_404
 
 from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
 import bookrepo.models as bm
-from bookrepo.import_books import map_book_folders, get_book_meta_data, thumbnail_jpg_path
+from bookrepo.import_books import thumbnail_jpg_path
 
 
 class BookListView(TemplateView):
@@ -22,6 +23,13 @@ class BookListView(TemplateView):
     @staticmethod
     def get_books():
         return bm.Book.objects.all()
+
+
+class BookDetailView(DetailView):
+    model = bm.Book
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, identifier=self.kwargs['book_identifier'])
 
 
 def thumbnail(request, book_identifier):
@@ -62,6 +70,7 @@ def serve_jpg(request, get_function, create_function, *function_args, **function
         raise Http404
 
 
+# Move these to model methods.
 def page_basename(book_identifier, page_number):
     return '{book_identifier}_{page_number:>04}'.format(
         book_identifier=book_identifier,
