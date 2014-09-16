@@ -9,6 +9,5 @@ class BookReaderView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BookReaderView, self).get_context_data(**kwargs)
         book_identifier = self.kwargs['book_identifier']
-        context['book_identifier'] = book_identifier
-        context['book_num_leafs'] = Book.objects.get(identifier=book_identifier).num_pages
+        context['book'] = Book.objects.get(identifier=book_identifier)
         return context

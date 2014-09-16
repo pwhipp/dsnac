@@ -81,7 +81,7 @@ br.getPageNum = function(index) {
 br.numLeafs = bookNumLeafs;
 
 // Book title and the URL used for the book title link
-br.bookTitle= 'SNAC BookReader';
+br.bookTitle= bookTitle;
 br.bookUrl  = '/';
 
 // Override the path used to find UI images
