@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
-{% load pages_tags mezzanine_tags i18n future staticfiles %}
+{% load pages_tags mezzanine_tags i18n future staticfiles blog_tags %}
+{% blog_recent_posts 5 as recent_posts %}
 
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -94,24 +95,21 @@
 <div class="container">
 <div class="row">
 
-<div class="col-md-9 middle">
-    {% block main %}{% endblock %}
-</div>
+    <div class="col-md-9 middle">
+        {% block main %}{% endblock %}
+    </div>
 
     <div class="col-md-3 right">
-        {% nevercache %}
-            {% include "includes/user_panel.html" %}
-        {% endnevercache %}
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {% block right_panel %}
-                    {% ifinstalled mezzanine.twitter %}
-                        {% include "twitter/tweets.html" %}
-                    {% endifinstalled %}
-                {% endblock %}
-            </div>
-        </div>
-    Recent blogs here
+        {% include "accounts/includes/user_panel.html" %}
+        {% if recent_posts %}
+            <h3>{% trans "Recent Posts" %}</h3>
+            <ul class="list-unstyled recent-posts">
+                {% for recent_post in recent_posts %}
+                    <li><a href="{{ recent_post.get_absolute_url }}"
+                            >{{ recent_post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 
 </div>
@@ -123,17 +121,9 @@
 
 <div class="row">
 <p class="site-info text-center">
-    {% trans "Powered by" %}
-    <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},
-    <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}
-    {% trans "and" %}
-    <a href="http://www.djangoproject.com">Django</a>
+    &copy; 2014 Sikh National Archives of Canada
     <span class="separator">|</span>
-    {% trans "Theme by" %} <a target="_blank" href="http://getbootstrap.com">Bootstrap</a>
-    {% ifinstalled mezzanine.mobile %}
-    <span class="separator">|</span>
-    <a href="{% url "set_device" "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
-    {% endifinstalled %}
+    Site by <a href="http://paulwhippconsulting.com" alt="Paul Whipp Consulting">PWC</a>
 </p>
 </div>
 </div>

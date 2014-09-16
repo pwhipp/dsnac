@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     "mezzanine.forms",
     "mezzanine.pages",
     "mezzanine.galleries",
+    "mezzanine.accounts",
     'bookreader',
     'bookrepo')
 
