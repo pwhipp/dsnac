@@ -92,6 +92,7 @@ br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
 }
 
 // Let's go!
+br.switchMode(2);
 br.init();
 
 // read-aloud and search need backend compenents and are not supported in the demo
