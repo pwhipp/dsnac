@@ -76,6 +76,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 FILEBROWSER_DIRECTORY = ''
 BOOKS_ROOT = os.path.join(MEDIA_ROOT, 'books')
+BOOKS_URL = MEDIA_URL + 'books/'
+BOOKS_NO_COVER_IMAGE = os.path.join(MEDIA_URL, 'no_cover_image.png')
 
 # Package/module name to import the root urlpatterns from for the project.
 ROOT_URLCONF = 'core.urls'

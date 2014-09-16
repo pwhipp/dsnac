@@ -5,10 +5,14 @@
 {% block main %}
     <div class="row">
         <div class="col-md-3">
-            <p>cover here</p>
-
-            <a href="{% url 'bookreader' book_identifier=book.identifier %}">Read now button</a>
-            <p>borrow button</p>
+            <div align="center">
+                <img src="{{ book.cover_thumbnail_url }}" alt="{{ book.title }} cover image" />
+            <hr>
+                {% if book.scanned or book.ebook %}
+                    <p><a class="btn btn-primary" href="{% url 'bookreader' book_identifier=book.identifier %}">Read now</a></p>
+                {% endif %}
+                <p><a class="btn btn-primary" href="{% url 'page' slug='borrowing' %}">Borrow now</a></p>
+            </div>
         </div>
         <div class="col-md-9">
             <table class="table table-striped">

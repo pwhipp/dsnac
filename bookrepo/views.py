@@ -9,7 +9,6 @@ from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
 import bookrepo.models as bm
-from bookrepo.import_books import thumbnail_jpg_path
 
 
 class BookListView(TemplateView):
@@ -131,7 +130,7 @@ def get_thumbnail_jpg_file_path(book_identifier):
     :param book_identifier: string: The folder name being used for the book
     :return: file path to the image or None
     """
-    thumb_file_path = thumbnail_jpg_path(book_identifier)
+    thumb_file_path = bm.thumbnail_jpg_path(book_identifier)
     if os.path.exists(thumb_file_path):
         return thumb_file_path
     else:

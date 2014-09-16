@@ -168,10 +168,7 @@ def _fix_mispelled_jp2s():
     return list(map_book_folders(function=fix_spellings))
 
 
-def thumbnail_jpg_path(book_identifier):
-    return os.path.join(settings.BOOKS_ROOT,
-                        book_identifier,
-                        book_identifier+'_cover_thumbnail.jpg')
+
 
 thumbnail_page = {
     u'annexationofpunj00econuoft': 5,
@@ -203,7 +200,7 @@ def _add_thumbnail_covers():
 
     def add_thumbnail_cover(book_folder):
         book_identifier = os.path.basename(book_folder)
-        thumbnail_path = thumbnail_jpg_path(book_identifier)
+        thumbnail_path = bm.thumbnail_jpg_path(book_identifier)
         jpg_page_path = page_jpg_path(book_identifier, thumbnail_page[book_identifier])  # we know it exists
         subprocess.call(['convert', jpg_page_path, '-resize', '150x225', thumbnail_path])
         return thumbnail_path

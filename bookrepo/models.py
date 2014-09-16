@@ -1,6 +1,8 @@
+import os
 from django.db import models
 
 from mezzanine.core.models import RichText, Displayable
+from mezzanine.conf import settings
 
 
 class UniqueNamed(models.Model):
@@ -66,5 +68,26 @@ class Book(RichText, Displayable):
     scanned = models.BooleanField(default=False)
     ebook = models.BooleanField(default=False)
 
+    def cover_thumbnail_url(self):
+        """
+        return url for cover thumbnail (not available image url if none)
+        :return: url path string
+        """
+        thumbnail_path = thumbnail_jpg_path(self.identifier)
+        if os.path.exists(thumbnail_path):
+            return thumbnail_jpg_url(self.identifier)
+        else:
+            return settings.BOOKS_NO_COVER_IMAGE
+
 # Override inherited verbose content name
 Book._meta.get_field('content').help_text = 'Brief description of the books content for searching and web display'
+
+
+def thumbnail_jpg_path(book_identifier):
+    return os.path.join(settings.BOOKS_ROOT,
+                        book_identifier,
+                        book_identifier+'_cover_thumbnail.jpg')
+
+
+def thumbnail_jpg_url(book_identifier):
+    return settings.BOOKS_URL + book_identifier + '/' + book_identifier + '_cover_thumbnail.jpg'
