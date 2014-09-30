@@ -358,6 +358,10 @@ def update_orm_book(meta_info, book=None):
     :return: None
     """
 
+    assert(False)
+    # TODO update the scanned_start_page using the <pageType>Title<pageType> tag under the relevant page in
+    # scandata.xml and use that page to generate a cover image.
+
     # Sort out foreign key objects
     for attr, model_class in (('creator', bm.Creator),
                               ('contributor', bm.Contributor),
