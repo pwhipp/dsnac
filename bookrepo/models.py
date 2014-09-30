@@ -67,6 +67,7 @@ class Book(RichText, Displayable):
         default=1,
         help_text="Number of physical copies held by the library")
     scanned = models.BooleanField(default=False)
+    scanned_start_page = models.IntegerField(default=0)
     ebook = models.BooleanField(default=False)
     search_fields = ('title', 'creator__name', 'content')
 

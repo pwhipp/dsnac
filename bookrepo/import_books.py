@@ -179,7 +179,6 @@ def _migrate_scandata():
                         f.extract('scandata.xml', target_book_folder)
 
 
-
 def _fix_mispelled_jp2s():
     """
     One off - some of the jp2 files have the wrong spelling!! correct them using the book identifier
@@ -392,3 +391,32 @@ def update_orm_book(meta_info, book=None):
     book.save()
 
     return book
+
+
+def get_scanned_page_start(book_folder):
+    """
+    Return the starting page if specified in scandata.xml (which may not be present)
+    Returns zero if it can't find a number or scandata.xml
+    :param book_folder: string
+    :return: integer
+    """
+    try:
+        scandata_pname = os.path.join(book_folder, 'scandata.xml')
+        with open(scandata_pname) as f:
+            scandata = BeautifulSoup(f, 'xml')
+            book_starts = scandata.find_all('bookStart')
+            if book_starts:
+                return int(book_starts[-1].parent['leafNum'])
+            else:
+                return 'no book_starts'
+    except IOError:
+        return 'no scandata.xml'
+
+
+def update_orm_scanned_start_pages():
+    def update_orm_scanned_page(book_folder):
+        book_identifier = os.path.basename(book_folder)
+        book = bm.Book.objects.get(identifier=book_identifier)
+        book_start = get_scanned_page_start(book_folder)
+        return book_identifier, book_start
+    return list(map_book_folders(function=update_orm_scanned_page))
