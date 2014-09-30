@@ -20,17 +20,19 @@
 
     <script type="text/javascript" src="{% static "BookReader/BookReader.js" %}"></script>
 <script type="text/javascript" src="{% static "bookreader/js/SNAC_BookReader.js" %}"></script>
-    <script type="text/javascript">
-        var book = "{{ book_json }}";
-        var bookIdentifier = "{{ book.identifier }}";
-        var bookNumLeafs = "{{ book.num_pages }}";
-        var bookTitle = "{{ book.title }}";
-    </script>
+<script type="text/javascript">
+    var book = {
+        identifier: "{{ book.identifier }}",
+        title: "{{ book.title }}",
+        num_pages: "{{ book.num_pages }}",
+        scanned_start_page: "{{ book.scanned_start_page }}"
+    };
+</script>
 </head>
-<body style="background-color: ##939598;">
+<body style="background-color: #939598;">
 
 <div id="BookReader">
-    Sikh National Archives of Canada Book Reader    <br/>
+    Sikh National Archives of Canada Book Reader<br/>
     
     <noscript>
     <p>

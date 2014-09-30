@@ -94,6 +94,7 @@ br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
 // Let's go!
 br.switchMode(2);
 br.init();
+br.jumpToPage(book.scanned_start_page.toString())
 
 // read-aloud and search need backend compenents and are not supported
 $('#BRtoolbar').find('.read').hide();
