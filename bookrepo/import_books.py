@@ -3,6 +3,7 @@ Scan and update db with new books, updates existing books
 """
 import os
 import shutil
+import glob
 from zipfile import ZipFile
 import tempfile
 import subprocess
@@ -149,6 +150,34 @@ def _migrate_books():
                             shutil.copyfile(jp2_source_file_path, jp2_target_file_path)
             finally:
                 shutil.rmtree(jp2_source_dir)
+
+
+def _migrate_scandata():
+    """
+    Copy existing book scandata into media
+    :return:
+    """
+    for source_book_folder, dirnames, filenames in os.walk('/home/paul/wk/snac/source_materials/existing_books'):
+        if is_source_book_folder(source_book_folder, filenames):
+            book_identifier = os.path.basename(source_book_folder)
+            print(book_identifier)
+            target_book_folder = os.path.join(settings.BOOKS_ROOT, book_identifier)
+            if not os.path.isdir(target_book_folder):
+                os.mkdir(target_book_folder)
+
+            target_scandata_pname = os.path.join(target_book_folder, 'scandata.xml')
+            possible_sources = glob.glob(os.path.join(source_book_folder, '*scandata.xml'))
+
+            if possible_sources:
+                source_scandata_pname = possible_sources[0]
+                shutil.copyfile(source_scandata_pname, target_scandata_pname)
+            else:
+                # If there is a scandata.zip, unzip it and use that
+                scandata_zip_pname = os.path.join(source_book_folder, 'scandata.zip')
+                if os.path.exists(scandata_zip_pname):
+                    with ZipFile(scandata_zip_pname) as f:
+                        f.extract('scandata.xml', target_book_folder)
+
 
 
 def _fix_mispelled_jp2s():
