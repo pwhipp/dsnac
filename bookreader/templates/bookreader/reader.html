@@ -21,6 +21,7 @@
     <script type="text/javascript" src="{% static "BookReader/BookReader.js" %}"></script>
 <script type="text/javascript" src="{% static "bookreader/js/SNAC_BookReader.js" %}"></script>
     <script type="text/javascript">
+        var book = "{{ book_json }}";
         var bookIdentifier = "{{ book.identifier }}";
         var bookNumLeafs = "{{ book.num_pages }}";
         var bookTitle = "{{ book.title }}";

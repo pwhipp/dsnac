@@ -24,9 +24,9 @@ br.getPageURI = function(index, reduce, rotate) {
     // reduce and rotate are ignored in this simple implementation, but we
     // could e.g. look at reduce and load images from a different directory
     // or pass the information to an image server
-    // bookIdentifier is obtained from a variable set in the html by Django
+    // book is obtained from a variable set in the html by Django
     var imgStr = (index+1).toString();
-    var url = '/bookrepo/'+bookIdentifier+'/'+imgStr+'/';
+    var url = '/bookrepo/'+book.identifier+'/'+imgStr+'/';
     return url;
 }
 
@@ -78,10 +78,10 @@ br.getPageNum = function(index) {
 }
 
 // Total number of leafs (from django setting in template)
-br.numLeafs = bookNumLeafs;
+br.numLeafs = book.num_pages;
 
 // Book title and the URL used for the book title link
-br.bookTitle= bookTitle;
+br.bookTitle= book.title;
 br.bookUrl  = '/';
 
 // Override the path used to find UI images
@@ -95,7 +95,7 @@ br.getEmbedCode = function(frameWidth, frameHeight, viewParams) {
 br.switchMode(2);
 br.init();
 
-// read-aloud and search need backend compenents and are not supported in the demo
+// read-aloud and search need backend compenents and are not supported
 $('#BRtoolbar').find('.read').hide();
 $('#textSrch').hide();
 $('#btnSrch').hide();
