@@ -1,6 +1,9 @@
 import os
 import subprocess
 
+from PIL import Image
+from pytesseract import image_to_string
+
 from django.db import models
 from django.core.urlresolvers import reverse
 
@@ -141,3 +144,14 @@ class BookPage(models.Model):
         if not os.path.exists(pathname):
             raise IOError('{0} not found'.format(pathname))
         return pathname
+
+    def update_text_from_image(self):
+        """
+        Update text attribute using ocr
+        :return:
+        """
+        image = Image.open(self.jpg_pathname)
+        try:
+            self.text = image_to_string(image)
+        finally:
+            image.close()
