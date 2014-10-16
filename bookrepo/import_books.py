@@ -224,7 +224,7 @@ def _add_thumbnail_covers():
     Create initial thumbnail covers for existing scanned books
     :return:
     """
-    from bookrepo.views import page_jpg_path
+    from bookrepo.models import page_jpg_path
 
     def add_thumbnail_cover(book_folder):
         book_identifier = os.path.basename(book_folder)
@@ -350,17 +350,14 @@ def _book_identifier_part(s):
     return word_string[:12]
 
 
-def update_orm_book(meta_info, book=None):
+def update_orm_book(meta_info, book=None, redo_ocr=False):
     """
     Update orm_book, creating it if necessary.
+    Also update the book pages, creating them as necessary.
     :param meta_info:
     :param book: book object, if already known
     :return: None
     """
-
-    assert(False)
-    # TODO update the scanned_start_page using the <pageType>Title<pageType> tag under the relevant page in
-    # scandata.xml and use that page to generate a cover image.
 
     # Sort out foreign key objects
     for attr, model_class in (('creator', bm.Creator),
@@ -394,6 +391,8 @@ def update_orm_book(meta_info, book=None):
             setattr(book, attr, value)
     book.save()
 
+    update_orm_book_pages(book, redo_ocr)
+
     return book
 
 
@@ -408,19 +407,29 @@ def get_scanned_page_start(book_folder):
         scandata_pname = os.path.join(book_folder, 'scandata.xml')
         with open(scandata_pname) as f:
             scandata = BeautifulSoup(f, 'xml')
-            book_starts = scandata.find_all('bookStart')
-            if book_starts:
-                return int(book_starts[-1].parent['leafNum'])
-            else:
-                return 'no book_starts'
-    except IOError:
-        return 'no scandata.xml'
+            return int(scandata.find('pageType', text='Title').parent['leafNum'])
+    except (IOError, AttributeError, KeyError):
+        return 1
 
 
 def update_orm_scanned_start_pages():
     def update_orm_scanned_page(book_folder):
         book_identifier = os.path.basename(book_folder)
-        book = bm.Book.objects.get(identifier=book_identifier)
         book_start = get_scanned_page_start(book_folder)
         return book_identifier, book_start
     return list(map_book_folders(function=update_orm_scanned_page))
+
+
+def update_orm_book_pages(book, redo_ocr=False):
+    """
+    Update or add the required book page objects, scanning if necessary (which creates the jpg pages)
+    This could take a while.
+    :param book:
+    :param redo_ocr:
+    :return:
+    """
+    for page_number in range(book.num_pages):
+        page, created = bm.BookPage.objects.get_or_create(book=book, num=page_number)
+        if created or redo_ocr:
+            page.update_text_from_image()
+            page.save()

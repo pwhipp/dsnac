@@ -1,4 +1,6 @@
 import os
+import subprocess
+
 from django.db import models
 from django.core.urlresolvers import reverse
 
@@ -74,14 +76,21 @@ class Book(RichText, Displayable):
     def get_absolute_url(self):
         return reverse("bookrepo_detail", args=(self.identifier,))
 
-    def cover_thumbnail_url(self):
+    @property
+    def thumbnail_path(self):
+        return os.path.join(settings.BOOKS_ROOT,
+                            self.identifier,
+                            self.identifier + '_cover_thumbnail.jpg')
+
+    @property
+    def thumbnail_url(self):
         """
         return url for cover thumbnail (not available image url if none)
         :return: url path string
         """
-        thumbnail_path = thumbnail_jpg_path(self.identifier)
-        if os.path.exists(thumbnail_path):
-            return thumbnail_jpg_url(self.identifier)
+        pathname = self.thumbnail_path
+        if os.path.exists(pathname):
+            return settings.BOOKS_URL + self.identifier + '/' + self.identifier + '_cover_thumbnail.jpg'
         else:
             return settings.BOOKS_NO_COVER_IMAGE
 
@@ -89,11 +98,46 @@ class Book(RichText, Displayable):
 Book._meta.get_field('content').help_text = 'Brief description of the books content for searching and web display'
 
 
-def thumbnail_jpg_path(book_identifier):
-    return os.path.join(settings.BOOKS_ROOT,
-                        book_identifier,
-                        book_identifier+'_cover_thumbnail.jpg')
+class BookPage(models.Model):
+    book = models.ForeignKey(Book)
+    num = models.IntegerField(verbose_name='Page number')
+    text = models.TextField()
 
+    @property
+    def basename(self):
+        return '{book_identifier}_{page_number:>04}'.format(
+            book_identifier=self.book.identifier,
+            page_number=self.num)
 
-def thumbnail_jpg_url(book_identifier):
-    return settings.BOOKS_URL + book_identifier + '/' + book_identifier + '_cover_thumbnail.jpg'
+    @property
+    def _jpg_pathname(self):
+        return os.path.join(settings.BOOKS_ROOT,
+                            self.book.identifier,
+                            'jpgs',
+                            self.basename + '.jpg')
+
+    @property
+    def jpg_pathname(self):
+        """
+        Return the pathname if it exists, create and return it otherwise
+        """
+        pathname = self._jpg_pathname
+        if not os.path.exists(pathname):  # create it from the jp2
+            jp2_pathname = self.jp2_pathname
+            if not subprocess.call(['convert', jp2_pathname, '-resize', '800>', pathname]) == 0:
+                raise IOError('{0} conversion failed'.format(jp2_pathname))
+        return pathname
+
+    @property
+    def _jp2_pathname(self):
+        return os.path.join(settings.BOOKS_ROOT,
+                            self.book.identifier,
+                            '{0}_jp2'.format(self.book.identifier),
+                            self.basename + '.jp2')
+
+    @property
+    def jp2_pathname(self):
+        pathname = self._jp2_pathname
+        if not os.path.exists(pathname):
+            raise IOError('{0} not found'.format(pathname))
+        return pathname
