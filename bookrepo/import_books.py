@@ -2,6 +2,7 @@
 Scan and update db with new books, updates existing books
 """
 import os
+import sys
 import shutil
 import glob
 from zipfile import ZipFile
@@ -196,8 +197,6 @@ def _fix_mispelled_jp2s():
     return list(map_book_folders(function=fix_spellings))
 
 
-
-
 thumbnail_page = {
     u'annexationofpunj00econuoft': 5,
     u'bandabraveorlife00soha': 7,
@@ -224,16 +223,17 @@ def _add_thumbnail_covers():
     Create initial thumbnail covers for existing scanned books
     :return:
     """
-    from bookrepo.models import page_jpg_path
+    from bookrepo.models import Book, BookPage
 
-    def add_thumbnail_cover(book_folder):
-        book_identifier = os.path.basename(book_folder)
-        thumbnail_path = bm.thumbnail_jpg_path(book_identifier)
-        jpg_page_path = page_jpg_path(book_identifier, thumbnail_page[book_identifier])  # we know it exists
-        subprocess.call(['convert', jpg_page_path, '-resize', '150x225', thumbnail_path])
+    def add_thumbnail_cover(book):
+        thumbnail_path = book.thumbnail_path
+        if os.path.exists(thumbnail_path):
+            return thumbnail_path
+        book_page, _ = BookPage.objects.get_or_create(book=book, num=thumbnail_page[book.identifier])
+        subprocess.call(['convert', book_page.jpg_pathname, '-resize', '150x225', thumbnail_path])
         return thumbnail_path
 
-    return list(map_book_folders(function=add_thumbnail_cover))
+    return [add_thumbnail_cover(b) for b in Book.objects.all()]
 
 
 def _make_page_dict():
@@ -433,3 +433,4 @@ def update_orm_book_pages(book, redo_ocr=False):
         if created or redo_ocr:
             page.update_text_from_image()
             page.save()
+            sys.stdout.write('.')
