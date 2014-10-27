@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load mezzanine_tags %}
 {% block meta_title %}{{ book.title }}{% endblock meta_title%}
-{% block title %}{{ book.title }}{% endblock title%}
+{% block title %}{{ book.title }} (Page {{ bookpage.num }}){% endblock title%}
 {% block main %}
     <div class="row">
         <div class="col-md-3">
             <div align="center">
                 <img src="{{ book.thumbnail_url }}" alt="{{ book.title }} cover image" />
             <hr>
-                {% if book.scanned or book.ebook %}
-                    <p><a class="btn btn-primary" href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}">Read now</a></p>
+                {% if book.scanned %}
+                    <p><a class="btn btn-primary" href="{{ bookpage.get_in_book_url }}">Read now</a></p>
                 {% endif %}
                 <p><a class="btn btn-primary" href="{% url 'page' slug='borrowing' %}">Borrow now</a></p>
             </div>

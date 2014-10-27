@@ -155,3 +155,9 @@ class BookPage(models.Model):
             self.text = image_to_string(image)
         finally:
             image.close()
+
+    def get_absolute_url(self):
+        return reverse("bookpage_detail", args=(self.id,))
+
+    def get_in_book_url(self):
+        return reverse("bookreader", args=(self.book.identifier, self.num))

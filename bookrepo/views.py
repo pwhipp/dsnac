@@ -30,6 +30,15 @@ class BookDetailView(DetailView):
         return get_object_or_404(self.model, identifier=self.kwargs['book_identifier'])
 
 
+class BookPageView(DetailView):
+    model = bm.BookPage
+
+    def get_context_data(self, **kwargs):
+        context = super(BookPageView, self).get_context_data(**kwargs)
+        context['book'] = context['bookpage'].book
+        return context
+
+
 def thumbnail(request, book_identifier):
     try:
         book = get_object_or_404(bm.Book, identifier=book_identifier)
