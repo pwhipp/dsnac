@@ -13,7 +13,7 @@
     <h2>Recent scans</h2>
     {% for book in recent_scans %}
         <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">
-        <img style="margin: 10px;" src="{{ book.cover_thumbnail_url }}" alt="{{ book.title }} cover image" />
+        <img style="margin: 10px;" src="{{ book.thumbnail_url }}" alt="{{ book.title }} cover image" />
         </a>
     {% endfor %}
 {% endblock %}

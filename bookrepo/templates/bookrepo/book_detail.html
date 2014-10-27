@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-3">
             <div align="center">
-                <img src="{{ book.cover_thumbnail_url }}" alt="{{ book.title }} cover image" />
+                <img src="{{ book.thumbnail_url }}" alt="{{ book.title }} cover image" />
             <hr>
                 {% if book.scanned or book.ebook %}
                     <p><a class="btn btn-primary" href="{% url 'bookreader' book_identifier=book.identifier %}">Read now</a></p>
