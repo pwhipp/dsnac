@@ -233,7 +233,7 @@ def _add_thumbnail_covers():
         subprocess.call(['convert', book_page.jpg_pathname, '-resize', '150x225', thumbnail_path])
         return thumbnail_path
 
-    return [add_thumbnail_cover(b) for b in Book.objects.all()]
+    return [add_thumbnail_cover(b) for b in bm.Book.objects.filter(scanned=True)]
 
 
 def _make_page_dict():
