@@ -103,6 +103,7 @@ INSTALLED_APPS = (
     "django.contrib.sitemaps",
     "django.contrib.staticfiles",
     "django.contrib.messages",
+    'haystack',
     'theme',
     "mezzanine.boot",
     "mezzanine.conf",
@@ -184,6 +185,13 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'sikhnationalarchives@gmail.com'
 EMAIL_HOST_PASSWORD = GMAIL_PASSWORD
 EMAIL_PORT = 587
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index')
+    }
+}
 
 ####################
 # DYNAMIC SETTINGS #
