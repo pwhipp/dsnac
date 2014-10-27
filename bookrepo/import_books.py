@@ -428,9 +428,17 @@ def update_orm_book_pages(book, redo_ocr=False):
     :param redo_ocr:
     :return:
     """
+    if not book.scanned:
+        return False
     for page_number in range(book.num_pages):
         page, created = bm.BookPage.objects.get_or_create(book=book, num=page_number)
         if created or redo_ocr:
-            page.update_text_from_image()
-            page.save()
-            sys.stdout.write('.')
+            try:
+                page.update_text_from_image()
+                page.save()
+                sys.stdout.write('.')
+            except IOError:
+                print('Unable to scan {title} - page {page_number}'.format(
+                    title=book.title,
+                    page_number=page_number))
+    return True
