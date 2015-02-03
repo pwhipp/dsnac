@@ -145,3 +145,42 @@ This is for public facing servers only.
          ~ $ sudo service nginx restart
          ~ $ sudo cp /home/dsnac/production/deploy/production/upstart.conf /etc/init/dsnac_production.conf
          ~ $ sudo service dsnac_production start
+         
+## Updating a Deployed service
+
+A deployed service is very similar to any other working copy with two additions:
+
+1. gunicorn is running to launch processes in response to user requests. It is set up and runs using upstart. The configuration files are in the deploy folder.
+1. Nginx is running to dispatch requests to the gunicorn process.
+
+The deployment update steps may not all be needed depending upon what has changed. The git pull output will identify what needs to be done.
+
+### Login as the appropriate user and switch to the appropriate virtual environment
+
+    ~ $ ssh sikhnationalarchives.com  # access the server from your local system
+    ~ $ sudo -iu dsnac  # switch to the service user
+    dsnac:~ $ workon production  # switch to the appropriate virtual environment
+
+Use 'git status' if necessary to check the current state of the repo.
+
+### Pull an appropriate branch version from the repository.
+
+    (production)dsnac:~/production $ git pull # update the repo
+
+### Execute any required Django management commands
+
+git pull will list the changes and you can use these to limit the commands but it does no harm to repeat all of them
+
+    (production)dsnac:~/production $ django migrate  # only needed if there are migrations
+    ...
+    (production)dsnac:~/production $ django collectstatic  # only needed if static files have changed
+    ...
+
+### Restart the Django service
+
+    (production)dsnac:~/production $ logout
+    ~ $ sudo service dsnac_production restart  # restart the django service if code has changed
+
+### Reload Nginx
+
+    ~ $ sudo service nginx reload  # restart nginx if its configuration has changed
