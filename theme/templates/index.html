@@ -23,8 +23,8 @@
 
     </div>
     <hr/>
-    <a class="left_arrow"> << </a>
-    <a class="right_arrow"> >> </a>
+    <a class="left_arrow glyphicon glyphicon-chevron-left"> </a>
+    <a class="right_arrow glyphicon glyphicon-chevron-right"> </a>
 
 
     <h1>Recent scans</h1>
@@ -55,14 +55,14 @@
             }
             $('.left_arrow').click(function () {
                 if(left_click > 0){
-                    $('.recent_scans').animate({left: '+='+290}, 800);
+                    $('.recent_scans').animate({left: '+='+300}, 800);
                     left_click--;
                     right_click++;
                 }
             });
             $('.right_arrow').click(function () {
                 if(right_click > 0){
-                    $('.recent_scans').animate({left: '-='+290}, 800);
+                    $('.recent_scans').animate({left: '-='+300}, 800);
                     left_click++;
                     right_click--;
                 }

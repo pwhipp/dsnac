@@ -3,25 +3,26 @@
 {% block meta_title %}Book List{% endblock meta_title%}
 {% block title %}Book List{% endblock title%}
 {% block main %}
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Title (click to for detailed info)</th>
-            <th>Creator</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for book in books %}
+    <h1>Recently Added</h1>
 
-            <tr>
-                <td><a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a></td>
-                <td>{{ book.creator }}</td>
-                <td>{{ book.published }}</td>
-            </tr>
+
+    <div class="all_books">
+        {% for book in books %}
+            <div class="single">
+                <div>
+                    {% if book.cover %}
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""/></a>
+                    {% else %}
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                    {% endif %}
+                </div>
+                <div class="all_books_title">
+                    {{ book.title|slice:'50'}} <br/>
+                </div>
+                <div class="all_books_author">{{ book.published }}</div>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
     {% pagination_for books %}
 {% endblock main%}
