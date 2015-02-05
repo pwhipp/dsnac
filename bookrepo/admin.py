@@ -11,6 +11,7 @@ class BookAdmin(admin.ModelAdmin):
                                     'title',
                                     'creator',
                                     'content',
+                                    'subject',
                                     'contributor',
                                     'reference',
                                     'num_copies',

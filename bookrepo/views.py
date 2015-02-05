@@ -75,3 +75,21 @@ def serve_jpg(pathname):
             return response
     else:
         raise Http404
+
+
+class BookSubjectListView(TemplateView):
+    template_name = 'bookrepo/book_list_subject.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BookSubjectListView, self).get_context_data(**kwargs)
+
+        context['subjects'] = bm.Subject.objects.all()
+        subjects = bm.Subject.objects.all()
+        for subj in subjects:
+            context['books'] = bm.Book.objects.filter(subject=subj)
+            # context['books'] = paginate(self.get_books(), self.request.GET.get("page", 1), 20, settings.MAX_PAGING_LINKS)
+        return context
+
+    @staticmethod
+    def get_books():
+        return bm.Book.objects.filter(subject=1)

@@ -23,34 +23,38 @@
 
     </div>
     <hr/>
+    <h1>Recent scans</h1>
     <a class="left_arrow glyphicon glyphicon-chevron-left"> </a>
     <a class="right_arrow glyphicon glyphicon-chevron-right"> </a>
 
-
-    <h1>Recent scans</h1>
-
     <div id="books_slide">
+
         <div class="recent_scans">
             {% for book in recent_scans %}
-                <a style="margin-right: 19px;" href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">
+                <div class="single_book_slide">
                     {% if book.cover %}
-                        <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="{{ book.title }} cover image" />
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt="" width="127" height="192"/></a>
                     {% else %}
-                        <div class="book_cover_index"></div>
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                        <div class="no_cover_title">
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
+                            <b>{{ book.creator }}</b>
+                        </div>
                     {% endif %}
-                </a>
+                <div class="single_book_title">{{ book.title }}</div>
+                </div>
             {% endfor %}
         </div>
+
     </div>
-    <div style="width: 750px; height: 250px;"></div>
+    <div style="width: 750px; height: 280px;"></div>
 
 
     <script>
         $(document).ready(function(){
-            var slider = $('.recent_scans');
             var n = 7;
             if(n>6){
-                right_click = 1;
+                right_click = 2;
                 left_click = 0;
             }
             $('.left_arrow').click(function () {
