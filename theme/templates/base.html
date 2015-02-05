@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
 {% load pages_tags mezzanine_tags i18n future staticfiles blog_tags %}
+{% load i18n future mezzanine_tags accounts_tags %}
 {% blog_recent_posts 5 as recent_posts %}
 
 <head>
@@ -18,6 +19,10 @@
 
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+
+        <link rel="stylesheet" href="{% static "css/style.css" %}">
+        <link rel="stylesheet" href="{% static "css/nivo-slider.css" %}">
+
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
         <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">
         {% if LANGUAGE_BIDI %}
@@ -36,6 +41,8 @@
         <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
         <script src="{% static "js/bootstrap.js" %}"></script>
         <script src="{% static "js/bootstrap-extras.js" %}"></script>
+
+        <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
         {% block extra_js %}{% endblock %}
     {% endcompress %}
 
@@ -49,26 +56,26 @@
 
 <body id="{% block body_id %}body{% endblock %}">
 
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="navbar navbar-default navbar-fixed-top top_menu" role="navigation">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">{% trans "Toggle Navigation" %}</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <img class="pull-left" src="{% static 'theme/images/logo.png' %}" alt="{{ settings.SITE_TITLE }}" />
-            <p class="navbar-brand"><a href="/">{{ settings.SITE_TITLE }}</a></p>
+        <div class="col-lg-4"><img class="pull-left" src="{% static 'theme/images/logo.png' %}" alt="{{ settings.SITE_TITLE }}" />
+            <p class="navbar-brand"><a class="logo_title" href="/">{{ settings.SITE_TITLE }}</a></p></div>
+        <div class="col-lg-3 search_panel">
+            {% search_form %}
         </div>
-        <div class="navbar-collapse collapse">
-            {% page_menu "pages/menus/dropdown.html" %}
+        {# cabinet #}
+        <div class="col-lg-offset-2 col-lg-3 auth">
+            {% if request.user.is_authenticated %}
+                Welcome, <a class="update_lnk" href="{% url "profile_update" %}">{{ request.user|username_or:"email" }}</a>  <a class="logout_lnk" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a class="reg_lnk" href="{% url 'signup' %}">Registration</a> or <a class="login_lnk" href="{% url "login" %}?next={{ request.path }}">login</a>
+            {% endif %}
         </div>
     </div>
 </div>
 
-<div class="container">
 
+<div class="container main_content">
     {% nevercache %}
         {% if messages %}
             <div class="messages">
@@ -82,55 +89,61 @@
         {% endif %}
     {% endnevercache %}
 
-    <h1>{% block title %}{% endblock %}</h1>
-
-    <ul class="breadcrumb">
-        {% spaceless %}
-            {% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}
-        {% endspaceless %}
-    </ul>
-
-</div>
-
-<div class="container">
     <div class="row">
-
-        <div class="col-md-9 middle">
-            {% block main %}{% endblock %}
-        </div>
-
-        <div class="col-md-3 right">
-            {% search_form 'all' %}
-            {% include "accounts/includes/user_panel.html" %}
-            {% if recent_posts %}
-                <h3>{% trans "Recent Posts" %}</h3>
-                <ul class="list-unstyled recent-posts">
-                    {% for recent_post in recent_posts %}
-                        <li><a href="{{ recent_post.get_absolute_url }}"
-                                >{{ recent_post.title }}</a></li>
-                    {% endfor %}
+        <div class="col-lg-2 left_side_menu">
+            <h2>Browse</h2>
+            <ul>
+                <li><a href="{% url 'bookrepo_list' %}"><img src="{% static 'img/side_menu_tb.png' %}" alt=""/>Top books</a></li>
+                <li><a href="{% url 'haystack_search' %}"><img src="{% static 'img/side_menu_disc.png' %}" alt=""/>Discover</a></li>
+                <li><a href=""><img src="{% static 'img/side_menu_cat.png' %}" alt=""/>Category</a></li>
+            </ul>
+            <hr/>
+            {% if request.user.is_authenticated %}
+                <h2>Your books</h2>
+                <ul>
+                    <li><a href=""><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>
+                    <li><a href=""><img src="{% static 'img/side_menu_fav.png' %}" alt=""/>Favorite reads</a></li>
+                    <li><a href=""><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>
+                </ul>
+                <hr/>
+                <h2>Shelves</h2>
+                <ul>
+                    <li><a href=""><img src="{% static 'img/side_menu_shlv.png' %}" alt=""/>Your shelves</a></li>
                 </ul>
             {% endif %}
         </div>
-
+        <div class="col-lg-8 center_content">
+            <div>
+                {% block main %}{% endblock %}
+            </div>
+        </div>
+        <div class="col-lg-2 right_side_menu">
+            <h2>Recent Post</h2>
+            {% for recent_post in recent_posts %}
+                <a href="{{ recent_post.get_absolute_url }}">{{ recent_post.title }}</a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
 <footer>
     <div class="container">
-        {% page_menu "pages/menus/footer.html" %}
-
         <div class="row">
             <p class="site-info text-center">
-                &copy; 2014 Sikh National Archives of Canada
+                &copy; 2015 Sikh National Archives of Canada
                 <span class="separator">|</span>
                 Site by <a href="http://paulwhippconsulting.com" alt="Paul Whipp Consulting">PWC</a>
             </p>
         </div>
     </div>
 </footer>
-
 {% include "includes/footer_scripts.html" %}
+
+<script type="text/javascript">
+    $(window).load(function() {
+        $('#slider').nivoSlider();
+    });
+</script>
 
 </body>
 </html>

@@ -14,6 +14,7 @@ class BookAdmin(admin.ModelAdmin):
                                     'contributor',
                                     'reference',
                                     'num_copies',
+                                    'cover',
                                     ('published', 'num_pages'),
                                     ('scanned', 'ebook'))}),
                  ('WebData', {'classes': ('collapse-closed',),

@@ -74,6 +74,7 @@ class Book(RichText, Displayable):
     scanned = models.BooleanField(default=False)
     scanned_start_page = models.IntegerField(default=0)
     ebook = models.BooleanField(default=False)
+    cover = models.FileField(upload_to='cover/', default=None, blank=True, null=True)
     search_fields = ('title', 'creator__name', 'content')
 
     def get_absolute_url(self):

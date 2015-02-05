@@ -1,4 +1,5 @@
-{% extends "pages/richtextpage.html" %}
+{#{% extends "pages/richtextpage.html" %}#}
+{% extends 'base.html' %}
 {% load staticfiles mezzanine_tags %}
 
 {% block meta_title %}Sikh National Archives of Canada{% endblock %}
@@ -10,10 +11,62 @@
 
 {% block main %}
     {{ block.super }}
-    <h2>Recent scans</h2>
-    {% for book in recent_scans %}
-        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">
-        <img style="margin: 10px;" src="{{ book.thumbnail_url }}" alt="{{ book.title }} cover image" />
-        </a>
-    {% endfor %}
+    {#    <h1>{% block title %}{% endblock %}</h1>#}
+    <div class="main_slider">
+        <div id="slider" class="nivoSlider">
+            <img src="{% static 'img/1.jpg'%}" data-thumb="images/1.jpg" alt="" />
+            <img src="{% static 'img/2.jpg'%}" data-thumb="images/2.jpg" alt="" />
+            <img src="{% static 'img/3.jpg'%}" data-thumb="images/3.jpg" alt="" data-transition="slideInLeft" />
+            <img src="{% static 'img/4.jpg'%}" data-thumb="images/4.jpg" alt=""/>
+            <img src="{% static 'img/5.jpg'%}" data-thumb="images/5.jpg" alt=""/>
+        </div>
+
+    </div>
+    <hr/>
+    <a class="left_arrow"> << </a>
+    <a class="right_arrow"> >> </a>
+
+
+    <h1>Recent scans</h1>
+
+    <div id="books_slide">
+        <div class="recent_scans">
+            {% for book in recent_scans %}
+                <a style="margin-right: 19px;" href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">
+                    {% if book.cover %}
+                        <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="{{ book.title }} cover image" />
+                    {% else %}
+                        <div class="book_cover_index"></div>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div style="width: 750px; height: 250px;"></div>
+
+
+    <script>
+        $(document).ready(function(){
+            var slider = $('.recent_scans');
+            var n = 7;
+            if(n>6){
+                right_click = 1;
+                left_click = 0;
+            }
+            $('.left_arrow').click(function () {
+                if(left_click > 0){
+                    $('.recent_scans').animate({left: '+='+290}, 800);
+                    left_click--;
+                    right_click++;
+                }
+            });
+            $('.right_arrow').click(function () {
+                if(right_click > 0){
+                    $('.recent_scans').animate({left: '-='+290}, 800);
+                    left_click++;
+                    right_click--;
+                }
+            });
+        });
+    </script>
 {% endblock %}

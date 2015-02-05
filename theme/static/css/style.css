@@ -1,0 +1,197 @@
+body {
+    background: #f6f6f6;
+    font: normal 14px/14px Ubuntu;
+    color: #575757;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #dddddd;
+}
+
+.clearfix {
+  clear: both;
+  width: 100%;
+  height: 0;
+}
+
+/* Top Menu */
+.top_menu {
+    background: #ffffff !important;
+    padding-top: 10px;
+}
+    .logo_title {
+        color: #31b77a;
+    }
+    .logo_title:hover {
+        text-decoration: none;
+        color: #51d89b;
+    }
+    .search_panel {
+    }
+        .search_panel input {
+            border: 0 !important;
+        }
+        .search_panel input[type="submit"] {
+            display: none;
+        }
+        /*.search_panel input[type="text"]:focus {*/
+            /*outline: none !important;*/
+        /*}*/
+
+    .auth {
+        margin-top: 10px;
+    }
+    .update_lnk {
+        display: inline-block;
+        border-right: 1px solid #dddddd;
+        width: 60px;
+        height: 35px;
+        line-height: 35px;
+        color: #32B77A;
+        text-decoration: underline;
+    }
+        .update_lnk:hover{
+            text-decoration: none;
+            color: #32B77A;
+        }
+    .login_lnk {
+        color: #32B77A;
+        text-decoration: underline;
+    }
+        .login_lnk:hover {
+            text-decoration: none;
+            color: #32B77A;
+        }
+
+    .logout_lnk {
+        margin-left: 15px;
+        color: #B1B1B1;
+        text-decoration: underline;
+    }
+        .logout_lnk:hover {
+            text-decoration: none;
+            color: #808080;
+        }
+
+
+    .reg_lnk {
+        display: inline-block;
+        width: 100px;
+        height: 35px;
+        line-height: 35px;
+        background: #32B77A;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        text-align: center;
+        color: #ffffff;
+        margin-right: 5px;
+    }
+    .reg_lnk:hover{
+        text-decoration: none;
+        color: #ffffff;
+        background: #51d89b;
+    }
+
+.main_content {
+    margin-top: 50px;
+}
+
+/* Left side */
+.left_side_menu {
+}
+    .left_side_menu h2 {
+        text-transform: uppercase;
+        color: #a5a5a5;
+        font-size: 14px;
+        font-weight: bold;
+        padding-bottom: 10px;
+    }
+    .left_side_menu ul li {
+        list-style: none;
+        margin-left: -25px;
+    }
+
+    .left_side_menu a {
+        display: inline-block;
+        width: 150px;
+        height: 35px;
+        text-decoration: none;
+        color: inherit;
+        padding-left: 10px;
+        line-height: 35px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+    }
+    .left_side_menu a:hover {
+        background: #e7e7e7;
+        padding-left: 10px;
+    }
+    .left_side_menu img {
+        margin-right: 5px;
+    }
+
+.center_content {
+}
+    .center_content h1 {
+        color: #6c6c6c;
+        font-size: 21px;
+        font-weight: normal;
+    }
+    .center_content .slider {
+        width: 100%;
+        height: 200px;
+        border: solid #000000;
+    }
+
+.right_side_menu {
+
+}
+    .right_side_menu a {
+        color: #32B77A;
+        text-decoration: underline;
+    }
+
+    .right_side_menu h2 {
+        text-transform: uppercase;
+        color: #a5a5a5;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+
+.recent_scans {
+    width: 1000px;
+    overflow:  hidden;
+    position: relative;
+}
+
+#books_slide {
+    width: 750px;
+    height: 230px;
+    position: absolute;
+    overflow: hidden;
+}
+
+.book_cover {
+    margin-top: 18px;
+}
+
+    .book_cover p {
+        position: absolute;
+        color: #ffffff;
+        width: 100px;
+        left: 50px;
+        top: 50px;
+        font: normal 10px/10px Times;
+    }
+
+.book_cover_index {
+    background: url("../img/cover-green.jpg") no-repeat;
+    width: 127px;
+    height: 192px;
+    position: absolute;
+}
