@@ -91,12 +91,16 @@ class Book(RichText, Displayable):
         """
         return url for cover thumbnail (not available image url if none)
         :return: url path string
+
+        updated: returning None instead. If scanned thumbnail is not available
+        making custom css cover
         """
         pathname = self.thumbnail_path
         if os.path.exists(pathname):
             return settings.BOOKS_URL + self.identifier + '/' + self.identifier + '_cover_thumbnail.jpg'
         else:
-            return settings.BOOKS_NO_COVER_IMAGE
+            # return settings.BOOKS_NO_COVER_IMAGE
+            return None
 
 # Override inherited verbose content name
 Book._meta.get_field('content').help_text = 'Brief description of the books content for searching and web display'

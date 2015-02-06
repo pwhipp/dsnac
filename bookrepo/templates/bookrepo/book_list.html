@@ -10,12 +10,22 @@
         {% for book in books %}
             <div class="single">
                 <div>
-                    {% if book.cover %}
-                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""/></a>
+                    {% if book.thumbnail_url %}
+                        <img src="{{ book.thumbnail_url }}" alt=""/>
                     {% else %}
-                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
-                        <div class="single_no_cover_title">{{ book.title }}</div>
+                        {% if book.cover == 'no_cover.jpg' %}
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                            <div class="single_no_cover_title">{{ book.title }}</div>
+                        {% else %}
+                            {% if book.cover %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""/></a>
+                            {% else %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                                <div class="single_no_cover_title">{{ book.title }}</div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
+
                 </div>
                 <div class="all_books_title">
                     {{ book.title|slice:'50'}} <br/>

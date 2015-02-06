@@ -32,16 +32,30 @@
         <div class="recent_scans">
             {% for book in recent_scans %}
                 <div class="single_book_slide">
-                    {% if book.cover %}
-                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt="" width="127" height="192"/></a>
+                    {% if book.thumbnail_url %}
+                        <img src="{{ book.thumbnail_url }}" alt=""/>
                     {% else %}
-                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
-                        <div class="no_cover_title">
-                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                            <b>{{ book.creator }}</b>
-                        </div>
+                        {% if book.cover == 'no_cover.jpg' %}
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                            <div class="no_cover_title">
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
+                                <b>{{ book.creator }}</b>
+                            </div>
+                        {% else %}
+                            {% if book.cover %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt="" width="127" height="192"/></a>
+                            {% else %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                                <div class="no_cover_title">
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
+                                    <b>{{ book.creator }}</b>
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
-                <div class="single_book_title">{{ book.title }}</div>
+
+
+                    <div class="single_book_title">{{ book.title }}</div>
                 </div>
             {% endfor %}
         </div>
@@ -53,7 +67,7 @@
     <script>
         $(document).ready(function(){
             var n = 7;
-{#            fixme with book count#}
+            {#            fixme with book count#}
             if(n>6){
                 right_click = 3;
                 left_click = 0;
