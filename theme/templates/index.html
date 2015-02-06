@@ -33,7 +33,7 @@
             {% for book in recent_scans %}
                 <div class="single_book_slide">
                     {% if book.thumbnail_url %}
-                        <img src="{{ book.thumbnail_url }}" alt=""/>
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt=""/></a>
                     {% else %}
                         {% if book.cover == 'no_cover.jpg' %}
                             <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
