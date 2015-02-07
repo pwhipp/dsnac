@@ -58,13 +58,13 @@
 
 <div class="navbar navbar-default navbar-fixed-top top_menu" role="navigation">
     <div class="container">
-        <div class="col-lg-4"><img class="pull-left" src="{% static 'theme/images/logo.png' %}" alt="{{ settings.SITE_TITLE }}" />
+        <div class="col-lg-4 col-xs-12"><img class="pull-left" src="{% static 'theme/images/logo.png' %}" alt="{{ settings.SITE_TITLE }}" />
             <p class="navbar-brand"><a class="logo_title" href="/">{{ settings.SITE_TITLE }}</a></p></div>
-        <div class="col-lg-3 search_panel">
+        <div class="col-lg-3 hidden-xs search_panel">
             {% search_form %}
         </div>
         {# cabinet #}
-        <div class="col-lg-offset-2 col-lg-3 auth">
+        <div class="col-lg-offset-2 col-lg-3 hidden-xs auth">
             {% if request.user.is_authenticated %}
                 Welcome, <a class="update_lnk" href="{% url "profile_update" %}">{{ request.user|username_or:"email" }}</a>  <a class="logout_lnk" href="{% url 'logout' %}">Logout</a>
             {% else %}
@@ -75,7 +75,8 @@
 </div>
 
 
-<div class="container main_content">
+<div class="container-full">
+
     {% nevercache %}
         {% if messages %}
             <div class="messages">
@@ -89,44 +90,42 @@
         {% endif %}
     {% endnevercache %}
 
-    <div class="row">
-        <div class="col-lg-2 left_side_menu">
-            <h2>Browse</h2>
+    <div class="col-lg-2 col-xs-12 left_side_menu">
+        <h2>Browse</h2>
+        <ul>
+            <li><a href="{% url 'bookrepo_list' %}"><img src="{% static 'img/side_menu_tb.png' %}" alt=""/>Top books</a></li>
+            <li><a href="{% url 'haystack_search' %}"><img src="{% static 'img/side_menu_disc.png' %}" alt=""/>Discover</a></li>
+            <li><a href=""><img src="{% static 'img/side_menu_cat.png' %}" alt=""/>Category</a></li>
+        </ul>
+        <hr/>
+        {% if request.user.is_authenticated %}
+            <h2>Your books</h2>
             <ul>
-                <li><a href="{% url 'bookrepo_list' %}"><img src="{% static 'img/side_menu_tb.png' %}" alt=""/>Top books</a></li>
-                <li><a href="{% url 'haystack_search' %}"><img src="{% static 'img/side_menu_disc.png' %}" alt=""/>Discover</a></li>
-                <li><a href=""><img src="{% static 'img/side_menu_cat.png' %}" alt=""/>Category</a></li>
+                <li><a href=""><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>
+                <li><a href=""><img src="{% static 'img/side_menu_fav.png' %}" alt=""/>Favorite reads</a></li>
+                <li><a href=""><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>
             </ul>
             <hr/>
-            {% if request.user.is_authenticated %}
-                <h2>Your books</h2>
-                <ul>
-                    <li><a href=""><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>
-                    <li><a href=""><img src="{% static 'img/side_menu_fav.png' %}" alt=""/>Favorite reads</a></li>
-                    <li><a href=""><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>
-                </ul>
-                <hr/>
-                <h2>Shelves</h2>
-                <ul>
-                    <li><a href=""><img src="{% static 'img/side_menu_shlv.png' %}" alt=""/>Your shelves</a></li>
-                </ul>
-                <a class="create_shelf" href="">Create a Shelf</a>
-            {% endif %}
-        </div>
-        <div class="col-lg-8 center_content">
-            <div>
-                {% block main %}{% endblock %}
-            </div>
-        </div>
-        <div class="col-lg-2 right_side_menu">
-            <h2>Recent Posts</h2>
-            {% for recent_post in recent_posts %}
-                <a href="{{ recent_post.get_absolute_url }}">{{ recent_post.title }}</a> <br/>
-            {% endfor %}
+            <h2>Shelves</h2>
+            <ul>
+                <li><a href=""><img src="{% static 'img/side_menu_shlv.png' %}" alt=""/>Your shelves</a></li>
+            </ul>
+            <a class="create_shelf" href="">Create a Shelf</a>
+        {% endif %}
+    </div>
+    <div class="col-lg-8 col-xs-12 center_content">
+        <div>
+            {% block main %}{% endblock %}
         </div>
     </div>
+    <div class="col-lg-2 col-xs-12 right_side_menu">
+        <h2>Recent Posts</h2>
+        {% for recent_post in recent_posts %}
+            <a href="{{ recent_post.get_absolute_url }}">{{ recent_post.title }}</a> <br/>
+        {% endfor %}
+    </div>
 </div>
-
+<div class="clearfix"></div>
 <footer>
     <div class="container">
         <div class="row">

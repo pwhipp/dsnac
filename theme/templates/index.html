@@ -11,9 +11,8 @@
 
 {% block main %}
     {{ block.super }}
-    {#    <h1>{% block title %}{% endblock %}</h1>#}
     <div class="main_slider">
-        <div id="slider" class="nivoSlider">
+        <div id="slider" class="nivoSlider slider">
             <img src="{% static 'img/1.jpg'%}" data-thumb="images/1.jpg" alt="" />
             <img src="{% static 'img/2.jpg'%}" data-thumb="images/2.jpg" alt="" />
             <img src="{% static 'img/3.jpg'%}" data-thumb="images/3.jpg" alt="" data-transition="slideInLeft" />
@@ -61,7 +60,7 @@
         </div>
 
     </div>
-    <div style="width: 750px; height: 280px;"></div>
+    <div style="width: 750px; height: 380px;"></div>
 
 
     <script>

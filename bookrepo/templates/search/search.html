@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}Search inside our books{% endblock title %}
 {% block main %}
-    <form method="get" action=".">
-        <table>
-            <tr>
-                <th><label for="id_q">Search:</label></th>
-                <td><input style="width: 40em;" id="id_q" name="q" type="search" placeholder="Within book words or phrase"/></td>
-            </tr>
-            <tr>
-                <td>&nbsp;</td>
-                <td style="text-align: right">
-                    <input type="submit" value="Search">
-                </td>
-            </tr>
-        </table>
+    <h1>Search</h1>
+    <form action="." method="get">
+        <div class="col-lg-10">
+            <input style="width: 100%" id="id_q" name="q" type="search" placeholder="Within book words or phrase"/>
+        </div>
+        <div class="col-lg-2">
+            <input type="submit" class="btn btn-success" style="margin-top: -4px;" value="Search">
+        </div>
     </form>
+
+    <div class="clearfix"></div>
 
     {% if query %}
         <h3>Results</h3>
@@ -25,8 +22,8 @@
                     {{ result.object.book.title }} (Page {{ result.object.num }})
                 </a>
             </p>
-        {% empty %}
-            <p>No results found.</p>
+            {% empty %}
+            <h1>No results found.</h1>
         {% endfor %}
 
         {% if page.has_previous or page.has_next %}
