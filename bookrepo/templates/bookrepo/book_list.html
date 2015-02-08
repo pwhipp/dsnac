@@ -27,13 +27,14 @@
                     {% endif %}
 
                 </div>
-                <div class="all_books_title">
-                    {{ book.title|slice:'50'}} <br/>
-                </div>
-                <div class="all_books_author">{{ book.published }}</div>
+{#                <div class="all_books_title">#}
+{#                    {{ book.title|slice:'50'}}#}
+{#                </div>#}
+{#                <div class="all_books_author">{{ book.published }}</div>#}
             </div>
         {% endfor %}
     </div>
+    <div class="clearfix"></div>
 
     {% pagination_for books %}
 {% endblock main%}

@@ -6,19 +6,27 @@
     <div class="row">
         <div class="col-md-3">
             <div align="center">
-                {% if book.cover %}
-                    <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="{{ book.title }} cover image" />
+
+                {% if book.thumbnail_url %}
+                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt=""/></a>
                 {% else %}
-                    <div class="book_cover">
-                        <p>{{ book.title }}
-                            <br/>
-                            <br/>
-
+                    {% if book.cover == 'no_cover.jpg' %}
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                        <div class="no_cover_title detail">
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
                             <b>{{ book.creator }}</b>
-                        </p>
-
-                        <img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/>
-                    </div>
+                        </div>
+                    {% else %}
+                        {% if book.cover %}
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt="" width="127" height="192"/></a>
+                        {% else %}
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                            <div class="no_cover_title detail">
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
+                                <b>{{ book.creator }}</b>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
 
                 <hr>
