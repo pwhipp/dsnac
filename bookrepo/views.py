@@ -2,12 +2,13 @@ import os
 
 from django.http import HttpResponse, Http404
 from django.views.generic import TemplateView, DetailView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
 import bookrepo.models as bm
+from bookreader.models import BookHistory, Book, FavoriteBook
 
 
 class BookListView(TemplateView):
@@ -26,7 +27,25 @@ class BookListView(TemplateView):
 class BookDetailView(DetailView):
     model = bm.Book
 
+    def get(self, request, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        book_identifier = self.kwargs['book_identifier']
+        book = Book.objects.get(identifier=book_identifier)
+        context['book_identifier'] = self.kwargs['book_identifier']
+        try:
+            context['favorite'] = FavoriteBook.objects.get(book_identifier=book, user=self.request.user)
+        except:
+            context['favorite'] = None
+        return self.render_to_response(context)
+
     def get_object(self, queryset=None):
+        # Saves to user's history
+        book_identifier = self.kwargs['book_identifier']
+        book = Book.objects.get(identifier=book_identifier)
+        if self.request.user.is_authenticated():
+            if not BookHistory.objects.filter(book_identifier=book, user=self.request.user):
+                BookHistory.objects.create(book_identifier=book, user=self.request.user)
         return get_object_or_404(self.model, identifier=self.kwargs['book_identifier'])
 
 

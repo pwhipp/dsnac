@@ -34,6 +34,16 @@
                     <p><a href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}" class="btn btn-success">Read now</a></p>
                 {% endif %}
                 <p><a class="btn btn-success" href="{% url 'page' slug='borrowing' %}">Borrow now</a></p>
+                <div class="favorite_book">
+{#                    {% if favorite %}#}
+{#                        in your <a href="{% url 'bookfavorite_page' %}">favorites</a>#}
+{#                    {% else %}#}
+{#                        <a class='' href="/bookreader/favorite/{{ book.identifier }}/"> <span class="glyphicon glyphicon-star"></span> Add to Favorites</a>#}
+{#                        <a href="/bookreader/favorite/{{ book.identifier }}/" class="btn btn-xs btn-warning vote_up" id="favorite" data-id="{{ book.id }}"><span class="glyphicon glyphicon-star"></span> Add to favorites</a>#}
+{#                    {% endif %}#}
+                </div>
+
+
             </div>
         </div>
         <div class="col-md-9">
@@ -68,8 +78,33 @@
                     <th>Ebook</th>
                     <td>{% if book.ebook %}Yes{% else %}Not yet{% endif %}</td>
                 </tr>
+
                 </tbody>
             </table>
+            <div>
+                <span class='st_facebook' displayText='Share'></span>
+                <span class='st_twitter' displayText='Tweet'></span>
+                <span class='st_googleplus' displayText='Google +'></span>
+                <span class='st_fblike' displayText='Facebook Like'></span>
+            </div>
         </div>
     </div>
+
+    {#    <script>#}
+    {#                $(document).ready(function(){#}
+    {#                    $('#favorite').on('click', function(e){#}
+    {#                        e.preventDefault();#}
+    {#                        $.ajax({#}
+    {#                            type: "POST",#}
+    {#                            url: '/bookreader/favorite/' + $(this).data('id') + '/',#}
+    {#                            data: {'favorite': $(this).data('id')},#}
+    {#                            dataType: 'json',#}
+    {#                            success: function (data){#}
+    {#                                alert('ok');#}
+    {#                            }#}
+    {#                        });#}
+    {#                    });#}
+    {#                })#}
+    {#    </script>#}
+
 {% endblock main %}

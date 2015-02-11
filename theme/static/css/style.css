@@ -10,6 +10,8 @@ hr {
     background-color: #dddddd;
 }
 
+
+
 .clearfix {
   clear: both;
   width: 100%;
@@ -306,6 +308,11 @@ hr {
         background: #51d89b !important;
     }
 
-/*@media (max-width: 480px) {*/
-    /**/
-/*}*/
+.favorite_book a {
+    color: #32B77A;
+    text-decoration: underline;
+}
+.favorite_book a:hover{
+    text-decoration: none;
+    color: #32B77A;
+}

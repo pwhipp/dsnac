@@ -43,6 +43,7 @@
         <script src="{% static "js/bootstrap-extras.js" %}"></script>
 
         <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
+        <script src="{% static "js/csrf.js" %}"></script>
         {% block extra_js %}{% endblock %}
     {% endcompress %}
 
@@ -50,8 +51,8 @@
 <script src="{% static "js/html5shiv.js" %}"></script>
 <script src="{% static "js/respond.min.js" %}"></script>
 <![endif]-->
-{#    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>#}
-{#    <script type="text/javascript">stLight.options({publisher: "18654956-fa7e-4cb2-98ed-60d22479014b", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>#}
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript">stLight.options({publisher: "18654956-fa7e-4cb2-98ed-60d22479014b", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -103,11 +104,9 @@
         {% if request.user.is_authenticated %}
             <h2>Your books</h2>
             <ul>
-{#                <li><a href="{% url 'bookreading' %}"><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>#}
-                <li><a href=""><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>
+                <li><a href="{% url 'bookreading' %}"><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>
                 <li><a href=""><img src="{% static 'img/side_menu_fav.png' %}" alt=""/>Favorite reads</a></li>
-{#                <li><a href="{% url 'bookhistory' %}"><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>#}
-                <li><a href=""><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>
+                <li><a href="{% url 'bookhistory' %}"><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>
             </ul>
             <hr/>
             <h2>Shelves</h2>
