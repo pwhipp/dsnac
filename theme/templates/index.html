@@ -11,7 +11,7 @@
 
 {% block main %}
     {{ block.super }}
-    <div class="main_slider">
+    <div class="main_slider hidden-xs">
         <div id="slider" class="nivoSlider slider">
             <img src="{% static 'img/1.jpg'%}" data-thumb="images/1.jpg" alt="" />
             <img src="{% static 'img/2.jpg'%}" data-thumb="images/2.jpg" alt="" />
@@ -22,9 +22,10 @@
 
     </div>
     <hr/>
+
     <h1>Recent scans</h1>
     <a class="left_arrow glyphicon glyphicon-chevron-left"> </a>
-    <a class="right_arrow glyphicon glyphicon-chevron-right"> </a>
+    <a class="right_arrow glyphicon glyphicon-chevron-right hidden-xs"> </a>
     <div id="books_slide">
         <div class="recent_scans">
             {% for book in recent_scans %}
@@ -36,7 +37,7 @@
                             <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
                             <div class="no_cover_title">
                                 <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                                <b>{{ book.creator }}</b>
+                                <b class="hidden-xs">{{ book.creator }}</b>
                             </div>
                         {% else %}
                             {% if book.cover %}
@@ -45,20 +46,20 @@
                                 <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
                                 <div class="no_cover_title">
                                     <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                                    <b>{{ book.creator }}</b>
+                                    <b class="hidden-xs">{{ book.creator }}</b>
                                 </div>
                             {% endif %}
                         {% endif %}
                     {% endif %}
 
 
-                    <div class="single_book_title">{{ book.title }}</div>
+                    <div class="single_book_title hidden-xs">{{ book.title }}</div>
                 </div>
             {% endfor %}
         </div>
 
     </div>
-    <div style="width: 750px; height: 380px;"></div>
+    <div style="width: 100%; height: 380px;"></div>
 
 
     <script>

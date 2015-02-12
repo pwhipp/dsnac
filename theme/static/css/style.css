@@ -265,7 +265,7 @@ hr {
         color: #51d89b;
         text-decoration: none;
     }
-    
+
     .left_arrow {
         position: absolute;
         top: 505px;
@@ -315,4 +315,134 @@ hr {
 .favorite_book a:hover{
     text-decoration: none;
     color: #32B77A;
+}
+
+/* Small devices (tablets, 320px and up) */
+@media (max-width: 468px) {
+    #books_slide {
+        position: relative;
+        overflow: visible;
+        width: 100%;
+        height: 100%;
+    }
+    .recent_scans {
+        position: relative;
+        width: 100%;
+    }
+    .single_book_slide {
+        margin-bottom: 16px;
+    }
+    .no_cover_title {
+        position: relative;
+        top: -160px;
+    }
+
+    .logo_title {
+        font-size: 12px;
+    }
+    .reg_lnk {
+        height: 20px;
+        font-size: 10px;
+        line-height: 20px;
+        position: relative;
+        bottom: 27px;
+    }
+    .login_lnk {
+        font-size: 10px;
+        position: relative;
+        bottom: 27px;
+    }
+
+    .xs_or {
+        font-size: 10px;
+        position: relative;
+        bottom: 27px;
+    }
+    .auth {
+        margin-bottom: -20px;
+    }
+    .update_lnk {
+        font-size: 10px;
+        position: relative;
+        bottom: 27px;
+        border: 0;
+    }
+
+    .logout_lnk {
+        font-size: 10px;
+        position: relative;
+        bottom: 27px;
+    }
+    .container-full {
+        margin-top: 150px;
+    }
+
+/* fixed menu */
+.top_menu {
+    height: 150px;
+}
+}
+
+.small_menu {
+    position: absolute;
+    top: -30px;
+    right: 0;
+}
+
+.xs_menu {
+    color: #32B77A;
+    font-size: 20px;
+    position: absolute;
+    right: 0;
+}
+.xs_menu_items {
+    margin-top: 30px;
+}
+.xs_menu_items a {
+    color: #32B77A;
+}
+
+
+
+/* Small devices (tablets, 468px and up) */
+@media (max-width: 1024px) {
+
+    .logo_title {
+        font-size: 12px;
+    }
+    .reg_lnk {
+        height: 20px;
+        font-size: 10px;
+        line-height: 20px;
+        position: relative;
+        bottom: 27px;
+    }
+    .login_lnk {
+        font-size: 12px;
+        position: relative;
+        bottom: 27px;
+    }
+
+    .xs_or {
+        font-size: 12px;
+        position: relative;
+        bottom: 27px;
+    }
+    .auth {
+        margin-bottom: -20px;
+    }
+    .update_lnk {
+        font-size: 12px;
+        position: relative;
+        bottom: 27px;
+        border: 0;
+    }
+
+    .logout_lnk {
+        font-size: 12px;
+        position: relative;
+        bottom: 27px;
+    }
+
+
 }
