@@ -404,35 +404,35 @@ hr {
 
 
 
-/* Small devices (tablets, 468px and up) */
+/* Small devices (tablets, 1024 and up) */
 @media (max-width: 1024px) {
 
     .logo_title {
-        font-size: 12px;
+        font-size: 16px;
     }
     .reg_lnk {
         height: 20px;
-        font-size: 10px;
+        font-size: 14px;
         line-height: 20px;
         position: relative;
-        bottom: 27px;
+        bottom: 20px;
     }
     .login_lnk {
-        font-size: 12px;
+        font-size: 14px;
         position: relative;
-        bottom: 27px;
+        bottom: 20px;
     }
 
     .xs_or {
-        font-size: 12px;
+        font-size: 14px;
         position: relative;
-        bottom: 27px;
+        bottom: 20px;
     }
     .auth {
-        margin-bottom: -20px;
+        margin-top: 30px;
     }
     .update_lnk {
-        font-size: 12px;
+        font-size: 14px;
         position: relative;
         bottom: 27px;
         border: 0;
@@ -444,5 +444,24 @@ hr {
         bottom: 27px;
     }
 
+    #books_slide {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+    .recent_scans {
+        position: relative;
+        overflow: visible;
+        width: 100%;
+        height: 100%;
+    }
+    .no_cover_title {
+        position: relative;
+        top: -160px;
+    }
+    .single_book_slide {
+        margin-right: 35px;
+        margin-bottom: 20px;
+    }
 
 }

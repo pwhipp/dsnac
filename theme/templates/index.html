@@ -24,8 +24,8 @@
     <hr/>
 
     <h1>Recent scans</h1>
-    <a class="left_arrow glyphicon glyphicon-chevron-left"> </a>
-    <a class="right_arrow glyphicon glyphicon-chevron-right hidden-xs"> </a>
+    <a class="left_arrow glyphicon glyphicon-chevron-left hidden-md"> </a>
+    <a class="right_arrow glyphicon glyphicon-chevron-right hidden-xs hidden-md"> </a>
     <div id="books_slide">
         <div class="recent_scans">
             {% for book in recent_scans %}
@@ -53,7 +53,7 @@
                     {% endif %}
 
 
-                    <div class="single_book_title hidden-xs">{{ book.title }}</div>
+                    <div class="single_book_title hidden-xs hidden-md">{{ book.title }}</div>
                 </div>
             {% endfor %}
         </div>
