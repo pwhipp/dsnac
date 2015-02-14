@@ -43,7 +43,7 @@ class UsersHistory(UsersBooks):
         context = super(UsersHistory, self).get_context_data(**kwargs)
         br = BookHistory.objects.filter(user=self.request.user).values_list('book_identifier')
         context['books'] = Book.objects.filter(id__in=br)
-        context['title'] = 'Your History'
+        context['title'] = 'My History'
         return context
 
 
@@ -53,12 +53,12 @@ class UsersFavorite(UsersBooks):
         context = super(UsersFavorite, self).get_context_data(**kwargs)
         br = FavoriteBook.objects.filter(user=self.request.user).values_list('book_identifier')
         context['books'] = Book.objects.filter(id__in=br)
-        context['title'] = 'Your Favorites'
+        context['title'] = 'My Favorites'
         return context
 
 
-# def favorite_book(request, identifier):
-#     # if request.POST:
-#     #     book = Book.objects.get(identifier=identifier)
-#     #     FavoriteBook.objects.create(book_identifier=book, user=request.user)
-#         return redirect('bookrepo_detail', book_identifier=book.identifier)
+def favorite_book(request, book_identifier):
+    # if request.POST:
+        book = Book.objects.get(identifier=book_identifier)
+        FavoriteBook.objects.create(book_identifier=book, user=request.user)
+        return redirect('bookrepo_detail', book_identifier=book.identifier)

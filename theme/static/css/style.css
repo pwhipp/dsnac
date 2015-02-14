@@ -189,6 +189,7 @@ hr {
 
 .category {
     position: relative;
+    height: 243px;
 }
 
 .single_book_category {
@@ -198,7 +199,47 @@ hr {
     margin-right: 28px;
     margin-bottom: 10px;
     background: #ffffff;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+    -moz-box-shadow:    0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+    box-shadow:         0px 2px 5px 0px rgba(50, 50, 50, 0.25);
 }
+    .category_book_title {
+        font-size: 12px;
+        color: #575757;
+        padding-left: 2px;
+        overflow: hidden;
+        height: 24px;
+    }
+    .category_book_creator {
+        font-size: 12px;
+        color: darkgray;
+        padding-left: 2px;
+        overflow: hidden;
+        height: 24px;
+    }
+    .category_read_more {
+        background: #1aa1e1;
+        display: inline-block;
+        color: #ffffff;
+        font-weight: bold;
+        width: 85px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    .category_read_more:hover {
+        background: #168bc2;
+        text-decoration: none;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
 
 #books_slide {
     width: 1215px;

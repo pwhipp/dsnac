@@ -35,12 +35,12 @@
                 {% endif %}
                 <p><a class="btn btn-success" href="{% url 'page' slug='borrowing' %}">Borrow now</a></p>
                 <div class="favorite_book">
-{#                    {% if favorite %}#}
-{#                        in your <a href="{% url 'bookfavorite_page' %}">favorites</a>#}
-{#                    {% else %}#}
-{#                        <a class='' href="/bookreader/favorite/{{ book.identifier }}/"> <span class="glyphicon glyphicon-star"></span> Add to Favorites</a>#}
+                    {% if favorite %}
+                        in your <a href="{% url 'bookfavorite_page' %}">favorites</a>
+                    {% else %}
+                        <a class='' href="/bookreader/{{ book.identifier }}/favorite/"> <span class="glyphicon glyphicon-star"></span> Add to Favorites</a>
 {#                        <a href="/bookreader/favorite/{{ book.identifier }}/" class="btn btn-xs btn-warning vote_up" id="favorite" data-id="{{ book.id }}"><span class="glyphicon glyphicon-star"></span> Add to favorites</a>#}
-{#                    {% endif %}#}
+                    {% endif %}
                 </div>
 
 

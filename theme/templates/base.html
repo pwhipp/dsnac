@@ -84,8 +84,7 @@
                     <ul class="list-inline">
                         <li><a href="{% url 'bookrepo_list' %}">Top Books</a></li>
                         <li><a href="{% url 'haystack_search' %}">Discover</a></li>
-{#                        <li><a href="{% url 'bookrepo_subject_list' %}">Category</a></li>#}
-                        <li><a href="">Category</a></li>
+                        <li><a href="{% url 'bookrepo_subject_list' %}">Category</a></li>
                         <li><a href="{% url 'bookreading' %}">Reading</a></li>
                         <li><a href="{% url 'bookhistory' %}">History</a></li>
                         <li><a href="#">Favorite reads</a></li>
@@ -127,7 +126,7 @@
             <h2>Your books</h2>
             <ul>
                 <li><a href="{% url 'bookreading' %}"><img src="{% static 'img/side_menu_read.png' %}" alt=""/>Reading</a></li>
-                <li><a href=""><img src="{% static 'img/side_menu_fav.png' %}" alt=""/>Favorite reads</a></li>
+                <li><a href="{% url 'bookfavorite_page' %}"><img src="{% static 'img/side_menu_fav.png' %}" alt=""/>Favorite reads</a></li>
                 <li><a href="{% url 'bookhistory' %}"><img src="{% static 'img/side_menu_hist.png' %}" alt=""/>History</a></li>
             </ul>
             <hr/>

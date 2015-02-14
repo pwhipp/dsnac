@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load mezzanine_tags %}
-{% block meta_title %}{{ title }}{% endblock meta_title%}
-{% block title %}{{ title }}{% endblock title%}
+{% block meta_title %}Books in category{% endblock meta_title%}
+{% block title %}Books in category{% endblock title%}
 {% block main %}
-    <h1>{{ title }}</h1>
+    <h1>Books in category</h1>
 
 
     <div class="all_books">
         {% for book in books %}
             <div class="single">
-                <div style="height: 292px">
+                <div>
                     {% if book.thumbnail_url %}
                         <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt=""/></a>
                     {% else %}
@@ -27,13 +27,10 @@
                     {% endif %}
 
                 </div>
-                <div class="all_books_title">
-                    {{ book.title|slice:'50'}} <br/>
-                </div>
-                <div class="all_books_author">{{ book.published }}</div>
             </div>
         {% endfor %}
     </div>
+    <div class="clearfix"></div>
 
     {% pagination_for books %}
 {% endblock main%}

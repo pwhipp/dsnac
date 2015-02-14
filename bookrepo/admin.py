@@ -16,6 +16,7 @@ class BookAdmin(admin.ModelAdmin):
                                     'reference',
                                     'num_copies',
                                     'cover',
+                                    'book_type',
                                     ('published', 'num_pages'),
                                     ('scanned', 'ebook'))}),
                  ('WebData', {'classes': ('collapse-closed',),
@@ -32,3 +33,4 @@ admin.site.register(bm.Book, BookAdmin)
 admin.site.register(bm.Creator, admin.ModelAdmin)
 admin.site.register(bm.Contributor, admin.ModelAdmin)
 admin.site.register(bm.Subject, admin.ModelAdmin)
+admin.site.register(bm.MainSlider)

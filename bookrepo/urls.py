@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url("^/(?P<book_identifier>.+)/detail/$", bv.BookDetailView.as_view(), name="bookrepo_detail"),
     url("^/$", bv.BookListView.as_view(), name="bookrepo_list"),
 
-    url("^/subjects/", bv.BookSubjectListView.as_view(), name="bookrepo_subject_list"),
+    url("^/subjects/$", bv.BookSubjectListView.as_view(), name="bookrepo_subject_list"),
+    url("^/(?P<subject_identifier>.+)/subject/$", bv.subject_books, name="bookrepo_subject_detail"),
 
     (r'^/search/', include('haystack.urls')))

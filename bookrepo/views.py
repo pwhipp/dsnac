@@ -2,7 +2,7 @@ import os
 
 from django.http import HttpResponse, Http404
 from django.views.generic import TemplateView, DetailView
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
 from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
@@ -103,12 +103,20 @@ class BookSubjectListView(TemplateView):
         context = super(BookSubjectListView, self).get_context_data(**kwargs)
 
         context['subjects'] = bm.Subject.objects.all()
-        subjects = bm.Subject.objects.all()
-        for subj in subjects:
-            context['books'] = bm.Book.objects.filter(subject=subj)
-            # context['books'] = paginate(self.get_books(), self.request.GET.get("page", 1), 20, settings.MAX_PAGING_LINKS)
+        # subjects = bm.Subject.objects.all()
+        # for subj in subjects:
+        #     context['books'] = bm.Book.objects.filter(subject=subj)
+        # context['books'] = paginate(self.get_books(), self.request.GET.get("page", 1), 20, settings.MAX_PAGING_LINKS)
+        context['books'] = bm.Book.objects.all()
         return context
 
     @staticmethod
     def get_books():
         return bm.Book.objects.filter(subject=1)
+
+
+def subject_books(request, subject_identifier):
+    books = Book.objects.filter(subject_id=subject_identifier)
+    title = Book.objects.filter(subject_id=subject_identifier)[:1]
+    data = {'books': books, 'title': title}
+    return render(request, 'bookrepo/book_detail_subject.html', data)

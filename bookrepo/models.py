@@ -47,6 +47,13 @@ class Book(RichText, Displayable):
     """
     A particular edition of a book that is held in the library.
     """
+    TYPE_CHOICES = (
+        ('Book', 'Book'),
+        ('Magazine', 'Magazine'),
+        ('Document', 'Document'),
+        ('Audio', 'Audio'),
+        ('Video', 'Video'),
+    )
     identifier = models.CharField(
         max_length=32, unique=True,
         help_text='Unique identifier for this book edition - used as folder name for book related scan and OCR files')
@@ -75,6 +82,7 @@ class Book(RichText, Displayable):
     scanned_start_page = models.IntegerField(default=0)
     ebook = models.BooleanField(default=False)
     cover = models.FileField(upload_to='cover/', default=None, blank=True, null=True)
+    book_type = models.CharField(max_length=255, choices=TYPE_CHOICES, blank=True, null=True, default=None)
     search_fields = ('title', 'creator__name', 'content')
 
     def get_absolute_url(self):
@@ -166,3 +174,16 @@ class BookPage(models.Model):
 
     def get_in_book_url(self):
         return reverse("bookreader", args=(self.book.identifier, self.num))
+
+
+class MainSlider(models.Model):
+    title = models.CharField(max_length=100, verbose_name='Slide name')
+    image = models.FileField(upload_to='slider/')
+    annotation = models.TextField(verbose_name='annotation', blank=True, null=True, default=None)
+
+    class Meta:
+        verbose_name = 'Slider'
+        verbose_name_plural = 'slides'
+
+    def __unicode__(self):
+        return self.title

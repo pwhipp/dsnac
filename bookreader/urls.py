@@ -13,8 +13,8 @@ urlpatterns = patterns(
 
     url("^/reading/$", login_required(bv.UsersBooks.as_view()), name='bookreading'),
     url("^/history/$", login_required(bv.UsersHistory.as_view()), name='bookhistory'),
-    # url("^/favorite/(.*)/$", bv.favorite_book, name="bookfavorite"),
-    # url("^/favorite/$", login_required(bv.UsersFavorite.as_view()), name="bookfavorite_page"),
+    url("^/(?P<book_identifier>.+)/favorite/$", bv.favorite_book, name="bookfavorite"),
+    url("^/favorite/$", login_required(bv.UsersFavorite.as_view()), name="bookfavorite_page"),
 )
 
 

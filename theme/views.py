@@ -8,4 +8,5 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['recent_scans'] = bm.Book.objects.filter(scanned=True).order_by('-updated')[:10]
+        context['slides'] = bm.MainSlider.objects.all()
         return context
