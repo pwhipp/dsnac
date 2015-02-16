@@ -3,14 +3,6 @@
 {% block meta_title %}Book List{% endblock meta_title%}
 {% block title %}Book List{% endblock title%}
 {% block main %}
-
-    {#        {% for subject in subjects %}#}
-    {#            <h1>{{ subject }}</h1>#}
-    {#            {% for book in subject.book_set.all|slice:":10" %}#}
-    {#                {{ book }}<br/>#}
-    {#            {% endfor %}#}
-    {#        {% endfor %}#}
-
     {% for subject in subjects %}
         <div style="height: 290px; position:relative;">
             <h1>{{ subject }}</h1>
@@ -18,11 +10,7 @@
                 {% for book in subject.book_set.all|slice:":7" %}
                     <div class="single_book_category">
                         {% if book.thumbnail_url %}
-                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt=""/></a>
-                                <div class="no_cover_title">
-                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                                    <b>{{ book.creator }}</b>
-                                </div>
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="127" height="192"/></a>
                         {% else %}
                             {% if book.cover == 'no_cover.jpg' %}
                                 <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
