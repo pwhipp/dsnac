@@ -84,7 +84,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-{#                    <span class="glyphicon glyphicon-align-justify xs_menu"></span>#}
+                    {#                    <span class="glyphicon glyphicon-align-justify xs_menu"></span>#}
                 </a>
                 <div class="collapse menu xs_menu_items" id="menu">
                     <ul class="list-unstyled">
@@ -120,7 +120,8 @@
         {% endif %}
     {% endnevercache %}
 
-    <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs hidden-sm left_side_menu">
+    {#    <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs hidden-sm left_side_menu">#}
+    <div class="col-md-2 hidden-xs hidden-sm left_side_menu">
         <h2>Browse</h2>
         <ul>
             <li><a href="{% url 'bookrepo_list' %}"><img src="{% static 'img/side_menu_tb.png' %}" alt=""/>Top books</a></li>
@@ -143,12 +144,14 @@
             <a class="create_shelf" href="{% url 'bookshelf' %}">Create a Shelf</a>
         {% endif %}
     </div>
-    <div class="col-lg-8 col-md-8 col-sm-8 col-sm-offset-1 center_content">
+
+    {#    <div class="col-lg-8 col-md-8 col-sm-8 col-sm-offset-1 center_content">#}
+    <div class="col-md-8 center_content">
         <div>
             {% block main %}{% endblock %}
         </div>
     </div>
-    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 right_side_menu">
+    <div class="col-md-2 right_side_menu">
         <h2>Recent Posts</h2>
         {% for recent_post in recent_posts %}
             <a href="{{ recent_post.get_absolute_url }}">{{ recent_post.title }}</a> <br/>
