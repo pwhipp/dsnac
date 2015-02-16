@@ -1,11 +1,14 @@
+from random import randint
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.core import serializers
 
 from bookrepo.models import Book
 
-from bookreader.models import BookReading, BookHistory, FavoriteBook
+from bookreader.models import BookReading, BookHistory, FavoriteBook, BookShelf, UsersShelves
 
 
 class BookReaderView(TemplateView):
@@ -61,4 +64,52 @@ def favorite_book(request, book_identifier):
     # if request.POST:
         book = Book.objects.get(identifier=book_identifier)
         FavoriteBook.objects.create(book_identifier=book, user=request.user)
+        return redirect('bookrepo_detail', book_identifier=book.identifier)
+
+#
+# class UsersShelves(TemplateView):
+#     template_name = 'shelf.html'
+#     def get_context_data(self, **kwargs):
+#         context = super(UsersShelves, self).get_context_data(**kwargs)
+#         br = FavoriteBook.objects.filter(user=self.request.user).values_list('book_identifier')
+#         context['books'] = Book.objects.filter(id__in=br)
+#         context['title'] = 'My Shelf'
+#         return context
+#
+#     def post(self, request, *args, **kwargs):
+#         # a = self.request.get('shelf_name')
+#         # print a
+#         return HttpResponseRedirect(reverse('bookshelf'))
+
+
+def bookshelf(request):
+    if request.POST:
+        shelf_name = request.POST.get('shelf_name', '')
+        if shelf_name:
+            BookShelf.objects.create(name=shelf_name, user=request.user)
+        else:
+            shelf_name = 'MyBookShelf_%s' % randint(0, 99)
+            BookShelf.objects.create(name=shelf_name, user=request.user)
+
+        return HttpResponseRedirect(reverse('bookshelf'))
+    else:
+        books = BookShelf.objects.filter(user=request.user)
+        data = {'books': books}
+        return render(request, 'add_shelf.html', data)
+
+
+def my_shelves(request):
+    shelves = UsersShelves.objects.filter(user=request.user)
+    books_count = UsersShelves.objects.filter(user=request.user).count()
+    data = {'shelves': shelves, 'books_count': books_count}
+    return render(request, 'shelf.html', data)
+
+
+def add_book_bookshelf(request):
+    if request.POST:
+        book_id = request.POST.get('book', '')
+        shelf_id = request.POST.get('selectshelf', '')
+        shelf = BookShelf.objects.get(id=shelf_id)
+        book = Book.objects.get(id=book_id)
+        UsersShelves.objects.create(user=request.user, book=book, shelf=shelf)
         return redirect('bookrepo_detail', book_identifier=book.identifier)

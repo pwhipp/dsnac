@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load mezzanine_tags %}
+{% block meta_title %}{{ s.s.book.title }}{% endblock meta_title%}
+{% block title %}{{ s.s.book.title }}{% endblock title%}
+{% block main %}
+    
+    <h1>My book shelves <span class="badge">{{ books_count }}</span></h1>
+    {% if shelves %}
+    <div class="all_books">
+        {% for s in shelves %}
+            <div class="single">
+                <div style="height: 292px">
+                    {% if s.book.thumbnail_url %}
+                        <a href="{% url 'bookrepo_detail' book_identifier=s.book.identifier %}"><img src="{{ s.book.thumbnail_url }}" alt=""/></a>
+                    {% else %}
+                        {% if s.book.cover == 'no_cover.jpg' %}
+                            <a href="{% url 'bookrepo_detail' book_identifier=s.book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                            <div class="single_no_cover_title">{{ s.book.title }}</div>
+                        {% else %}
+                            {% if s.book.cover %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=s.book.identifier %}"><img src="{{ MEDIA_URL }}{{ s.book.cover }}" alt=""/></a>
+                            {% else %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=s.book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
+                                <div class="single_no_cover_title">{{ s.book.title }} <br/> <b>{{ s.book.creator }}</b></div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+                <div class="all_books_title">
+                    {{ s.book.title|slice:'50'}} <br/>
+
+                </div>
+                <div class="all_books_author">{{ s.shelf }}: {{ s.added }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <i>There is no books yet. You can <a href="{% url 'bookshelf' %}">create you owm shelf</a> and add books to it</i>
+    {% endif %}
+    <div class="clearfix"></div>    
+
+
+{% endblock main %}

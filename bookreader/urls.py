@@ -15,6 +15,9 @@ urlpatterns = patterns(
     url("^/history/$", login_required(bv.UsersHistory.as_view()), name='bookhistory'),
     url("^/(?P<book_identifier>.+)/favorite/$", bv.favorite_book, name="bookfavorite"),
     url("^/favorite/$", login_required(bv.UsersFavorite.as_view()), name="bookfavorite_page"),
+    url("^/shelf/$", bv.bookshelf, name="bookshelf"),
+    url("^/shelf/add/$", bv.add_book_bookshelf, name="add_book_bookshelf"),
+    url("^/myshelves/$", bv.my_shelves, name="mybookshelf"),
 )
 
 

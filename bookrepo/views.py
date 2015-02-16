@@ -8,7 +8,7 @@ from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
 import bookrepo.models as bm
-from bookreader.models import BookHistory, Book, FavoriteBook
+from bookreader.models import BookHistory, Book, FavoriteBook, BookShelf, UsersShelves
 
 
 class BookListView(TemplateView):
@@ -35,8 +35,12 @@ class BookDetailView(DetailView):
         context['book_identifier'] = self.kwargs['book_identifier']
         try:
             context['favorite'] = FavoriteBook.objects.get(book_identifier=book, user=self.request.user)
+            context['usershelves'] = UsersShelves.objects.filter(user=self.request.user, book=book)
+            context['bookshelves'] = BookShelf.objects.filter(user=self.request.user)
         except:
             context['favorite'] = None
+            context['usershelves'] = None
+            context['bookshelves'] = None
         return self.render_to_response(context)
 
     def get_object(self, queryset=None):
