@@ -83,6 +83,12 @@ def favorite_book(request, book_identifier):
 
 
 def bookshelf(request):
+    """
+    Adding new bookshelves
+    if input is empty - it's generates name 'BookShelf_<random_num>'
+    :param request:
+    :return:
+    """
     if request.POST:
         shelf_name = request.POST.get('shelf_name', '')
         if shelf_name:
@@ -99,6 +105,11 @@ def bookshelf(request):
 
 
 def my_shelves(request):
+    """
+    list of books in one page
+    :param request:
+    :return:
+    """
     shelves = UsersShelves.objects.filter(user=request.user)
     books_count = UsersShelves.objects.filter(user=request.user).count()
     data = {'shelves': shelves, 'books_count': books_count}
@@ -106,10 +117,17 @@ def my_shelves(request):
 
 
 def add_book_bookshelf(request):
+    """
+    adding book to a selected bookshelf
+    :param request:
+    :return:
+    """
     if request.POST:
         book_id = request.POST.get('book', '')
         shelf_id = request.POST.get('selectshelf', '')
         shelf = BookShelf.objects.get(id=shelf_id)
         book = Book.objects.get(id=book_id)
-        UsersShelves.objects.create(user=request.user, book=book, shelf=shelf)
+        book_in_shelf = UsersShelves.objects.filter(user=request.user, book=book, shelf=shelf).count()
+        if not book_in_shelf:
+            UsersShelves.objects.create(user=request.user, book=book, shelf=shelf)
         return redirect('bookrepo_detail', book_identifier=book.identifier)

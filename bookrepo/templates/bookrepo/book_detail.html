@@ -45,17 +45,19 @@
                             {% if usershelves %}
                                 <span class="small">Book in your <a href="{% url 'mybookshelf' %}">shelf</a></span>
                             {% else %}
-                                <form action="{% url 'add_book_bookshelf'  %}" method="post">
-                                    {% csrf_token %}
-                                    <label class='small' for="selectshelf">Add this book to your bookshelf:</label>
-                                    <select id="selectshelf" name="selectshelf" class="form-control">
-                                        {% for bs in bookshelves %}
-                                            <option value="{{ bs.id }}">{{ bs }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <input type="hidden" name="book" value="{{ book.id }}"/>
-                                    <button class="btn btn-xs btn-success">Add book</button>
-                                </form>
+                                {% if bookshelves %}
+                                    <form action="{% url 'add_book_bookshelf'  %}" method="post">
+                                        {% csrf_token %}
+                                        <label class='small' for="selectshelf">Add this book to your bookshelf:</label>
+                                        <select id="selectshelf" name="selectshelf" class="form-control">
+                                            {% for bs in bookshelves %}
+                                                <option value="{{ bs.id }}">{{ bs }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="hidden" name="book" value="{{ book.id }}"/>
+                                        <button class="btn btn-xs btn-success">Add book</button>
+                                    </form>
+                                {% endif %}
                             {% endif %}
                         </div>
                     {% endif %}

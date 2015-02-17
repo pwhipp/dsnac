@@ -33,14 +33,13 @@ class BookDetailView(DetailView):
         book_identifier = self.kwargs['book_identifier']
         book = Book.objects.get(identifier=book_identifier)
         context['book_identifier'] = self.kwargs['book_identifier']
+        context['bookshelves'] = BookShelf.objects.filter(user=self.request.user)
         try:
             context['favorite'] = FavoriteBook.objects.get(book_identifier=book, user=self.request.user)
             context['usershelves'] = UsersShelves.objects.filter(user=self.request.user, book=book)
-            context['bookshelves'] = BookShelf.objects.filter(user=self.request.user)
         except:
             context['favorite'] = None
             context['usershelves'] = None
-            context['bookshelves'] = None
         return self.render_to_response(context)
 
     def get_object(self, queryset=None):
