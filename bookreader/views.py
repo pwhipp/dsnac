@@ -110,7 +110,7 @@ def my_shelves(request):
     :param request:
     :return:
     """
-    shelves = UsersShelves.objects.filter(user=request.user)
+    shelves = UsersShelves.objects.filter(user=request.user).order_by('-added')
     books_count = UsersShelves.objects.filter(user=request.user).count()
     data = {'shelves': shelves, 'books_count': books_count}
     return render(request, 'shelf.html', data)
@@ -130,4 +130,4 @@ def add_book_bookshelf(request):
         book_in_shelf = UsersShelves.objects.filter(user=request.user, book=book, shelf=shelf).count()
         if not book_in_shelf:
             UsersShelves.objects.create(user=request.user, book=book, shelf=shelf)
-        return redirect('bookrepo_detail', book_identifier=book.identifier)
+        return redirect('mybookshelf')

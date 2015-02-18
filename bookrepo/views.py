@@ -33,7 +33,8 @@ class BookDetailView(DetailView):
         book_identifier = self.kwargs['book_identifier']
         book = Book.objects.get(identifier=book_identifier)
         context['book_identifier'] = self.kwargs['book_identifier']
-        context['bookshelves'] = BookShelf.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated():
+            context['bookshelves'] = BookShelf.objects.filter(user=self.request.user)
         try:
             context['favorite'] = FavoriteBook.objects.get(book_identifier=book, user=self.request.user)
             context['usershelves'] = UsersShelves.objects.filter(user=self.request.user, book=book)
