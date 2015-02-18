@@ -27,9 +27,11 @@ if settings.DEBUG:
 
 urlpatterns += patterns(
     '',
+    url(r'', include('social_auth.urls')),
     url("^$", HomeView.as_view(), name="home"),
     ("^bookreader", include(bookreader.urls)),
     ("^bookrepo", include(bookrepo.urls)),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}),
     ("^", include("mezzanine.urls")))+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error

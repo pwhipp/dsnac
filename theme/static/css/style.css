@@ -601,3 +601,239 @@ hr {
     }
 
 }
+
+
+.login_block {
+    width: 728px;
+    height:210px;
+    margin: 0 auto;
+    background: #ffffff;
+    margin-bottom: 20px;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+    -moz-box-shadow:    0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+    box-shadow:         0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+
+}
+    .login_block .social {
+        width: 347px;
+    }
+    .login_block .header {
+        font-weight: bold;
+        margin-top: 10px;
+        padding-left: 20px;
+    }
+    .login_block .float_left {
+        float: left;
+    }
+    .login_block .divider {
+        background: url("../img/login_or.png") no-repeat;
+        width: 31px;
+        height: 159px;
+        margin-top: 25px;
+    }
+
+
+/* Facebook */
+.login_buttons {
+    margin-left: 65px;
+    margin-top: 10px;
+}
+
+.login_buttons a {
+    color: #fff;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding-left: 7px;
+    line-height: 38px;
+}
+
+.login_buttons a:hover {
+    text-decoration: none;
+}
+
+.fb-icon-bg {
+	background: #354f88;
+	height: 37px;
+	margin: 0 0 -37px 0;
+	width: 41px;
+}
+
+.fb-icon-bg:after {
+  content: url('../img/fb-icon.png');
+  display: block;
+  /*padding: 9px 10px 5px 15px;*/
+}
+
+.fb-bg {
+	background: #3b5998;
+	display: block;
+	height: 37px;
+	margin: 0 0 15px 41px;
+	width: 166px;
+    color: #fff;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding-left: 3px;
+    line-height: 40px;
+}
+
+.fb-bg a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.fb-bg:after {
+	color: #fff;
+	/*content: "sign in with facebook";*/
+	font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+	height: 37px;
+	left: 3%;
+	position: relative;
+	text-transform: uppercase;
+	top: 22%;
+	width: 41px;
+}
+
+.fb-bg:hover{
+  cursor: pointer;
+    background: #354f88;
+}
+
+.fb-bg:active{
+  background: #354f88;
+}
+
+
+/* Twitter */
+.twi-icon-bg:after {
+  content: url('../img/tw-icon.png');
+  display: block;
+  /*padding: 11px 10px 6px 11px;*/
+}
+
+.twi-icon-bg {
+	background: #40a2d1;
+	height: 37px;
+	margin: 0 0 -37px 0;
+	width: 41px;
+}
+
+.twi-bg {
+	background: #45b0e3;
+	height: 37px;
+	margin: 0 0 15px 41px;
+	width: 166px;
+}
+
+.twi-bg:after {
+	color: #fff;
+	/*content: "sign in with twitter";*/
+	font-family: 'Ubuntu', sans-serif;
+	height: 37px;
+    font-size: 12px;
+  left: 3%;
+	position: relative;
+  text-transform: uppercase;
+	top: 22%;
+  width: 41px;
+}
+
+.twi-bg:hover {
+  cursor: pointer;
+    background: #40a2d1;
+}
+
+.twi-bg:active {
+  background: #40a2d1;
+}
+
+/* Google+ */
+.g-icon-bg:after {
+  content: url('../img/g-icon.png');
+  display: block;
+  /*padding: 11px 10px 6px 13px;*/
+}
+
+.g-icon-bg {
+	background: #ce3e26;
+	height: 37px;
+	margin: 0 0 -37px 0;
+	width: 41px;
+}
+
+.g-bg {
+	background: #de4c34;
+	height: 37px;
+	margin-left: 41px;
+	width: 166px;
+}
+
+.g-bg:after {
+	color: #fff;
+	/*content: "sign in with google+";*/
+	font-family: 'Ubuntu', sans-serif;
+    font-size: 12px;
+	height: 37px;
+	left: 3%;
+	position: relative;
+	text-transform: uppercase;
+	top: 22%;
+	width: 41px;
+}
+
+.g-bg:hover {
+  cursor: pointer;
+    background: #ce3e26;
+}
+
+.g-bg:active {
+  background: #ce3e26;
+}
+
+.login-form {
+    height: 145px;
+    /*border: 1px solid #000000;*/
+    margin-left: 30px;
+    width: 250px;
+    margin-top: 10px;
+}
+
+.login-form input[type="text"], input[type="password"] {
+    width: 210px;
+    height: 25px;
+    border: 1px solid lightgray;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+.login-create {
+    margin-left: 30px;
+}
+
+.login-create a {
+    color: #101010;
+    text-decoration: none;
+}
+.login-create a:hover {
+    text-decoration: underline;
+}
+.login-submit {
+    width: 90px;
+    height: 20px;
+    background: #757583;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    text-transform: uppercase;
+    border: 0;
+    margin-top: -5px;
+    font-size: 12px;
+    line-height: 20px;
+}

@@ -1,0 +1,60 @@
+{% extends "accounts/account_form.html" %}
+{% load i18n future %}
+
+{% block main %}
+
+    {% if request.user.is_authenticated %}
+        <p>{% trans "You're already logged in. If you'd like to log in as a different user, you'll need to log out first." %}</p>
+    {% else %}
+
+        <section class="login_block">
+            <div class="float_left social">
+                <div class="header">Connect with your Preferred Social Account</div>
+                <div class="login_buttons">
+                    <div class="fb-icon-bg"></div>
+                    <div class="fb-bg">
+                        <a href="{% url 'socialauth_begin' 'facebook' %}">sign in with facebook</a>
+                    </div>
+                </div>
+                <div class="login_buttons">
+                    <div class="twi-icon-bg"></div>
+                    <div class="twi-bg">
+                        <a href="{% url 'socialauth_begin' 'twitter' %}">sign in with twitter</a>
+                    </div>
+                </div>
+                <div class="login_buttons">
+                    <div class="g-icon-bg"></div>
+                    <div class="g-bg">
+                        <a href="{% url 'socialauth_begin' 'google-oauth2' %}">sign in with google+</a>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+
+            <div class="float_left divider"></div>
+
+            <div class="float_left">
+                <div class="header">Sign-in with Username</div>
+                <div class="login-form">
+                    <form method="post">
+                        {% csrf_token %}
+                        <label for="id_username">Username</label>
+                        <input type="text" id="id_username" name="username"/>
+                        <label for="id_password">Password</label>
+                        <input id="id_password" name="password" type="password">
+                        <input class="login-submit" type="submit" value="login">
+                    </form>
+                </div>
+                {% url "signup" as signup_url %}
+                {% url "mezzanine_password_reset" as password_reset_url %}
+                {% url "profile_update" as profile_update_url %}
+
+                <div class="login-create"><a href="{{ password_reset_url }}?next={{ profile_update_url }}">Forgotten Password?</a> | <a href="{{ signup_url }}?next={{ next }}">Create a New Account</a></div>
+            </div>
+
+        </section>
+
+{#        {{ block.super }}#}
+    {% endif %}
+
+{% endblock %}

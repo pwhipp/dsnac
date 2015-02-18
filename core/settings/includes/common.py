@@ -44,7 +44,27 @@ TEMPLATE_LOADERS = (
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader")
 
-AUTHENTICATION_BACKENDS = ("mezzanine.core.auth_backends.MezzanineBackend",)
+AUTHENTICATION_BACKENDS = (
+    "mezzanine.core.auth_backends.MezzanineBackend",
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social_auth.backends.google.GoogleBackend',
+    'social_auth.backends.yahoo.YahooBackend',
+    'social_auth.backends.browserid.BrowserIDBackend',
+    'social_auth.backends.contrib.linkedin.LinkedinBackend',
+    'social_auth.backends.contrib.disqus.DisqusBackend',
+    'social_auth.backends.contrib.livejournal.LiveJournalBackend',
+    'social_auth.backends.contrib.orkut.OrkutBackend',
+    'social_auth.backends.contrib.foursquare.FoursquareBackend',
+    'social_auth.backends.contrib.github.GithubBackend',
+    'social_auth.backends.contrib.live.LiveBackend',
+    'social_auth.backends.contrib.skyrock.SkyrockBackend',
+    'social_auth.backends.contrib.yahoo.YahooOAuthBackend',
+    'social_auth.backends.contrib.readability.ReadabilityBackend',
+    'social_auth.backends.OpenIDBackend',
+)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -115,7 +135,8 @@ INSTALLED_APPS = (
     "mezzanine.galleries",
     "mezzanine.accounts",
     'bookreader',
-    'bookrepo')
+    'bookrepo',
+    'social_auth')
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
@@ -131,6 +152,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "mezzanine.conf.context_processors.settings",
     "mezzanine.pages.context_processors.page",
+    'social_auth.context_processors.social_auth_by_name_backends',
+    'social_auth.context_processors.social_auth_backends',
+    'social_auth.context_processors.social_auth_by_type_backends',
+    'social_auth.context_processors.social_auth_login_redirect',
 )
 
 # List of middleware classes to use. Order is important; in the request phase,
@@ -214,6 +239,44 @@ DATABASES = {
         "PORT": "",
     }
 }
+# https://console.developers.google.com/project/third-being-859/apiui/credential?clientType#
+
+TWITTER_CONSUMER_KEY         = 'rj3AxmjrcWT06n0sbCj5GdSr4'
+TWITTER_CONSUMER_SECRET      = 'lwFInmiSRHcOtqOYRxkvEDCJuEsFfHK7qMY332zWM12IOeAW6B'
+FACEBOOK_APP_ID              = '343039815906340'
+FACEBOOK_API_SECRET          = 'cc4e0a2fdd6f8bf379f1d53820bbf1bb'
+LINKEDIN_CONSUMER_KEY        = ''
+LINKEDIN_CONSUMER_SECRET     = ''
+ORKUT_CONSUMER_KEY           = ''
+ORKUT_CONSUMER_SECRET        = ''
+GOOGLE_CONSUMER_KEY          = ''
+GOOGLE_CONSUMER_SECRET       = ''
+GOOGLE_OAUTH2_CLIENT_ID      = '947939126600-e51bfah35mnuodbb7obsjfgt2a3pflh1.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET  = 'WOaPOc_R6jpMBMIJc67WY6ef'
+FOURSQUARE_CONSUMER_KEY      = ''
+FOURSQUARE_CONSUMER_SECRET   = ''
+VK_APP_ID                    = ''
+VK_API_SECRET                = ''
+LIVE_CLIENT_ID               = ''
+LIVE_CLIENT_SECRET           = ''
+SKYROCK_CONSUMER_KEY         = ''
+SKYROCK_CONSUMER_SECRET      = ''
+YAHOO_CONSUMER_KEY           = ''
+YAHOO_CONSUMER_SECRET        = ''
+READABILITY_CONSUMER_SECRET  = ''
+
+# LOGIN_URL          = '/login-form/'
+# LOGIN_REDIRECT_URL = '/logged-in/'
+# LOGIN_ERROR_URL    = '/login-error/'
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/another-login-url/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/new-users-redirect-url/'
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/new-association-redirect-url/'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/account-disconnected-redirect-url/'
+SOCIAL_AUTH_BACKEND_ERROR_URL = '/new-error-url/'
+
+SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
+SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
