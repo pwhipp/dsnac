@@ -265,6 +265,8 @@ YAHOO_CONSUMER_KEY           = ''
 YAHOO_CONSUMER_SECRET        = ''
 READABILITY_CONSUMER_SECRET  = ''
 
+SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
+
 # LOGIN_URL          = '/login-form/'
 LOGIN_REDIRECT_URL = '/'
 # LOGIN_ERROR_URL    = '/login-error/'
