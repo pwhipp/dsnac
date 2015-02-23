@@ -837,3 +837,36 @@ hr {
     font-size: 12px;
     line-height: 20px;
 }
+
+.search_results {
+    width: 80%;
+    height: 100%;
+}
+    .search_results_pic {
+        float: left;
+        width: 10%;
+        height: 100px;
+        padding: 20px;
+    }
+
+    .search_results_title {
+        float: left;
+        width: 80%;
+        height: 100px;
+        padding: 30px;
+        overflow: hidden;
+        color: #000000;
+    }
+        .search_results_book {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .search_results_year {
+            color: darkgray;
+        }
+    .search_results_read {
+        float: left;
+        width: 10%;
+        height: 100px;
+        padding: 30px;
+    }

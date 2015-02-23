@@ -3,11 +3,15 @@
 {% block main %}
     <h1>Search</h1>
     <form action="." method="get">
-        <div class="col-lg-10">
+        <div class="col-lg-8">
             <input style="width: 100%" id="id_q" name="q" type="search" placeholder="Within book words or phrase"/>
         </div>
         <div class="col-lg-2">
             <input type="submit" class="btn btn-success" style="margin-top: -4px;" value="Search">
+        </div>
+        <div class="col-lg-2">
+            <input type="checkbox" id="ebook"/>
+            <label for="ebook">Only show e-books</label>
         </div>
     </form>
 
@@ -15,17 +19,37 @@
 
     {% if query %}
         <h3>Results</h3>
+        <div class="search_results">
+            {% for result in page.object_list %}
+                <div class="search_results_pic">
+                    {% if book.thumbnail_url %}
+                        <a href="{{ result.object.get_in_book_url }}"><img src="{{ result.object.book.thumbnail_url }}" alt="" width="50" height="70"/></a>
+                    {% else %}
+                        {% if book.cover == 'no_cover.jpg' %}
+                            <a href="{{ result.object.get_in_book_url }}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt="" width="50" height="70"/></a>
+                        {% else %}
+                            {% if book.cover %}
+                                <a href="{{ result.object.get_in_book_url }}"><img src="{{ MEDIA_URL }}{{ result.object.book.cover }}" width="50" height="70" alt=""/></a>
+                            {% else %}
+                                <a href="{{ result.object.get_in_book_url }}"><img src="{{ STATIC_URL }}img/cover-green.jpg" width="50" height="70" alt=""/></a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
 
-        {% for result in page.object_list %}
-            <p>
-                <a href="{{ result.object.get_in_book_url }}">
-                    {{ result.object.book.title }} (Page {{ result.object.num }})
-                </a>
-            </p>
-            {% empty %}
-            <h1>No results found.</h1>
-        {% endfor %}
-
+                </div>
+                <div class="search_results_title">
+                    <span class="search_results_book">{{ result.object.book.title }} (Page {{ result.object.num }})</span> by <span style="font-size: 16px">{{ result.object.book.creator }}</span>
+                    <p class="search_results_year">{{ result.object.book.published }}</p>
+                </div>
+                <div class="search_results_read">
+                    <a href="{{ result.object.get_in_book_url }}"><img src="{{ STATIC_URL }}img/read_button.png" alt=""/></a>
+                    <br/>
+                    <a href="{{ result.object.get_in_book_url }}">Read</a>
+                </div>
+                {% empty %}
+                <h1>No results found.</h1>
+            {% endfor %}
+        </div>
         {% if page.has_previous or page.has_next %}
             <div>
                 {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
