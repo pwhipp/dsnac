@@ -18,7 +18,7 @@
 
         {% for result in page.object_list %}
             <p>
-                <a href="{{ result.object.get_absolute_url }}">
+                <a href="{{ result.object.get_in_book_url }}">
                     {{ result.object.book.title }} (Page {{ result.object.num }})
                 </a>
             </p>
