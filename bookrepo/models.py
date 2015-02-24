@@ -10,6 +10,9 @@ from django.core.urlresolvers import reverse
 from mezzanine.core.models import RichText, Displayable
 from mezzanine.conf import settings
 
+import sys, zipfile, os, os.path
+import shutil
+
 
 class UniqueNamed(models.Model):
     name = models.CharField(max_length=512, unique=True)
@@ -80,11 +83,99 @@ class Book(RichText, Displayable):
         help_text="Number of physical copies held by the library")
     scanned = models.BooleanField(default=False)
     scanned_start_page = models.IntegerField(default=0)
+    ebook_file = models.FileField(upload_to=lambda instance, filename: '/'.join(['books/%s/%s_jp2' % (str(instance.identifier), str(instance.identifier)),  filename]),
+                                  null=True, blank=True, help_text='Only zip files accepted')
     ebook = models.BooleanField(default=False)
-    cover = models.FileField(upload_to='cover/', default=None, blank=True, null=True)
+    cover = models.ImageField(upload_to='cover/', default=None, blank=True, null=True)
     book_type = models.CharField(max_length=255, choices=TYPE_CHOICES, blank=True, null=True, default=None,
                                  verbose_name='Material Type')
     search_fields = ('title', 'creator__name', 'content')
+
+    def save(self, *args, **kwargs):
+        try:
+            if zipfile.is_zipfile(self.ebook_file):
+
+                zfobj = zipfile.ZipFile(self.ebook_file)
+                fullpath = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
+
+                jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
+                os.mkdir(os.path.join(jpg_path))
+
+                xml = ''' <metadata>
+                            <title>%s</title>
+                            <creator>%s</creator>
+                            <subject/>
+                            <subject/>
+                            <description/>
+                            <publisher/>
+                            <date>1906</date>
+                            <language/>
+                            <copyright-evidence-operator/>
+                            <possible-copyright-status/>
+                            <copyright-region/>
+                            <copyright-evidence/>
+                            <copyright-evidence-date/>
+                            <sponsor/>
+                            <contributor/>
+                            <scanningcenter/>
+                            <mediatype/>
+                            <collection/>
+                            <call_number/>
+                            <updatedate/>
+                            <updater/>
+                            <identifier>%s</identifier>
+                            <uploader/>
+                            <addeddate/>
+                            <publicdate/>
+                            <imagecount/>
+                            <ppi/>
+                            <camera/>
+                            <operator/>
+                            <scanner/>
+                            <scandate/>
+                            <foldoutcount/>
+                            <identifier-access>http://www.archive.org/details/punjab</identifier-access>
+                            <identifier-ark/>
+                            <bookplateleaf/>
+                            <curation/>
+                            <sponsordate/>
+                            <filesxml/>
+                            <collection/>
+                            <repub_state/>
+                        </metadata> ''' % (self.title, self.creator, self.identifier)
+
+                xml_path = os.path.join('%s/books/%s') % (settings.MEDIA_ROOT, self.identifier)
+                meta_file = '%s_meta.xml' % self.identifier
+                xml_file = open(os.path.join(xml_path, meta_file), 'wb')
+                xml_file.write(xml)
+                xml_file.close()
+
+                i = 0
+                for name in zfobj.namelist():
+                    i += 1
+                    # jp2_name = '%s_%s.jp2' % (str(self.identifier), i)
+                    jpg_name = '%s_%s.jpg' % (str(self.identifier), i)
+                    if name.endswith('/'):
+                        try:
+                            os.mkdir(os.path.join(fullpath, name))
+                        except:
+                            pass
+                    else:
+                        outfile = open(os.path.join(jpg_path, jpg_name), 'wb')
+                        outfile.write(zfobj.read(name))
+                        outfile.close()
+                        #
+                        # jp2file = open(os.path.join(fullpath, jp2_name), 'wb')
+                        # jp2file.write(zfobj.read(name))
+                        # jp2file.close()
+
+                super(Book, self).save(*args, **kwargs)
+            else:
+                return None
+        except:
+            super(Book, self).save(*args, **kwargs)
+        super(Book, self).save(*args, **kwargs)
+
 
     def get_absolute_url(self):
         return reverse("bookrepo_detail", args=(self.identifier,))

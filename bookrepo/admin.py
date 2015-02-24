@@ -17,6 +17,7 @@ class BookAdmin(admin.ModelAdmin):
                                     'num_copies',
                                     'cover',
                                     'book_type',
+                                    'ebook_file',
                                     ('published', 'num_pages'),
                                     ('scanned', 'ebook'))}),
                  ('WebData', {'classes': ('collapse-closed',),
