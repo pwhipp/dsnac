@@ -147,7 +147,7 @@ class Book(RichText, Displayable):
                 xml_path = os.path.join('%s/books/%s') % (settings.MEDIA_ROOT, self.identifier)
                 meta_file = '%s_meta.xml' % self.identifier
                 xml_file = open(os.path.join(xml_path, meta_file), 'wb')
-                xml_file.write(xml)
+                xml_file.write(str(xml))
                 xml_file.close()
 
                 i = 0
