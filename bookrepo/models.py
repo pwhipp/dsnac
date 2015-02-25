@@ -12,6 +12,8 @@ from mezzanine.conf import settings
 
 import sys, zipfile, os, os.path
 import shutil
+import PIL
+from PIL import Image
 
 
 class UniqueNamed(models.Model):
@@ -58,7 +60,7 @@ class Book(RichText, Displayable):
         ('Video', 'Video'),
     )
     identifier = models.CharField(
-        max_length=32, unique=True,
+        max_length=255, unique=True,
         help_text='Unique identifier for this book edition - used as folder name for book related scan and OCR files')
     creator = models.ForeignKey(
         Creator, null=True,
@@ -70,7 +72,7 @@ class Book(RichText, Displayable):
         Subject, null=True,
         help_text='The subject categorization used in the library')
     reference = models.CharField(
-        max_length=16, null=True,
+        max_length=255, null=True,
         help_text='Library reference number')
     published = models.CharField(
         max_length=32,
@@ -92,14 +94,10 @@ class Book(RichText, Displayable):
     search_fields = ('title', 'creator__name', 'content')
 
     def save(self, *args, **kwargs):
+
+
         try:
             if zipfile.is_zipfile(self.ebook_file):
-
-                zfobj = zipfile.ZipFile(self.ebook_file)
-                fullpath = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
-
-                jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
-                os.mkdir(os.path.join(jpg_path))
 
                 xml = ''' <metadata>
                             <title>%s</title>
@@ -134,7 +132,7 @@ class Book(RichText, Displayable):
                             <scanner/>
                             <scandate/>
                             <foldoutcount/>
-                            <identifier-access>http://www.archive.org/details/punjab</identifier-access>
+                            <identifier-access>http://www.archive.org/details/%s</identifier-access>
                             <identifier-ark/>
                             <bookplateleaf/>
                             <curation/>
@@ -142,19 +140,37 @@ class Book(RichText, Displayable):
                             <filesxml/>
                             <collection/>
                             <repub_state/>
-                        </metadata> ''' % (self.title, self.creator, self.identifier)
+                        </metadata> ''' % (self.title, self.creator, self.identifier, self.identifier)
 
                 xml_path = os.path.join('%s/books/%s') % (settings.MEDIA_ROOT, self.identifier)
+                if not os.path.exists(xml_path):
+                    os.makedirs(xml_path)
                 meta_file = '%s_meta.xml' % self.identifier
-                xml_file = open(os.path.join(xml_path, meta_file), 'wb')
+                xml_file = open(os.path.join(xml_path, meta_file), 'wb+')
                 xml_file.write(str(xml))
                 xml_file.close()
+                zfobj = zipfile.ZipFile(self.ebook_file)
+                fullpath = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
+                if not os.path.exists(fullpath):
+                    os.makedirs(fullpath)
+                # try:
+                #     os.mkdir(os.path.join(fullpath))
+                # except:
+                #     pass
 
+                jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
+                if not os.path.exists(jpg_path):
+                    os.makedirs(jpg_path)
+                # try:
+                #     os.mkdir(os.path.join(jpg_path))
+                # except:
+                #     pass
                 i = 0
                 for name in zfobj.namelist():
                     i += 1
-                    # jp2_name = '%s_%s.jp2' % (str(self.identifier), i)
-                    jpg_name = '%s_%s.jpg' % (str(self.identifier), i)
+
+                    jp2_name = '%s_%s.jp2' % (str(self.identifier), i)
+                    jpg_name = '%s_%s.jpg' % (str(self.identifier), '{0:04}'.format(i))
                     if name.endswith('/'):
                         try:
                             os.mkdir(os.path.join(fullpath, name))
@@ -164,10 +180,10 @@ class Book(RichText, Displayable):
                         outfile = open(os.path.join(jpg_path, jpg_name), 'wb')
                         outfile.write(zfobj.read(name))
                         outfile.close()
-                        #
-                        # jp2file = open(os.path.join(fullpath, jp2_name), 'wb')
-                        # jp2file.write(zfobj.read(name))
-                        # jp2file.close()
+
+                        jp2file = open(os.path.join(fullpath, jp2_name), 'w+')
+                        jp2file.write(zfobj.read(name))
+                        jp2file.close()
 
                 super(Book, self).save(*args, **kwargs)
             else:
