@@ -14,7 +14,9 @@ PAGE_MENU_TEMPLATES = (
 USE_SOUTH = True
 
 
-ADMINS = (('Paul Whipp', 'paul.whipp@gmail.com'),)
+ADMINS = (('Paul Whipp', 'paul.whipp@gmail.com'),
+            ('Alexey Dubnyak', 'adubnyak@gmail.com'),
+            )
 MANAGERS = ADMINS
 
 ALLOWED_HOSTS = ['sikhnationalarchives.com']
