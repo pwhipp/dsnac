@@ -41,6 +41,11 @@ class BookDetailView(DetailView):
         except:
             context['favorite'] = None
             context['usershelves'] = None
+        try:
+            context['reported'] = bm.Report.objects.get(user=self.request.user, book=book, fixed=False)
+        except:
+            context['reported'] = None
+
         return self.render_to_response(context)
 
     def get_object(self, queryset=None):
@@ -124,3 +129,11 @@ def subject_books(request, subject_identifier):
     title = Book.objects.filter(subject_id=subject_identifier)[:1]
     data = {'books': books, 'title': title}
     return render(request, 'bookrepo/book_detail_subject.html', data)
+
+
+def report_problem(request):
+    if request.POST:
+        book_id = request.POST.get('book', '')
+        book = Book.objects.get(id=book_id)
+        bm.Report.objects.create(user=request.user, book=book)
+        return redirect('bookrepo_detail', book_identifier=book.identifier)

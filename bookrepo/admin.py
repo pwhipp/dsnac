@@ -30,8 +30,13 @@ class BookAdmin(admin.ModelAdmin):
                                          'publish_date',
                                          'expiry_date')}))
 
+
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('user', 'fixed', 'added')
+
 admin.site.register(bm.Book, BookAdmin)
 admin.site.register(bm.Creator, admin.ModelAdmin)
 admin.site.register(bm.Contributor, admin.ModelAdmin)
 admin.site.register(bm.Subject, admin.ModelAdmin)
 admin.site.register(bm.MainSlider)
+admin.site.register(bm.Report, ReportAdmin)

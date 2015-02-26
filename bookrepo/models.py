@@ -15,6 +15,8 @@ import shutil
 import PIL
 from PIL import Image
 
+from mezzanine.accounts.views import User
+
 
 class UniqueNamed(models.Model):
     name = models.CharField(max_length=512, unique=True)
@@ -295,3 +297,13 @@ class MainSlider(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class Report(models.Model):
+    book = models.ForeignKey(Book)
+    user = models.ForeignKey(User)
+    added = models.DateField(auto_now_add=True)
+    fixed = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return str(self.user)
