@@ -53,3 +53,13 @@ class UsersShelves(models.Model):
 
     def __unicode__(self):
         return self.shelf
+
+
+class Report(models.Model):
+    book = models.ForeignKey(Book)
+    user = models.ForeignKey(User)
+    added = models.DateField(auto_now_add=True)
+    fixed = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return str(self.user)

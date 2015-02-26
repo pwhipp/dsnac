@@ -8,7 +8,7 @@ from django.core import serializers
 
 from bookrepo.models import Book
 
-from bookreader.models import BookReading, BookHistory, FavoriteBook, BookShelf, UsersShelves
+from bookreader.models import BookReading, BookHistory, FavoriteBook, BookShelf, UsersShelves, Report
 
 
 class BookReaderView(TemplateView):
@@ -131,3 +131,11 @@ def add_book_bookshelf(request):
         if not book_in_shelf:
             UsersShelves.objects.create(user=request.user, book=book, shelf=shelf)
         return redirect('mybookshelf')
+
+
+def report_problem(request):
+    if request.POST:
+        book_id = request.POST.get('book', '')
+        book = Book.objects.get(id=book_id)
+        Report.objects.create(user=request.user, book=book)
+        return redirect('bookrepo_detail', book_identifier=book.identifier)

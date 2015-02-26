@@ -60,15 +60,15 @@
                                 {% endif %}
                             {% endif %}
                         </div>
-{#                        {% if reported %}#}
-{#                            <p class="small">You've reported already</p>#}
-{#                        {% else %}#}
-{#                            <form action="{% url 'bookrepo_report' %}" method="POST">#}
-{#                                {% csrf_token %}#}
-{#                                <input type="hidden" name="book" value="{{ book.id }}">#}
-{#                                <button type="submit" class="btn btn-xs btn-danger" id="report"><span class="glyphicon glyphicon-warning-sign"></span> report a problem</button>#}
-{#                            </form>#}
-{#                        {% endif %}#}
+                        {% if reported %}
+                            <p class="small">Thanks for the report!</p>
+                        {% else %}
+                            <form action="{% url 'bookrepo_report' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="book" value="{{ book.id }}">
+                                <button type="submit" class="btn btn-xs btn-danger" id="report"><span class="glyphicon glyphicon-warning-sign"></span> report a problem</button>
+                            </form>
+                        {% endif %}
 
                     {% endif %}
                 </div>

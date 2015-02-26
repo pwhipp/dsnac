@@ -18,6 +18,7 @@ urlpatterns = patterns(
     url("^/shelf/$", bv.bookshelf, name="bookshelf"),
     url("^/shelf/add/$", bv.add_book_bookshelf, name="add_book_bookshelf"),
     url("^/myshelves/$", bv.my_shelves, name="mybookshelf"),
+    url("^/report/$", bv.report_problem, name="bookrepo_report"),
 )
 
 

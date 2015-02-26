@@ -8,7 +8,7 @@ from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
 import bookrepo.models as bm
-from bookreader.models import BookHistory, Book, FavoriteBook, BookShelf, UsersShelves
+from bookreader.models import BookHistory, Book, FavoriteBook, BookShelf, UsersShelves, Report
 
 
 class BookListView(TemplateView):
@@ -41,10 +41,10 @@ class BookDetailView(DetailView):
         except:
             context['favorite'] = None
             context['usershelves'] = None
-        # try:
-        #     context['reported'] = bm.Report.objects.get(user=self.request.user, book=book, fixed=False)
-        # except:
-        #     context['reported'] = None
+        try:
+            context['reported'] = Report.objects.get(user=self.request.user, book=book, fixed=False)
+        except:
+            context['reported'] = None
 
         return self.render_to_response(context)
 
@@ -130,10 +130,3 @@ def subject_books(request, subject_identifier):
     data = {'books': books, 'title': title}
     return render(request, 'bookrepo/book_detail_subject.html', data)
 
-
-def report_problem(request):
-    if request.POST:
-        book_id = request.POST.get('book', '')
-        book = Book.objects.get(id=book_id)
-        bm.Report.objects.create(user=request.user, book=book)
-        return redirect('bookrepo_detail', book_identifier=book.identifier)
