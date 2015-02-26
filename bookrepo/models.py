@@ -11,11 +11,8 @@ from mezzanine.core.models import RichText, Displayable
 from mezzanine.conf import settings
 
 import sys, zipfile, os, os.path
-import shutil
-import PIL
-from PIL import Image
 
-from mezzanine.accounts.views import User
+# from mezzanine.accounts.views import User
 
 
 class UniqueNamed(models.Model):

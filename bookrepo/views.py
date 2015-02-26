@@ -41,10 +41,10 @@ class BookDetailView(DetailView):
         except:
             context['favorite'] = None
             context['usershelves'] = None
-        try:
-            context['reported'] = bm.Report.objects.get(user=self.request.user, book=book, fixed=False)
-        except:
-            context['reported'] = None
+        # try:
+        #     context['reported'] = bm.Report.objects.get(user=self.request.user, book=book, fixed=False)
+        # except:
+        #     context['reported'] = None
 
         return self.render_to_response(context)
 
