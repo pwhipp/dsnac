@@ -66,9 +66,11 @@ def favorite_book(request, book_identifier):
         FavoriteBook.objects.create(book_identifier=book, user=request.user)
         return redirect('bookrepo_detail', book_identifier=book.identifier)
 
-#
+
+# fixme make a class based view
 # class UsersShelves(TemplateView):
 #     template_name = 'shelf.html'
+#
 #     def get_context_data(self, **kwargs):
 #         context = super(UsersShelves, self).get_context_data(**kwargs)
 #         br = FavoriteBook.objects.filter(user=self.request.user).values_list('book_identifier')
@@ -77,9 +79,10 @@ def favorite_book(request, book_identifier):
 #         return context
 #
 #     def post(self, request, *args, **kwargs):
-#         # a = self.request.get('shelf_name')
-#         # print a
-#         return HttpResponseRedirect(reverse('bookshelf'))
+#         a = request.POST.get('shelf_name', '')
+#         print a
+#         return self.get(request, *args, **kwargs)
+#         # return HttpResponseRedirect(reverse('bookshelf'))
 
 
 def bookshelf(request):
@@ -139,3 +142,18 @@ def report_problem(request):
         book = Book.objects.get(id=book_id)
         Report.objects.create(user=request.user, book=book)
         return redirect('bookrepo_detail', book_identifier=book.identifier)
+
+from django import forms
+from haystack.forms import SearchForm
+
+
+class EbookSearchForm(SearchForm):
+    q = forms.CharField(required=False)
+    ebook = forms.BooleanField(required=False)
+
+    def search(self):
+        sqs = super(EbookSearchForm, self).search()
+        if self.is_valid() and self.cleaned_data['ebook']:
+            sqs = sqs.filter(ebook=True)
+
+        return sqs
