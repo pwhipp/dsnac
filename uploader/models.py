@@ -1,4 +1,3 @@
-import zipfile
 from django.db import models
 from mezzanine.conf import settings
 import csv
@@ -8,6 +7,13 @@ from codecs import open
 
 
 class BulkUpload(models.Model):
+    """
+    Waiting for csv file, parse it and updating db.
+    Makes book_identifier like = 'asfasf1r' w/o slashes and spaces.
+    if exist:
+        don't add
+
+    """
     csv_file = models.FileField(upload_to='csv/', verbose_name='Upload a csv')
     uploaded = models.DateField(auto_now_add=True)
 
@@ -18,14 +24,10 @@ class BulkUpload(models.Model):
     def __unicode__(self):
         return str(self.uploaded)
 
-    # @staticmethod
-    def csv_parse(self, *args, **kwargs):
-        try:
-            dir = '%s/csv' % settings.MEDIA_ROOT
-            filename = '%s/%s' % (dir, str(self.csv_file))
-        except IOError:
-            dir = '%s' % settings.MEDIA_ROOT
-            filename = '%s/%s' % (dir, str(self.csv_file))
+    def save(self, *args, **kwargs):
+        super(BulkUpload, self).save(*args, **kwargs)
+        dir = '%s/' % settings.MEDIA_ROOT
+        filename = '%s/%s' % (dir, str(self.csv_file))
 
         reader = csv.reader(open(filename, 'rU', encoding='utf-7'), delimiter=',', quotechar='"')
         for row in reader:
@@ -56,6 +58,3 @@ class BulkUpload(models.Model):
                             book.published = row[3]
                             book.num_pages = row[5]
                             book.save()
-
-        # super(BulkUpload, self).save(*args, **kwargs)
-
