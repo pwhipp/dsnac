@@ -8,7 +8,7 @@ from django.core import serializers
 
 from bookrepo.models import Book
 
-from bookreader.models import BookReading, BookHistory, FavoriteBook, BookShelf, UsersShelves, Report
+from bookreader.models import BookReading, BookHistory, FavoriteBook, BookShelf, UsersShelves, Report, Reviews
 
 
 class BookReaderView(TemplateView):
@@ -157,3 +157,26 @@ class EbookSearchForm(SearchForm):
             sqs = sqs.filter(ebook=True)
 
         return sqs
+
+
+class ReviewView(TemplateView):
+    template_name = 'review.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReviewView, self).get_context_data(**kwargs)
+        context['book'] = Book.objects.get(identifier=kwargs.get('book_identifier'))
+        return context
+
+    def post(self, request, book_identifier):
+        rating = request.POST.get('star', '')
+        review = request.POST.get('review_text', '')
+        headline = request.POST.get('headline', '')
+        user = request.user
+        book = Book.objects.get(identifier=book_identifier)
+        try:
+            Reviews.objects.create(book_identifier=book, headline=headline, user=user, review=review, rating=rating)
+        except:
+            errors = 'Please fill all required fields'
+            data = {'errors': errors, 'book': book}
+            return render(request, 'review.html', data)
+        return redirect('bookrepo_detail', book_identifier=book.identifier)

@@ -123,6 +123,31 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Customer Reviews</h1>
+
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="review">
+                        <div class="stars_{{ review.rating }}"></div>
+                        <div class="reviews_headline">{{ review.headline }}</div>
+                        <div class="reviews_author">By {{ review.user }} in {{ review.added }}</div>
+                        <div>{{ review.review }}</div>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                There is no reviews yet
+            {% endif %}
+
+            <div>
+                <a class="btn btn-default" href="{% url 'review' book_identifier=book.identifier %}">Write a review</a>
+            </div>
+
+        </div>
+    </div>
+
     {#    <script>#}
     {#                $(document).ready(function(){#}
     {#                    $('#favorite').on('click', function(e){#}

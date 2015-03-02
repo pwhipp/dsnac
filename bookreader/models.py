@@ -63,3 +63,12 @@ class Report(models.Model):
 
     def __unicode__(self):
         return str(self.user)
+
+
+class Reviews(CommonUsersBooks):
+    rating = models.IntegerField()
+    review = models.TextField(default=0)
+    headline = models.CharField(max_length=255, default=0)
+
+    def __unicode__(self):
+        return str(self.book_identifier)

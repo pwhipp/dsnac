@@ -8,7 +8,7 @@ from mezzanine.conf import settings
 from mezzanine.utils.views import paginate
 
 import bookrepo.models as bm
-from bookreader.models import BookHistory, Book, FavoriteBook, BookShelf, UsersShelves, Report
+from bookreader.models import BookHistory, Book, FavoriteBook, BookShelf, UsersShelves, Report, Reviews
 
 
 class BookListView(TemplateView):
@@ -45,6 +45,7 @@ class BookDetailView(DetailView):
             context['reported'] = Report.objects.get(user=self.request.user, book=book, fixed=False)
         except:
             context['reported'] = None
+        context['reviews'] = Reviews.objects.filter(book_identifier=book)
 
         return self.render_to_response(context)
 
