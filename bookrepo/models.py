@@ -150,18 +150,9 @@ class Book(RichText, Displayable):
                 fullpath = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
                 if not os.path.exists(fullpath):
                     os.makedirs(fullpath)
-                # try:
-                #     os.mkdir(os.path.join(fullpath))
-                # except:
-                #     pass
-
                 jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
                 if not os.path.exists(jpg_path):
                     os.makedirs(jpg_path)
-                # try:
-                #     os.mkdir(os.path.join(jpg_path))
-                # except:
-                #     pass
                 i = 0
                 for name in zfobj.namelist():
                     i += 1
@@ -174,9 +165,9 @@ class Book(RichText, Displayable):
                         except:
                             pass
                     else:
-                        outfile = open(os.path.join(jpg_path, jpg_name), 'wb')
-                        outfile.write(zfobj.read(name))
-                        outfile.close()
+                        # outfile = open(os.path.join(jpg_path, jpg_name), 'wb')
+                        # outfile.write(zfobj.read(name))
+                        # outfile.close()
 
                         jp2file = open(os.path.join(fullpath, jp2_name), 'w+')
                         jp2file.write(zfobj.read(name))
