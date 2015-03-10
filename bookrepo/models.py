@@ -156,20 +156,15 @@ class Book(RichText, Displayable):
                 i = 0
                 for name in zfobj.namelist():
                     i += 1
-
                     jp2_name = '%s_%s.jp2' % (str(self.identifier), '{0:04}'.format(i))
-                    jpg_name = '%s_%s.jpg' % (str(self.identifier), '{0:04}'.format(i))
                     if name.endswith('/'):
                         try:
                             os.mkdir(os.path.join(fullpath, name))
                         except:
                             pass
                     else:
-                        # outfile = open(os.path.join(jpg_path, jpg_name), 'wb')
-                        # outfile.write(zfobj.read(name))
-                        # outfile.close()
-
-                        jp2file = open(os.path.join(fullpath, jp2_name), 'w+')
+                        print name
+                        jp2file = open(os.path.join(fullpath, name), 'w+')
                         jp2file.write(zfobj.read(name))
                         jp2file.close()
 
