@@ -157,7 +157,7 @@ class Book(RichText, Displayable):
                 for name in zfobj.namelist():
                     i += 1
 
-                    jp2_name = '%s_%s.jp2' % (str(self.identifier), i)
+                    jp2_name = '%s_%s.jp2' % (str(self.identifier), '{0:04}'.format(i))
                     jpg_name = '%s_%s.jpg' % (str(self.identifier), '{0:04}'.format(i))
                     if name.endswith('/'):
                         try:
