@@ -158,12 +158,12 @@ class Book(RichText, Displayable):
                     i += 1
                     jp2_name = '%s_%s.jp2' % (str(self.identifier), '{0:04}'.format(i))
                     if name.endswith('/'):
+                        pass
                         try:
                             os.mkdir(os.path.join(fullpath, name))
                         except:
                             pass
                     else:
-                        print name
                         jp2file = open(os.path.join(fullpath, name), 'w+')
                         jp2file.write(zfobj.read(name))
                         jp2file.close()
