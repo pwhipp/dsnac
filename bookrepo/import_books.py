@@ -96,9 +96,12 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
             num_leafs = int(xml.imagecount.text)
         else:
             # count them :(
-            num_leafs = len(os.listdir(os.path.join(
+            try:
+                num_leafs = len(os.listdir(os.path.join(
                 book_folder,
                 jp2_folder(book_identifier))))
+            except IOError:
+                pass
         return dict(
             identifier=book_identifier,
             title=get_text('title'),
