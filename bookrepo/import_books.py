@@ -101,7 +101,8 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
                 book_folder,
                 jp2_folder(book_identifier))))
             except:
-                num_leafs = int(xml.imagecount.text)
+                n = bm.Book.objects.get(identifier=book_identifier)
+                num_leafs = int(n.num_pages)
         return dict(
             identifier=book_identifier,
             title=get_text('title'),
