@@ -233,8 +233,11 @@ def _add_thumbnail_covers():
         thumbnail_path = book.thumbnail_path
         if os.path.exists(thumbnail_path):
             return thumbnail_path
-        book_page, _ = BookPage.objects.get_or_create(book=book, num=thumbnail_page[book.identifier])
-        subprocess.call(['convert', book_page.jpg_pathname, '-resize', '150x225', thumbnail_path])
+        try:
+            book_page, _ = BookPage.objects.get_or_create(book=book, num=thumbnail_page[book.identifier])
+            subprocess.call(['convert', book_page.jpg_pathname, '-resize', '150x225', thumbnail_path])
+        except:
+            pass
         return thumbnail_path
 
     return [add_thumbnail_cover(b) for b in bm.Book.objects.filter(scanned=True)]
