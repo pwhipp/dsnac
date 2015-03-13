@@ -100,7 +100,7 @@ def get_book_meta_data(book_folder=None, book_identifier=None):
                 num_leafs = len(os.listdir(os.path.join(
                 book_folder,
                 jp2_folder(book_identifier))))
-            except IOError:
+            except:
                 pass
         return dict(
             identifier=book_identifier,
