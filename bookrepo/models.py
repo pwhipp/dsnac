@@ -91,72 +91,16 @@ class Book(RichText, Displayable):
     search_fields = ('title', 'creator__name', 'content')
 
     def save(self, *args, **kwargs):
-
-
         try:
             if zipfile.is_zipfile(self.ebook_file):
-
-                xml = ''' <metadata>
-                            <title>%s</title>
-                            <creator>%s</creator>
-                            <subject/>
-                            <subject/>
-                            <description/>
-                            <publisher/>
-                            <date>1906</date>
-                            <language/>
-                            <copyright-evidence-operator/>
-                            <possible-copyright-status/>
-                            <copyright-region/>
-                            <copyright-evidence/>
-                            <copyright-evidence-date/>
-                            <sponsor/>
-                            <contributor/>
-                            <scanningcenter/>
-                            <mediatype/>
-                            <collection/>
-                            <call_number/>
-                            <updatedate/>
-                            <updater/>
-                            <identifier>%s</identifier>
-                            <uploader/>
-                            <addeddate/>
-                            <publicdate/>
-                            <imagecount/>
-                            <ppi/>
-                            <camera/>
-                            <operator/>
-                            <scanner/>
-                            <scandate/>
-                            <foldoutcount/>
-                            <identifier-access>http://www.archive.org/details/%s</identifier-access>
-                            <identifier-ark/>
-                            <bookplateleaf/>
-                            <curation/>
-                            <sponsordate/>
-                            <filesxml/>
-                            <collection/>
-                            <repub_state/>
-                        </metadata> ''' % (self.title, self.creator, self.identifier, self.identifier)
-
-                xml_path = os.path.join('%s/books/%s') % (settings.MEDIA_ROOT, self.identifier)
-                if not os.path.exists(xml_path):
-                    os.makedirs(xml_path)
-                meta_file = '%s_meta.xml' % self.identifier
-                xml_file = open(os.path.join(xml_path, meta_file), 'wb+')
-                xml_file.write(str(xml))
-                xml_file.close()
                 zfobj = zipfile.ZipFile(self.ebook_file)
-                fullpath = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
+                fullpath = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, self.identifier)
                 if not os.path.exists(fullpath):
                     os.makedirs(fullpath)
                 jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
                 if not os.path.exists(jpg_path):
                     os.makedirs(jpg_path)
-                i = 0
                 for name in zfobj.namelist():
-                    i += 1
-                    jp2_name = '%s_%s.jp2' % (str(self.identifier), '{0:04}'.format(i))
                     if name.endswith('/'):
                         pass
                         try:
@@ -167,8 +111,12 @@ class Book(RichText, Displayable):
                         jp2file = open(os.path.join(fullpath, name), 'w+')
                         jp2file.write(zfobj.read(name))
                         jp2file.close()
-
                 super(Book, self).save(*args, **kwargs)
+                # Removing zip file
+                jp2_path = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
+                for name in os.listdir(jp2_path):
+                    if name.endswith('zip'):
+                        os.remove(os.path.join(jp2_path, name))
             else:
                 return None
         except:
