@@ -219,7 +219,10 @@ thumbnail_page = {
     u'shorthistoryofsi00paynrich': 7,
     u'sikhsofpunjab00parruoft': 9,
     u'talesofpunjabtol00stee': 9,
-    u'workingplanforch00punjrich': 1}
+    u'workingplanforch00punjrich': 1,
+    u'digranthorholysc00trumuoft': 11,
+    u'bhaimahngaorsear00khal': 5,
+    }
 
 
 def _add_thumbnail_covers():
