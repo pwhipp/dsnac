@@ -139,7 +139,8 @@ INSTALLED_APPS = (
     'bookreader',
     'bookrepo',
     'social_auth',
-    'uploader',)
+    'uploader')
+    # 'djcelery')
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
@@ -244,31 +245,14 @@ DATABASES = {
 }
 # https://console.developers.google.com/project/third-being-859/apiui/credential?clientType#
 
-TWITTER_CONSUMER_KEY         = 'rj3AxmjrcWT06n0sbCj5GdSr4'
-TWITTER_CONSUMER_SECRET      = 'lwFInmiSRHcOtqOYRxkvEDCJuEsFfHK7qMY332zWM12IOeAW6B'
-FACEBOOK_APP_ID              = '343039815906340'
-FACEBOOK_API_SECRET          = 'cc4e0a2fdd6f8bf379f1d53820bbf1bb'
-LINKEDIN_CONSUMER_KEY        = ''
-LINKEDIN_CONSUMER_SECRET     = ''
-ORKUT_CONSUMER_KEY           = ''
-ORKUT_CONSUMER_SECRET        = ''
-GOOGLE_CONSUMER_KEY          = ''
-GOOGLE_CONSUMER_SECRET       = ''
-GOOGLE_OAUTH2_CLIENT_ID      = '947939126600-e51bfah35mnuodbb7obsjfgt2a3pflh1.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET  = 'WOaPOc_R6jpMBMIJc67WY6ef'
-FOURSQUARE_CONSUMER_KEY      = ''
-FOURSQUARE_CONSUMER_SECRET   = ''
-VK_APP_ID                    = ''
-VK_API_SECRET                = ''
-LIVE_CLIENT_ID               = ''
-LIVE_CLIENT_SECRET           = ''
-SKYROCK_CONSUMER_KEY         = ''
-SKYROCK_CONSUMER_SECRET      = ''
-YAHOO_CONSUMER_KEY           = ''
-YAHOO_CONSUMER_SECRET        = ''
-READABILITY_CONSUMER_SECRET  = ''
+TWITTER_CONSUMER_KEY = 'rj3AxmjrcWT06n0sbCj5GdSr4'
+TWITTER_CONSUMER_SECRET = 'lwFInmiSRHcOtqOYRxkvEDCJuEsFfHK7qMY332zWM12IOeAW6B'
+FACEBOOK_APP_ID = '343039815906340'
+FACEBOOK_API_SECRET = 'cc4e0a2fdd6f8bf379f1d53820bbf1bb'
+GOOGLE_OAUTH2_CLIENT_ID = '947939126600-e51bfah35mnuodbb7obsjfgt2a3pflh1.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'WOaPOc_R6jpMBMIJc67WY6ef'
 
-SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'
+SESSION_SERIALIZER ='django.contrib.sessions.serializers.PickleSerializer'
 
 # LOGIN_URL          = '/login-form/'
 LOGIN_REDIRECT_URL = '/'
@@ -282,6 +266,11 @@ SOCIAL_AUTH_BACKEND_ERROR_URL = '/'
 
 SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
+#
+# import djcelery
+# djcelery.setup_loader()
+#
+# CELERY_IMPORTS = ('bookrepo.tasks')
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where

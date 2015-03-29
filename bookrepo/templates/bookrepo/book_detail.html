@@ -1,168 +1,119 @@
-{% extends 'base.html' %}
+{% extends 'base_page.html' %}
 {% load mezzanine_tags %}
 {% block meta_title %}{{ book.title }}{% endblock meta_title%}
-{% block title %}{{ book.title }}{% endblock title%}
+{% block title %}{{ book.title }}11{% endblock title%}
 {% block main %}
-    <div class="row">
-        <div class="col-md-3">
-            <div align="center">
 
-                {% if book.thumbnail_url %}
-                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt=""/></a>
+    <section>
+        <div class="col-lg-4 book-cover">
+            {% if book.thumbnail_url %}
+                <img src="{{ book.thumbnail_url }}" alt=""/>
+            {% else %}
+                {% if book.cover == 'no_cover.jpg' %}
+                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/></a>
                 {% else %}
-                    {% if book.cover == 'no_cover.jpg' %}
-                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
-                        <div class="no_cover_title detail">
-                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                            <b>{{ book.creator }}</b>
-                        </div>
+                    {% if book.cover %}
+                        <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="">
                     {% else %}
-                        {% if book.cover %}
-                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt="" width="127" height="192"/></a>
-                        {% else %}
-                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
-                            <div class="no_cover_title detail">
-                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                                <b>{{ book.creator }}</b>
-                            </div>
-                        {% endif %}
+                        <img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/>
                     {% endif %}
                 {% endif %}
-
-                <hr>
-                {% if book.scanned or book.ebook %}
-                    <p><a href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}" class="btn btn-success">Read now</a></p>
-                {% endif %}
-                <p><a class="btn btn-success" href="{% url 'page' slug='borrowing' %}">Borrow now</a></p>
-                <div class="favorite_book">
-                    {% if request.user.is_authenticated %}
-                        {% if favorite %}
-                            <span class="small">Book in your <a href="{% url 'bookfavorite_page' %}">favorites</a></span>
-                        {% else %}
-                            <a class='' href="/bookreader/{{ book.identifier }}/favorite/"> <span class="glyphicon glyphicon-star"></span> Add to Favorites</a>
-                        {% endif %}
-                        <div style="width: 100px; padding-top: 20px;">
-                            {% if usershelves %}
-                                <span class="small">Book in your <a href="{% url 'mybookshelf' %}">shelf</a></span>
-                            {% else %}
-                                {% if bookshelves %}
-                                    <form action="{% url 'add_book_bookshelf'  %}" method="post">
-                                        {% csrf_token %}
-                                        <label class='small' for="selectshelf">Add this book to your bookshelf:</label>
-                                        <select id="selectshelf" name="selectshelf" class="form-control">
-                                            {% for bs in bookshelves %}
-                                                <option value="{{ bs.id }}">{{ bs }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <input type="hidden" name="book" value="{{ book.id }}"/>
-                                        <button class="btn btn-xs btn-success">Add book</button>
-                                    </form>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                        {% if reported %}
-                            <p class="small">Thanks for the report!</p>
-                        {% else %}
-                            <form action="{% url 'bookrepo_report' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="book" value="{{ book.id }}">
-                                <button type="submit" class="btn btn-xs btn-danger" id="report"><span class="glyphicon glyphicon-warning-sign"></span> report a problem</button>
-                            </form>
-                        {% endif %}
-
-                    {% endif %}
-                </div>
-
-
-
-
-
-            </div>
+            {% endif %}
         </div>
-        <div class="col-md-9">
+        <div class="col-lg-6 book-title">
             <h1>{{ book.title }}</h1>
-            <table class="table table-striped">
-                <tbody>
+        </div>
+        <div class="col-lg-6 book-data">
+            <table class="table table-striped ">
                 <tr>
-                    <th>Creator</th>
+                    <td>Creator</td>
                     <td>{{ book.creator }}</td>
                 </tr>
                 <tr>
-                    <th>Published</th>
+                    <td>Published</td>
                     <td>{{ book.published }}</td>
                 </tr>
                 <tr>
-                    <th>Description</th>
-                    <td>{{ book.content|safe }}</td>
+                    <td>Description </td>
+                    <td class="book-description">{{ book.content|safe }}</td>
                 </tr>
                 <tr>
-                    <th>Pages</th>
+                    <td>Pages</td>
                     <td>{{ book.pages }}</td>
                 </tr>
                 <tr>
-                    <th>Copies</th>
+                    <td>Copies</td>
                     <td>{{ book.num_copies }}</td>
                 </tr>
                 <tr>
-                    <th>Scanned</th>
+                    <td>Scanned</td>
                     <td>{% if book.scanned %}Yes{% else %}Not yet{% endif %}</td>
                 </tr>
                 <tr>
-                    <th>Ebook</th>
+                    <td>Ebook</td>
                     <td>{% if book.ebook %}Yes{% else %}Not yet{% endif %}</td>
                 </tr>
-
-                </tbody>
             </table>
-            <div>
-                <span class='st_facebook' displayText='Share'></span>
-                <span class='st_twitter' displayText='Tweet'></span>
-                <span class='st_googleplus' displayText='Google +'></span>
-                <span class='st_fblike' displayText='Facebook Like'></span>
-            </div>
         </div>
-    </div>
+    </section>
+    <div class="clearfix"></div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Customer Reviews</h1>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-offset-2 col-lg-4 book-buttons">
+                    <a class="read-now" href="">read now</a>
+                    <a class="borrow" href="">borrow</a>
+                    {% if favorite %}
+                        <a class="favorite" href="{% url 'bookfavorite_page' %}" title="In yours favorites"><i class="glyphicon glyphicon-ok"></i></a>
+                    {% else %}
+                        <a class="favorite" href="/bookreader/{{ book.identifier }}/favorite/" title="Add to favorites">&#9733;</a>
+                    {% endif %}
+                </div>
 
-            {% if reviews %}
-                {% for review in reviews %}
-                    <div class="review">
-                        <div class="stars_{{ review.rating }}"></div>
-                        <div class="reviews_headline">{{ review.headline }}</div>
-                        <div class="reviews_author">By {{ review.user }} in {{ review.added }}</div>
-                        <div>{{ review.review }}</div>
+                <div class="col-lg-6 social-buttons">
+                    <div>
+                        <img src="{{ STATIC_URL }}img/theme/fb_shares.png" alt=""/>
+                        <a class="fb" href="">2 shares</a>
                     </div>
-                {% endfor %}
-
-            {% else %}
-                There is no reviews yet
-            {% endif %}
-
-            <div>
-                <a class="btn btn-default" href="{% url 'review' book_identifier=book.identifier %}">Write a review</a>
+                    <div>
+                        <img src="{{ STATIC_URL }}img/theme/tw_shares.png" alt=""/>
+                        <a class="fb tw" href="">1 tweets</a>
+                    </div>
+                    <div>
+                        <img src="{{ STATIC_URL }}img/theme/g_shares.png" alt=""/>
+                        <a class="fb gp" href="">0 shares</a>
+                    </div>
+                </div>
             </div>
-
         </div>
-    </div>
+    </section>
 
-    {#    <script>#}
-    {#                $(document).ready(function(){#}
-    {#                    $('#favorite').on('click', function(e){#}
-    {#                        e.preventDefault();#}
-    {#                        $.ajax({#}
-    {#                            type: "POST",#}
-    {#                            url: '/bookreader/favorite/' + $(this).data('id') + '/',#}
-    {#                            data: {'favorite': $(this).data('id')},#}
-    {#                            dataType: 'json',#}
-    {#                            success: function (data){#}
-    {#                                alert('ok');#}
-    {#                            }#}
-    {#                        });#}
-    {#                    });#}
-    {#                })#}
-    {#    </script>#}
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 reviews">
+                    <h1>Customer Reviews</h1>
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <div class="review">
+                                <div class="reviews_headline">{{ review.headline }}</div>
+                                <div class="stars_{{ review.rating }}"></div>
+                                <div class="reviews_author">By {{ review.user }} in {{ review.added }}</div>
+                                <div class="reviews_text">{{ review.review }}</div>
+                            </div>
+                        {% endfor %}
+
+                    {% else %}
+                        There is no reviews yet
+                    {% endif %}
+
+                    <div>
+                        <a class="write-review" href="{% url 'review' book_identifier=book.identifier %}">Write a review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
 {% endblock main %}

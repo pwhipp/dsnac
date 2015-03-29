@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
     <meta name="description" content="{% block meta_description %}{% endblock %}">
-    <title>{% block meta_title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+    <title>{% block title %}{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
     <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
 
     {% ifinstalled mezzanine.blog %}
@@ -54,7 +54,7 @@
 <script src="{% static "js/respond.min.js" %}"></script>
 <![endif]-->
     <script type="text/javascript" src="{% static 'js/jquery.diyslider.min.js' %}"></script>
-    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+{#    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>#}
     <script type="text/javascript">stLight.options({publisher: "18654956-fa7e-4cb2-98ed-60d22479014b", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
 
     {% block extra_head %}{% endblock %}
@@ -85,7 +85,28 @@
         </div>
     </div>
 
-{% block main %}{% endblock %}
+    <section class="mainpage-slider">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-2 main-menu">
+                    <span class="grey-color">browse:</span>
+                    <a class="book-lnk" href="{% url 'bookrepo_list' %}">e-books</a>
+                    <a class="mag-lnk" href="">magazines</a>
+                    <a class="doc-lnk" href="">documents</a>
+                    <a class="video-lnk" href="">videos</a>
+                    <a class="audio-lnk" href="">audios</a>
+                    <hr class="c-hr"/>
+                    <a class="cat-lnk" href="">category</a>
+                    <a class="search-lnk" href="{% url 'haystack_search' %}">search inside books</a>
+                </div>
+
+                <div>
+                    {% block main %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
     <section>
         <div class="red-footer">
             <div class="container">
@@ -114,13 +135,9 @@
             </div>
         </div>
     </section>
-{% include "includes/footer_scripts.html" %}
 
-<script type="text/javascript">
-    $(window).load(function() {
-        $('#slider').nivoSlider();
-    });
-</script>
+
+{% include "includes/footer_scripts.html" %}
 
 </body>
 </html>

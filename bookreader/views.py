@@ -59,30 +59,12 @@ class UsersFavorite(UsersBooks):
         context['title'] = 'My Favorites'
         return context
 
-
+@login_required
 def favorite_book(request, book_identifier):
     # if request.POST:
         book = Book.objects.get(identifier=book_identifier)
         FavoriteBook.objects.create(book_identifier=book, user=request.user)
         return redirect('bookrepo_detail', book_identifier=book.identifier)
-
-
-# fixme make a class based view
-# class UsersShelves(TemplateView):
-#     template_name = 'shelf.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(UsersShelves, self).get_context_data(**kwargs)
-#         br = FavoriteBook.objects.filter(user=self.request.user).values_list('book_identifier')
-#         context['books'] = Book.objects.filter(id__in=br)
-#         context['title'] = 'My Shelf'
-#         return context
-#
-#     def post(self, request, *args, **kwargs):
-#         a = request.POST.get('shelf_name', '')
-#         print a
-#         return self.get(request, *args, **kwargs)
-#         # return HttpResponseRedirect(reverse('bookshelf'))
 
 
 def bookshelf(request):
@@ -180,3 +162,19 @@ class ReviewView(TemplateView):
             data = {'errors': errors, 'book': book}
             return render(request, 'review.html', data)
         return redirect('bookrepo_detail', book_identifier=book.identifier)
+
+
+# from bookrepo.models import BookPage
+# import json
+# def add_book(request):
+#     count = BookPage.objects.filter(book_id=11).count()
+#     data = {'response': count}
+#     if request.is_ajax():
+#         if request.GET.get('action', None) == 'start_task':
+#             from bookrepo.tasks import add
+#             print 'asasd'
+#             add.delay()
+#         json_data = json.dumps(data)
+#         return HttpResponse(json_data, content_type='application/json')
+#     return render(request, 'add_book.html', data)
+

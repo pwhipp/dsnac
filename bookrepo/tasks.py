@@ -1,6 +1,4 @@
-"""
-Scan and update db with new books, updates existing books
-"""
+from __future__ import absolute_import
 import os
 import sys
 import shutil
@@ -10,29 +8,29 @@ import tempfile
 import subprocess
 import csv
 import re
-
 from bs4 import BeautifulSoup
-
 from mezzanine.conf import settings
-
 import bookrepo.models as bm
+from celery import shared_task, task
+
+from celery import Celery
+app = Celery('tasks')
+
+# @app.task
+# def add(x, y):
+#     return x + y
+
+
+# @app.task(name='hello')
+# def hello():
+#     print 'hello'
 
 
 def meta_file_bname(book_identifier):
-    """
-    Return the meta xml file base name for book_identifier
-    :param book_identifier:
-    :return: string
-    """
     return '{0}_meta.xml'.format(book_identifier)
 
 
 def jp2_folder(book_identifier):
-    """
-    Return the jp2 zip base name for book_identifier
-    :param book_identifier:
-    :return: string
-    """
     return '{0}_jp2'.format(book_identifier)
 
 
@@ -42,13 +40,6 @@ def is_book_folder(dirpath, filenames):
 
 
 def map_book_folders(path=None, function=None):
-    """
-    Import all of the books on path. books are updated by identity.
-    Path is searched recursively.
-    A 'book' is any folder containing a <folder_name>_meta.xml file.
-    :param path: file path to books
-    :return: list of function results
-    """
     if path is None:
         path = settings.BOOKS_ROOT
 
@@ -64,13 +55,6 @@ def map_book_folders(path=None, function=None):
 
 
 def get_book_meta_data(book_folder=None, book_identifier=None):
-    """
-    Return a dict containing basic book info - this will be replaced by a model or some such.
-    Either book_folder or book_identifier must be supplied
-    :param book_folder: string
-    :param book_identifier: string
-    :return: dict
-    """
     if book_folder is None and book_identifier is None:
         raise Exception('Both args None for get_book_meta_data')
 
@@ -121,10 +105,6 @@ def is_source_book_folder(dirpath, filenames):
 
 
 def _migrate_books():
-    """
-    Move the existing books into a more suitable format under media
-    :return: None
-    """
     for source_book_folder, dirnames, filenames in os.walk('/home/paul/wk/snac/source_materials/existing_books'):
         if is_source_book_folder(source_book_folder, filenames):
             book_identifier = os.path.basename(source_book_folder)
@@ -158,10 +138,6 @@ def _migrate_books():
 
 
 def _migrate_scandata():
-    """
-    Copy existing book scandata into media
-    :return:
-    """
     for source_book_folder, dirnames, filenames in os.walk('/home/paul/wk/snac/source_materials/existing_books'):
         if is_source_book_folder(source_book_folder, filenames):
             book_identifier = os.path.basename(source_book_folder)
@@ -185,10 +161,6 @@ def _migrate_scandata():
 
 
 def _fix_mispelled_jp2s():
-    """
-    One off - some of the jp2 files have the wrong spelling!! correct them using the book identifier
-    :return:
-    """
     def fix_spellings(book_folder):
         book_identifier = os.path.basename(book_folder)
         jp2_folder_path = os.path.join(book_folder, jp2_folder(book_identifier))
@@ -201,34 +173,7 @@ def _fix_mispelled_jp2s():
     return list(map_book_folders(function=fix_spellings))
 
 
-thumbnail_page = {
-    u'annexationofpunj00econuoft': 5,
-    u'bandabraveorlife00soha': 7,
-    u'catalogueofcoins01lahouoft': 5,
-    u'crisisinpunjabfr00coop': 7,
-    u'gurugobindsingh00sher': 9,
-    u'gurunanaklifeand00singuoft': 7,
-    u'inthesikhsanct00vaswuoft': 3,
-    u'lawrencesofpunja01gibb': 11,
-    u'originofsikhpowe00prinuoft': 7,
-    u'panjabcastes00ibbe': 9,
-    u'plantsofpunjabde00bamb': 11,
-    u'punjab': 7,
-    u'punjabimusalmans00wikeuoft': 5,
-    u'ranjitsinghsikh00grif': 11,
-    u'shorthistoryofsi00paynrich': 7,
-    u'sikhsofpunjab00parruoft': 9,
-    u'talesofpunjabtol00stee': 9,
-    u'workingplanforch00punjrich': 1,
-    u'bhaimahngaorsear00khal': 5,
-    }
-
-
 def _add_thumbnail_covers():
-    """
-    Create initial thumbnail covers for existing scanned books
-    :return:
-    """
     from bookrepo.models import Book, BookPage
 
     def add_thumbnail_cover(book):
@@ -246,23 +191,14 @@ def _add_thumbnail_covers():
 
 
 def _make_page_dict():
-    """
-    Make a starting page dictionary - one off.
-    :return:
-    """
-
     def _make_dict_tuple(book_folder):
         book_identifier = os.path.basename(book_folder)
         return book_identifier, 1
 
     return dict(list(map_book_folders(function=_make_dict_tuple)))
 
-
-def import_scanned_books():
-    """
-    Import the scanned books into the ORM
-    :return:
-    """
+@app.task(name='add')
+def add():
     def import_scanned_book(book_folder):
         meta_info = get_book_meta_data(book_folder)
         meta_info['scanned'] = True
@@ -314,11 +250,6 @@ def import_book_csv(path):
 
 
 def create_book_identifier(meta_info):
-    """
-    Create a new identifier suitable for use as a unique folder name
-    :param meta_info:
-    :return:
-    """
     title_part = _book_identifier_part(meta_info['title'])
     creator_part = _book_identifier_part(meta_info['creator'])
     number = 0
@@ -336,11 +267,6 @@ def create_book_identifier(meta_info):
 
 
 def _book_identifier_part(s):
-    """
-    Return up to 12 characters of s made up of non common words
-    :param s:
-    :return:
-    """
     common_words = [
         'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'I', 'it', 'for', 'not',
         'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her',
@@ -360,14 +286,6 @@ def _book_identifier_part(s):
 
 
 def update_orm_book(meta_info, book=None, redo_ocr=False):
-    """
-    Update orm_book, creating it if necessary.
-    Also update the book pages, creating them as necessary.
-    :param meta_info:
-    :param book: book object, if already known
-    :return: None
-    """
-
     # Sort out foreign key objects
     for attr, model_class in (('creator', bm.Creator),
                               ('contributor', bm.Contributor),
@@ -406,12 +324,6 @@ def update_orm_book(meta_info, book=None, redo_ocr=False):
 
 
 def get_scanned_page_start(book_folder):
-    """
-    Return the starting page if specified in scandata.xml (which may not be present)
-    Returns zero if it can't find a number or scandata.xml
-    :param book_folder: string
-    :return: integer
-    """
     try:
         scandata_pname = os.path.join(book_folder, 'scandata.xml')
         with open(scandata_pname) as f:
@@ -428,15 +340,10 @@ def update_orm_scanned_start_pages():
         return book_identifier, book_start
     return list(map_book_folders(function=update_orm_scanned_page))
 
+import json
+from django.http import HttpResponse
 
 def update_orm_book_pages(book, redo_ocr=False):
-    """
-    Update or add the required book page objects, scanning if necessary (which creates the jpg pages)
-    This could take a while.
-    :param book:
-    :param redo_ocr:
-    :return:
-    """
     if not book.scanned:
         return False
     for page_number in range(book.num_pages):
@@ -446,8 +353,13 @@ def update_orm_book_pages(book, redo_ocr=False):
                 page.update_text_from_image()
                 page.save()
                 sys.stdout.write('.')
+
+
+
             except IOError:
                 print('Unable to scan {title} - page {page_number}'.format(
                     title=book.title,
                     page_number=page_number))
+
     return True
+

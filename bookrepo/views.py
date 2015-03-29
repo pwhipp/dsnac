@@ -16,7 +16,7 @@ class BookListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BookListView, self).get_context_data(**kwargs)
-        context['books'] = paginate(self.get_books(), self.request.GET.get("page", 1), 20, settings.MAX_PAGING_LINKS)
+        context['books'] = paginate(self.get_books(), self.request.GET.get("page", 1), 18, settings.MAX_PAGING_LINKS)
         return context
 
     @staticmethod

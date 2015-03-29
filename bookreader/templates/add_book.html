@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <section style="margin-top: 100px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-default" id="import">Begin import</button>
+                    </form>
+                </div>
+                <h1><b id="pages">{{ response|default:'0'}}</b> pages </h1>
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        $(document).ready(function(){
+            $('#import').on('click', function(){
+                $.ajax({
+                    url: '/bookreader/add_book/?action=start_task',
+                    dataType: 'json',
+                    success: function(data){
+                        setInterval(function(){
+                            $.ajax({
+                                url: '/bookreader/add_book/',
+                                dataType: 'json',
+                                success: function(data){
+                                    $('#pages').text(data.response)
+                                }})
+                        }, 5000);
+                        console.log(data);
+                    }
+                });
+                $(this).hide();
+                return false
+            })
+
+        })
+    </script>
+
+{% endblock %}

@@ -127,18 +127,22 @@
 .nivo-controlNav {
 	text-align: center;
 	padding: 20px 0;
+	position: absolute;
+	top: 0;
+	right: 50px;
+	z-index: 10;
 }
 .nivo-controlNav a {
 	display:inline-block;
-	width:22px;
-	height:22px;
-	background:url(../img/bullets.png) no-repeat;
+	width:15px;
+	height:15px;
+	background:url(../img/theme/bullets.png) no-repeat;
 	text-indent:-9999px;
 	border:0;
 	margin: 0 2px;
 }
 .nivo-controlNav a.active {
-	background-position:0 -22px;
+	background-position:0 -15px;
 }
 
 .nivo-directionNav a {
