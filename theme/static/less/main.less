@@ -87,11 +87,13 @@ a {
       height: 77px;
     }
     .logo-title {
+      position: relative;
+      z-index: 7;
       float: left;
       font: normal 22px/75px helioscondcregular;
       text-transform: uppercase;
       padding-left: 10px;
-
+    overflow-wrap: break-word;
       a {
         color: @white;
         text-decoration: none;
@@ -140,6 +142,112 @@ a {
     }
   }
 }
+
+.xs-menu {
+  margin-top: 40px;
+  z-index: 4;
+  padding-left: 50px;
+}
+.xs-menu-items {
+  .book-lnk {
+    background: url("../img/theme/ico_books.png") no-repeat 25px 14px;
+  }
+  .mag-lnk {
+    background: url("../img/theme/ico_mag.png") no-repeat 25px 14px;
+
+  }
+  .doc-lnk {
+    background: url("../img/theme/ico_doc.png") no-repeat 25px 14px;
+  }
+  .video-lnk {
+    background: url("../img/theme/ico_video.png") no-repeat 25px 14px;
+  }
+  .audio-lnk {
+    background: url("../img/theme/ico_audio.png") no-repeat 25px 14px;
+  }
+  .cat-lnk {
+    background: url("../img/theme/ico_cat.png") no-repeat 25px 14px;
+    color: @deep-blue;
+    margin-top: 8px;
+  }
+  .search-lnk {
+    background: url("../img/theme/ico_search.png") no-repeat 25px 14px;
+    color: @deep-blue;
+  }
+  .signup-lnk {
+    background: url("../img/theme/ico_login.png") no-repeat 25px 14px;
+    color: @deep-blue;
+  }
+  .signin-lnk {
+    background: url("../img/theme/ico_signin.png") no-repeat 25px 14px;
+    color: @deep-blue;
+  }
+  margin-top: 26px;
+  padding: 0;
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  background: #151c27;
+  z-index: 1;
+  a {
+    width: 100%;
+    display: block;
+    height: 55px;
+    font: normal 23px/56px TrebuchetMS;
+    color: #cdcecf;
+    padding-left: 80px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #4e5868;
+    &:hover {
+      text-decoration: none;
+      opacity: 0.7;
+    }
+//    &:hover.book-lnk {
+//      background: url("../img/theme/ico_books.png") no-repeat left center;
+//    }
+
+  }
+}
+.xs-menu-donate {
+  padding: 0;
+  .donate-lnk {
+    background: url("../img/theme/ico_donate.png") no-repeat 25px 14px;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  background: #5c191f;
+  z-index: 1;
+  a {
+    width: 100%;
+    display: block;
+    height: 55px;
+    font: normal 24px/56px TrebuchetMS;
+    color: #cdcecf;
+    padding-left: 80px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #4e5868;
+    &:hover {
+      text-decoration: none;
+      opacity: 0.7;
+    }
+  }
+}
+
 
 /* Slider */
 .mainpage-slider {
@@ -200,6 +308,7 @@ a {
         color: @sky-blue;
         text-transform: uppercase;
         padding-top: 10px;
+        padding-bottom: 15px;
         ul {
           list-style-type: none;
         }
@@ -221,28 +330,29 @@ a {
         }
         input {
           width: 720px;
-          height: 45px;
+          height: 43px;
           border: 0;
           .border-radius(5px);
           padding-left: 15px;
           color: @grey;
+          margin-top: -14px;
         }
         .search-button{
+          background: url("../img/theme/sb.png") no-repeat;
           display: inline-block;
           .border-radius(5px);
-          background: @red;
           color: @white;
           text-transform: uppercase;
-          width: 155px;
-          height: 45px;
+          width: 157px;
+          height: 43px;
           font-size: 16px;
           text-align: center;
           line-height: 42px;
-
-
+          padding-left: 25px;
           &:hover {
             text-decoration: none;
             opacity: 0.7;
+            background: url("../img/theme/sb.png") no-repeat;
           }
         }
       }
@@ -327,7 +437,7 @@ a {
       position: absolute;
       right: -70px;
       top: 80px;
-      
+
       &:hover {
         opacity: 0.7;
       }
@@ -841,7 +951,6 @@ a {
 
 }
 
-
 /* search */
 .search-block {
   font: normal 22px/22px TrebuchetMS;
@@ -930,7 +1039,6 @@ a {
   }
 }
 
-
 /* all books */
 .all_books {
   img {
@@ -939,4 +1047,156 @@ a {
   .books {
     margin-bottom: 15px;
   }
+}
+
+
+
+
+
+
+/* XS */
+/* Small devices (tablets, 468px and up) */
+@media (min-width: 468px) and (max-width: 768px) {
+  .mainpage-slider .mainpage-element .index-slider {
+    width: 100%;
+  }
+  .mainpage-slider .mainpage-element .search-field {
+    width: 100%;
+  }
+  .mainpage-slider .mainpage-element .index-slider {
+    height: auto;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-input input {
+    margin-top: 16px;
+    width: 100%;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-input .search-button {
+    width: 100%;
+    background: @red;
+    &:hover {
+      background: @red;
+    }
+  }
+  .mainpage-slider .mainpage-element .search-field .search-input {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .scans h1 {
+    line-height: 0;
+    padding-left: 5px;
+  }
+  .more {
+    margin-top: -20px;
+    padding-bottom: 10px;
+  }
+  .more a {
+    color: @sky-blue;
+  }
+  .videos img {
+    width: 100%;
+  }
+  .audios img {
+    width: 100%;
+  }
+  /* signup */
+  .login-block {
+    height: 100%;
+  }
+}
+
+
+/* SM */
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 992px) {
+  .top-menu .logo .logo-title {
+    padding-left: 0;
+
+  }
+  .top-menu .logo .logo-title a {
+    font-size: 22px;
+  }
+  .mainpage-slider .main-menu a {
+    font-size: 15px;
+    margin-top: 10px;
+  }
+  .mainpage-slider .mainpage-element .index-slider {
+    width: 563px;
+  }
+  .mainpage-slider .mainpage-element .search-field {
+    width: 562px;
+    margin-top: -87px;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-input input {
+    width: 490px;
+    height: 51px;
+    margin-top: 20px;
+    margin-bottom: -10px;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-input .search-button {
+    position: relative;
+    left: 335px;
+    top: 20px;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-links {
+    margin-left: 50px;
+    margin-top: -10px;
+    font-size: 15px;
+  }
+  .scans h1 {
+    font-size: 24px;
+  }
+  .audios {
+    img {
+      width: 100%;
+    }
+  }
+
+  /* signup */
+  .login-block {
+    height: 600px;
+  }
+}
+
+/* MD */
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1200px) {
+  .mainpage-slider .main-menu a {
+    font-size: 15px;
+    margin-top: 10px;
+  }
+
+  .mainpage-slider .mainpage-element .index-slider {
+    width: 781px;
+  }
+
+  .mainpage-slider .mainpage-element .search-field {
+    width: 780px;
+    margin-top: -35px;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-input input {
+    width: 567px;
+    height: 42px;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-filter li.active {
+    font-size: 19px;
+  }
+  .mainpage-slider .mainpage-element .search-field .search-filter li {
+    font-size: 11px;
+  }
+  .videos {
+    img {
+      width: 100%;
+    }
+  }
+
+  /* signup */
+  .login-block input {
+    width: 361px;
+  }
+}
+
+/* LG */
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
 }

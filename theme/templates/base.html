@@ -2,7 +2,7 @@
 <html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
 {% load pages_tags mezzanine_tags i18n future staticfiles blog_tags %}
 {% load i18n future mezzanine_tags accounts_tags %}
-{% blog_recent_posts 5 as recent_posts %}
+{#{% blog_recent_posts 5 as recent_posts %}#}
 
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -44,6 +44,7 @@
         <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
         <script src="{% static "js/bootstrap.js" %}"></script>
         <script src="{% static "js/bootstrap-extras.js" %}"></script>
+        <script src="{% static "js/main.js" %}"></script>
 
         <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
         {% block extra_js %}{% endblock %}
@@ -66,11 +67,11 @@
     <div class=" navbar navbar-default navbar-fixed-top top-menu" role="navigation">
         <div class="container">
             <div class="row">
-                <div class="col-md-5 logo">
+                <div class="col-lg-5 col-md-6 col-sm-6 logo">
                     <div class="logo-img"></div>
                     <div class="logo-title"><a href="/">{{ settings.SITE_TITLE }}</a></div>
                 </div>
-                <div class="col-md-offset-2 col-md-5 auth">
+                <div class="col-lg-offset-2 col-lg-5 col-md-6 col-sm-6 pull-right hidden-xs auth">
                     <a class="donate-button">donate</a>
                     <div class="sign">
                         {% if request.user.is_authenticated %}
@@ -81,16 +82,41 @@
                         {% endif %}
                     </div>
                 </div>
+
+                <div style="position: absolute; z-index: 6; top: 0; width: 100%;">
+                    <div class="visible-xs col-xs-3 pull-right xs-menu">
+                        <a id="collapse_xs_menu_on" href="#collapse_xs_menu">
+                            <img src="{{ STATIC_URL }}img/theme/burger.png" alt=""/>
+                        </a>
+                    </div>
+                    <div class="" id="collapse_xs_menu" style="display: none">
+                        <div class="col-xs-12 xs-menu-items">
+                            <a class="book-lnk" href="{% url 'bookrepo_list' %}">E-Books</a>
+                            <a class="mag-lnk" href="">Magazines</a>
+                            <a class="video-lnk" href="">Videos</a>
+                            <a class="audio-lnk" href="">Audios</a>
+                            <a class="cat-lnk" href="{% url 'bookrepo_subject_list' %}">category</a>
+                            <a class="search-lnk" href="{% url 'haystack_search' %}">Search Inside books</a>
+                            <a class="signup-lnk" href="{% url 'signup' %}">SIGN UP</a>
+                            <a class="signin-lnk"  href="{% url "login" %}?next={{ request.path }}">SIGN IN</a>
+                        </div>
+                        <div class="col-xs-12 xs-menu-donate">
+                            <a class="donate-lnk" href="">DONATE</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+
 
 {% block main %}{% endblock %}
     <section>
         <div class="red-footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-offset-2 col-md-8 footer-menu">
+                    <div class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-9 hidden-xs footer-menu">
                         <ul>
                             <li>top books</li>
                             <li>discover</li>
@@ -107,7 +133,7 @@
         <div class="black-footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-offset-4 col-md-4">
+                    <div class="col-lg-offset-4 col-lg-4 col-md-offset-4 col-md-8 col-sm-offset-2 col-sm-9">
                         SIKH NATIONAL ARCHIVES OF CANADA  ©  ALL RIGHTS RESERVED
                     </div>
                 </div>

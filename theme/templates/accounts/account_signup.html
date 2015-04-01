@@ -17,34 +17,34 @@
                     <form method="post"{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
 {#                        {% fields_for form %}#}
                         {% csrf_token %}
-                        <div class="col-lg-10 login-block">
+                        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12 login-block">
                             <h1>sign up</h1>
-                            <div class="col-lg-5 login-space">
-                                <input id="id_first_name" name="first_name" type="text" style="width: 431px; color: #8e8e8e; padding-left: 15px" value="First name" onfocus="if(value == 'First name') value='';" onblur="if(value == '') value='First name';"/>
+                            <div class="col-lg-5 col-md-5 login-space">
+                                <input id="id_first_name" name="first_name" type="text" style="color: #8e8e8e; padding-left: 15px" value="First name" onfocus="if(value == 'First name') value='';" onblur="if(value == '') value='First name';"/>
                             </div>
-                            <div class="col-lg-5">
-                                <input id="id_last_name" name="last_name" type="text" style="width: 431px; color: #8e8e8e; padding-left: 15px" value="Last name" onfocus="if(value == 'Last name') value='';" onblur="if(value == '') value='Last name';"/>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="col-lg-5 login-space">
-                                <input id="id_email" name="email" type="text" style="width: 431px; color: #8e8e8e; padding-left: 15px" value="Email address" onfocus="if(value == 'Email address') value='';" onblur="if(value == '') value='Email address';"/>
-                            </div>
-                            <div class="col-lg-5">
-                                <input id="id_username" name="username" type="text" style="width: 431px; color: #8e8e8e; padding-left: 15px" value="Username*" onfocus="if(value == 'Username*') value='';" onblur="if(value == '') value='Username*';"/>
+                            <div class="col-lg-5 col-md-5">
+                                <input id="id_last_name" name="last_name" type="text" style="color: #8e8e8e; padding-left: 15px" value="Last name" onfocus="if(value == 'Last name') value='';" onblur="if(value == '') value='Last name';"/>
                             </div>
                             <div class="clearfix"></div>
-                            <div class="col-lg-5 login-space">
-                                <input autocomplete="off" id="id_password1" name="password1" type="text" style="width: 431px; color: #8e8e8e; padding-left: 15px" value="Password" onfocus="if(value == 'Password') value='';" onblur="if(value == '') value='Password';"/>
+                            <div class="col-lg-5 col-md-5 login-space">
+                                <input id="id_email" name="email" type="text" style="color: #8e8e8e; padding-left: 15px" value="Email address" onfocus="if(value == 'Email address') value='';" onblur="if(value == '') value='Email address';"/>
                             </div>
-                            <div class="col-lg-5">
-                                <input autocomplete="off" id="id_password1" name="password2" type="text" style="width: 431px; color: #8e8e8e; padding-left: 15px" value="Confirm password" onfocus="if(value == 'Confirm password') value='';" onblur="if(value == '') value='Confirm password';"/>
+                            <div class="col-lg-5 col-md-5">
+                                <input id="id_username" name="username" type="text" style="color: #8e8e8e; padding-left: 15px" value="Username*" onfocus="if(value == 'Username*') value='';" onblur="if(value == '') value='Username*';"/>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-lg-5 col-md-5 login-space">
+                                <input autocomplete="off" id="id_password1" name="password1" type="text" style="color: #8e8e8e; padding-left: 15px" value="Password" onfocus="if(value == 'Password') value='';" onblur="if(value == '') value='Password';"/>
+                            </div>
+                            <div class="col-lg-5 col-md-5">
+                                <input autocomplete="off" id="id_password1" name="password2" type="text" style="color: #8e8e8e; padding-left: 15px" value="Confirm password" onfocus="if(value == 'Confirm password') value='';" onblur="if(value == '') value='Confirm password';"/>
                             </div>
 
                             <div class="clearfix"></div>
-                            <div class="col-lg-5 login-space warn">
+                            <div class="col-lg-5 col-md-5 col-sm-5 login-space warn">
                                 <p>* Only letters, numbers, dashes or underscores please </p>
                             </div>
-                            <div class="col-lg-5 pull-right">
+                            <div class="col-lg-5 col-md-5 col-sm-5 pull-right">
 {#                                <div class="form-actions">#}
                                     {% block account_form_actions %}
                                         <input class="signup_button" type="submit" value="{{ title }} " >
@@ -58,6 +58,6 @@
 
     {% endif %}
 
-    <div style="width: 100%; height: 300px;"></div>
+    <div style="width: 100%; height: 300px;" class="hidden-xs"></div>
 
 {% endblock %}

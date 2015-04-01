@@ -62,8 +62,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-offset-2 col-lg-4 book-buttons">
-                    <a class="read-now" href="">read now</a>
-                    <a class="borrow" href="">borrow</a>
+                    <a class="read-now" href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}">read now</a>
+                    <a class="borrow" href="{% url 'page' slug='borrowing' %}">borrow</a>
                     {% if favorite %}
                         <a class="favorite" href="{% url 'bookfavorite_page' %}" title="In yours favorites"><i class="glyphicon glyphicon-ok"></i></a>
                     {% else %}
@@ -74,15 +74,15 @@
                 <div class="col-lg-6 social-buttons">
                     <div>
                         <img src="{{ STATIC_URL }}img/theme/fb_shares.png" alt=""/>
-                        <a class="fb" href="">2 shares</a>
+                        <a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=/bookrepo/{{ book.identifier }}/detail/">share</a>
                     </div>
                     <div>
                         <img src="{{ STATIC_URL }}img/theme/tw_shares.png" alt=""/>
-                        <a class="fb tw" href="">1 tweets</a>
+                        <a class="fb tw" href="https://twitter.com/home?status=/bookrepo/{{ book.identifier }}/detail/">tweet</a>
                     </div>
                     <div>
                         <img src="{{ STATIC_URL }}img/theme/g_shares.png" alt=""/>
-                        <a class="fb gp" href="">0 shares</a>
+                        <a class="fb gp" href="https://plus.google.com/share?url=/bookrepo/{{ book.identifier }}/detail/">share</a>
                     </div>
                 </div>
             </div>

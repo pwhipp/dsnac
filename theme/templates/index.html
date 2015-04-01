@@ -11,11 +11,12 @@
 
 {% block main %}
 
+    {#  recent scans  #}
     <section class="mainpage-slider">
         <div class="container">
             <div class="row">
 
-                <div class="col-md-2 main-menu">
+                <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs main-menu">
                     <span class="grey-color">browse:</span>
                     <a class="book-lnk" href="{% url 'bookrepo_list' %}">e-books</a>
                     <a class="mag-lnk" href="">magazines</a>
@@ -27,14 +28,14 @@
                     <a class="search-lnk" href="{% url 'haystack_search' %}">search inside books</a>
                 </div>
 
-                <div class="col-md-10 mainpage-element">
+                <div class="col-lg-10 col-md-10 col-sm-9 mainpage-element">
                     <div class="nivoSlider slider index-slider" id="slider">
                         {% for slide in slides %}
                             <img src="{{ MEDIA_URL }}{{ slide.image }}" alt=""/>
                         {% endfor %}
                     </div>
                     <div class="search-field">
-                        <div class="search-filter">
+                        <div class="search-filter visible-lg visible-md">
                             <ul>
                                 <li class="active">ebooks</li>
                                 <li>magazines</li>
@@ -46,11 +47,10 @@
                             </ul>
                         </div>
                         <div class="search-input">
-                            {#                            {% search_form 'all'%}#}
-                            <input type="text"/>
-                            <a href="{% url 'haystack_search' %}" class="search-button"> <img src="{{ STATIC_URL }}img/theme/loopa.png" alt=""/> Search</a>
+{#                            {% search_form 'all'%}#}
+                            {% search_form %}
                         </div>
-                        <div class="search-links">
+                        <div class="search-links hidden-xs">
                             <a href="">Classic catalog</a>
                             <a href="">Advanced Search</a>
                         </div>
@@ -60,7 +60,7 @@
         </div>
     </section>
 
-    <section class="scans">
+    <section class="scans visible-lg">
         <div class="container">
             <div class="row">
                 <hr class="c-hr"/>
@@ -82,7 +82,7 @@
                 <div class="book-slider">
                     <div>
                         {% for book in recent_scans %}
-                            <div class="col-md-2 book">
+                            <div class="col-lg-2 col-md-2 book">
                                 {% if book.thumbnail_url %}
                                     <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
                                     <div>{{ book.title }}</div>
@@ -110,7 +110,126 @@
         </div>
     </section>
 
-    <section class="scans">
+    <section class="scans visible-md">
+        <div class="container">
+            <div class="row">
+                <hr class="c-hr"/>
+                <h1>RECENT SCANS</h1>
+                <div class="more"><a href="">more scans</a></div>
+                <div class="clearfix"></div>
+
+                <div class="book-slider-md">
+                    <div>
+                        {% for book in recent_scans|slice:":6" %}
+                            <div class="col-lg-2 col-md-2 book">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
+                                {% else %}
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        {#                                <div>{{ book.title }}</div>#}
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scans visible-sm">
+        <div class="container">
+            <div class="row">
+                <hr class="c-hr"/>
+                <h1>RECENT SCANS</h1>
+                <div class="more"><a href="">more scans</a></div>
+                <div class="clearfix"></div>
+
+                <div class="book-slider-sm">
+                    <div>
+                        {% for book in recent_scans|slice:":4" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 book">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
+                                {% else %}
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        {#                                <div>{{ book.title }}</div>#}
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scans visible-xs">
+        <div class="container">
+            <div class="row">
+                <hr class="c-hr"/>
+                <h1>RECENT SCANS</h1>
+                <div class="more"><a href="">more scans</a></div>
+                <div class="clearfix"></div>
+
+                <div class="book-slider-xs1">
+                    <div>
+                        {% for book in recent_scans|slice:":3" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 book">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
+                                {% else %}
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        {#                                <div>{{ book.title }}</div>#}
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    {#  ebooks  #}
+    <section class="scans visible-lg">
         <div class="container">
             <div class="row">
                 <hr class="c-hr"/>
@@ -130,7 +249,7 @@
                 <div class="book-slider-ebooks">
                     <div>
                         {% for book in ebooks %}
-                            <div class="col-md-2 book">
+                            <div class="col-lg-2 col-md-2 book">
                                 {% if book.thumbnail_url %}
                                     <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
                                     <div>{{ book.title }}</div>
@@ -158,8 +277,252 @@
         </div>
     </section>
 
+    <section class="scans visible-md">
+        <div class="container">
+            <div class="row">
+                <hr class="c-hr"/>
+                <h1>RECENT e-books</h1>
+                <div class="more"><a href="">more books</a></div>
+                <div class="clearfix"></div>
+
+                <div class="book-slider-md">
+                    <div>
+                        {% for book in ebooks|slice:":6" %}
+                            <div class="col-lg-2 col-md-2 book">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
+                                {% else %}
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        {#                                <div>{{ book.title }}</div>#}
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scans visible-sm">
+        <div class="container">
+            <div class="row">
+                <hr class="c-hr"/>
+                <h1>RECENT e-books</h1>
+                <div class="more"><a href="">more books</a></div>
+                <div class="clearfix"></div>
+
+                <div class="book-slider-sm">
+                    <div>
+                        {% for book in ebooks|slice:":4" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 book">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
+                                {% else %}
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        {#                                <div>{{ book.title }}</div>#}
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="scans visible-xs">
+        <div class="container">
+            <div class="row">
+                <hr class="c-hr"/>
+                <h1>RECENT e-books</h1>
+                <div class="more"><a href="">more books</a></div>
+                <div class="clearfix"></div>
+
+                <div class="book-slider-xs1">
+                    <div>
+                        {% for book in ebooks|slice:":3" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 book">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
+                                {% else %}
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        {#                                <div>{{ book.title }}</div>#}
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
     {% if magazines %}
-        <section class="scans">
+        <section class="scans visible-lg">
+            <div class="container">
+                <div class="row">
+                    <hr class="c-hr"/>
+                    <h1>RECENT magazines</h1>
+                    <div class="more"><a href="">more magazines</a></div>
+                    <div class="clearfix"></div>
+
+                    <div class="book-slider-nav">
+                        <a href="javascript:void(0)" id="go-left-mags" class="go-left">
+                            <img src="{{ STATIC_URL }}img/theme/arrow_left.png" alt=""/>
+                        </a>
+                        <a href="javascript:void(0)" id="go-right-mags" class="go-right">
+                            <img src="{{ STATIC_URL }}img/theme/arrow_right.png" alt=""/>
+                        </a>
+                    </div>
+
+                    <div class="book-slider-mags">
+                        <div>
+                            {% for book in magazines %}
+                                <div class="col-lg-2 col-md-2 book">
+                                    {% if book.thumbnail_url %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover == 'no_cover.jpg' %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                            {#                                <div>{{ book.title }}</div>#}
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            {% if book.cover %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                                <div>{{ book.title }}</div>
+                                            {% else %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                                <div class="no-cover-title">{{ book.title }}</div>
+                                                <div>{{ book.title }}</div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="scans visible-md">
+            <div class="container">
+                <div class="row">
+                    <hr class="c-hr"/>
+                    <h1>RECENT magazines</h1>
+                    <div class="more"><a href="">more magazines</a></div>
+                    <div class="clearfix"></div>
+
+                    <div class="book-slider-md">
+                        <div>
+                            {% for book in magazines|slice:":6" %}
+                                <div class="col-lg-2 col-md-2 book">
+                                    {% if book.thumbnail_url %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover == 'no_cover.jpg' %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                            {#                                <div>{{ book.title }}</div>#}
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            {% if book.cover %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                                <div>{{ book.title }}</div>
+                                            {% else %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                                <div class="no-cover-title">{{ book.title }}</div>
+                                                <div>{{ book.title }}</div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="scans visible-sm">
+            <div class="container">
+                <div class="row">
+                    <hr class="c-hr"/>
+                    <h1>RECENT magazines</h1>
+                    <div class="more"><a href="">more magazines</a></div>
+                    <div class="clearfix"></div>
+
+                    <div class="book-slider-sm">
+                        <div>
+                            {% for book in magazines|slice:":4" %}
+                                <div class="col-lg-2 col-md-2 col-sm-3 book">
+                                    {% if book.thumbnail_url %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover == 'no_cover.jpg' %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                            {#                                <div>{{ book.title }}</div>#}
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            {% if book.cover %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                                <div>{{ book.title }}</div>
+                                            {% else %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                                <div class="no-cover-title">{{ book.title }}</div>
+                                                <div>{{ book.title }}</div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="scans visible-xs">
         <div class="container">
             <div class="row">
                 <hr class="c-hr"/>
@@ -167,19 +530,10 @@
                 <div class="more"><a href="">more magazines</a></div>
                 <div class="clearfix"></div>
 
-                <div class="book-slider-nav">
-                    <a href="javascript:void(0)" id="go-left-mags" class="go-left">
-                        <img src="{{ STATIC_URL }}img/theme/arrow_left.png" alt=""/>
-                    </a>
-                    <a href="javascript:void(0)" id="go-right-mags" class="go-right">
-                        <img src="{{ STATIC_URL }}img/theme/arrow_right.png" alt=""/>
-                    </a>
-                </div>
-
-                <div class="book-slider-mags">
+                <div class="book-slider-xs1">
                     <div>
-                        {% for book in magazines %}
-                            <div class="col-md-2 book">
+                        {% for book in magazines|slice:":3" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 book">
                                 {% if book.thumbnail_url %}
                                     <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
                                     <div>{{ book.title }}</div>
@@ -215,17 +569,17 @@
                 <h1>RECENT videos</h1>
                 <div class="more"><a href="">more videos</a></div>
                 <div class="clearfix"></div>
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 videos">
                     <img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs videos">
                     <img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-lg-4 col-md-4 hidden-sm hidden-xs videos">
                     <img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
@@ -241,32 +595,32 @@
                 <h1>RECENT Audios</h1>
                 <div class="more"><a href="">more audios</a></div>
                 <div class="clearfix"></div>
-                <div class="col-md-2">
+                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 audios">
                     <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2 col-md-4 col-sm-6 hidden-xs audios">
                     <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2 col-md-4 hidden-sm hidden-xs ">
                     <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2 visible-lg">
                     <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2 visible-lg">
                     <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2 visible-lg">
                     <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
                     <div>Ut enim ad minim veniam</div>
                     <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>

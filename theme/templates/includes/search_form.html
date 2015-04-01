@@ -1,0 +1,23 @@
+{% load mezzanine_tags i18n future %}
+<form action="{% url "search" %}" class="" role="search">
+    <input class="" placeholder="{% trans "Title, Author, Topic, Genre, Year, etc." %}" type="text" name="q" value="{{ request.REQUEST.q }}">
+
+    {% if search_model_choices %}
+        {% if search_model_choices|length == 1 %}
+            <input type="hidden" name="type" value="{{ search_model_choices.0.1 }}">
+        {% else %}
+            <div class="form-group">
+                <select class="form-control" name="type">
+                    <option value="">{% trans "Everything" %}</option>
+                    {% for verbose_name, model in search_model_choices %}
+                        <option value="{{ model }}"
+                                {% if model == request.REQUEST.type  %}selected{% endif %}>
+                            {{ verbose_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+    {% endif %}
+    <input value="Search" type="submit" class="search-button">
+</form>
