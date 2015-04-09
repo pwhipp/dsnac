@@ -89,7 +89,6 @@
                                 {% else %}
                                     {% if book.cover == 'no_cover.jpg' %}
                                         <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
-                                        {#                                <div>{{ book.title }}</div>#}
                                         <div>{{ book.title }}</div>
                                     {% else %}
                                         {% if book.cover %}
@@ -635,9 +634,9 @@
     <script>
         $(document).ready(function(){
             $(".book-slider").diyslider({
-                width: "1200px", // width of the slider
-                height: "232px", // height of the slider
-                display: 7, // number of slides you want it to display at once
+                width: "1170", // width of the slider
+                height: "292px", // height of the slider
+                display: 6, // number of slides you want it to display at once
                 loop: false // disable looping on slides
             }); // this is all you need!
 
@@ -652,9 +651,9 @@
             });
 
             $(".book-slider-ebooks").diyslider({
-                width: "1200px", // width of the slider
+                width: "1170px", // width of the slider
                 height: "232px", // height of the slider
-                display: 7, // number of slides you want it to display at once
+                display: 6, // number of slides you want it to display at once
                 loop: false
             });
             $("#go-left-ebooks").bind("click", function(){
@@ -667,9 +666,9 @@
             });
 
             $(".book-slider-mags").diyslider({
-                width: "1200px", // width of the slider
-                height: "232px", // height of the slider
-                display: 7, // number of slides you want it to display at once
+                width: "1170px", // width of the slider
+                height: "292px", // height of the slider
+                display: 6, // number of slides you want it to display at once
                 loop: false
             });
             $("#go-left-mags").bind("click", function(){

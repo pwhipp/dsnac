@@ -16,11 +16,6 @@ from celery import shared_task, task
 from celery import Celery
 app = Celery('tasks')
 
-# @app.task
-# def add(x, y):
-#     return x + y
-
-
 # @app.task(name='hello')
 # def hello():
 #     print 'hello'
@@ -325,14 +320,14 @@ def update_orm_book(meta_info, book=None, redo_ocr=False):
 
 def get_scanned_page_start(book_folder):
     try:
-        scandata_pname = os.path.join(book_folder, 'scandata.xml')
+        scandata_pname = os.path.join('media/books', book_folder, 'scandata.xml')
         with open(scandata_pname) as f:
             scandata = BeautifulSoup(f, 'xml')
             return int(scandata.find('pageType', text='Title').parent['leafNum'])
     except (IOError, AttributeError, KeyError):
         return 1
 
-
+@app.task()
 def update_orm_scanned_start_pages():
     def update_orm_scanned_page(book_folder):
         book_identifier = os.path.basename(book_folder)

@@ -10,6 +10,9 @@ from bookrepo.models import Book
 
 from bookreader.models import BookReading, BookHistory, FavoriteBook, BookShelf, UsersShelves, Report, Reviews
 
+from bookrepo.models import BookPage, BookUploadLog
+import json
+
 
 class BookReaderView(TemplateView):
     template_name = 'bookreader/reader.html'
@@ -163,18 +166,22 @@ class ReviewView(TemplateView):
             return render(request, 'review.html', data)
         return redirect('bookrepo_detail', book_identifier=book.identifier)
 
-
-# from bookrepo.models import BookPage
-# import json
-# def add_book(request):
-#     count = BookPage.objects.filter(book_id=11).count()
-#     data = {'response': count}
-#     if request.is_ajax():
-#         if request.GET.get('action', None) == 'start_task':
-#             from bookrepo.tasks import add
-#             print 'asasd'
-#             add.delay()
-#         json_data = json.dumps(data)
-#         return HttpResponse(json_data, content_type='application/json')
-#     return render(request, 'add_book.html', data)
+from django.contrib.auth.decorators import permission_required
+@permission_required('bookrepo')
+def add_book(request):
+    pending = BookUploadLog.objects.filter(scanned=False)
+    count = BookPage.objects.filter(book_id=11).count()
+    data = {'response': count }
+    httpdata = {'pending': pending}
+    if request.is_ajax():
+        if request.GET.get('action', None) == 'start_task':
+            from bookrepo.tasks import add, update_orm_scanned_start_pages
+            add.delay()
+            for p in pending:
+                # update_orm_scanned_start_pages.delay()
+                p.scanned = True
+                p.save()
+        json_data = json.dumps(data)
+        return HttpResponse(json_data, content_type='application/json')
+    return render(request, 'add_book.html', httpdata)
 

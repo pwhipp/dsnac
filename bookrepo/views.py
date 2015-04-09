@@ -3,6 +3,7 @@ import os
 from django.http import HttpResponse, Http404
 from django.views.generic import TemplateView, DetailView
 from django.shortcuts import get_object_or_404, redirect, render
+from haystack.views import SearchView
 
 from mezzanine.conf import settings
 from mezzanine.utils.views import paginate

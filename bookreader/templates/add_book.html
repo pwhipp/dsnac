@@ -1,16 +1,32 @@
 {% extends 'base.html' %}
+{% block meta_title %}Scan books{% endblock %}
 
 {% block main %}
-    <section style="margin-top: 100px;">
+    <section class="add_book">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
+                <div class="book-title"><h1>Pending books:</h1></div>
+                        {% for book in pending %}
+                            <ul>
+                            <li><a href="{% url 'bookrepo_detail' book_identifier=book.book.identifier %}">{{ book.book.title }}</a> (<span class="deep-blue-color">Added:</span> {{ book.modified }}) <span class="deep-blue-color">{{ book.book.num_pages }} pages to scan</span> </li>
+                            </ul>
+                            {% empty %}
+                            There is no new books to import
+                        {% endfor %}
+
+                    <br/>
+                    <br/>
+
                     <form action="." method="post">
                         {% csrf_token %}
                         <button class="btn btn-default" id="import">Begin import</button>
                     </form>
+                    <p class="working">Working...</p>
+                    <br/>
+                    <br/>
+                <p><b id="pages">{{ response|default:'0'}}</b> pages imported so far</p>
                 </div>
-                <h1><b id="pages">{{ response|default:'0'}}</b> pages </h1>
             </div>
         </div>
 
@@ -35,6 +51,7 @@
                     }
                 });
                 $(this).hide();
+                $('.working').show();
                 return false
             })
 

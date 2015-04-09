@@ -139,8 +139,8 @@ INSTALLED_APPS = (
     'bookreader',
     'bookrepo',
     'social_auth',
-    'uploader')
-    # 'djcelery')
+    'uploader',
+    'djcelery')
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
@@ -266,11 +266,11 @@ SOCIAL_AUTH_BACKEND_ERROR_URL = '/'
 
 SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
-#
-# import djcelery
-# djcelery.setup_loader()
-#
-# CELERY_IMPORTS = ('bookrepo.tasks')
+
+import djcelery
+djcelery.setup_loader()
+
+CELERY_IMPORTS = ('bookrepo.tasks')
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where

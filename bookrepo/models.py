@@ -11,7 +11,6 @@ from mezzanine.conf import settings
 
 import sys, zipfile, os, os.path
 
-
 class UniqueNamed(models.Model):
     name = models.CharField(max_length=512, unique=True)
 
@@ -99,6 +98,7 @@ class Book(RichText, Displayable):
                 jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
                 if not os.path.exists(jpg_path):
                     os.makedirs(jpg_path)
+                BookUploadLog.objects.create(book_id=self.id, scanned=False)
                 for name in zfobj.namelist():
                     if name.endswith('/'):
                         pass
@@ -225,3 +225,12 @@ class MainSlider(models.Model):
 
     def __unicode__(self):
         return self.title
+
+
+class BookUploadLog(models.Model):
+    book = models.ForeignKey(Book)
+    scanned = models.BooleanField(default=False)
+    modified = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return str(self.book)

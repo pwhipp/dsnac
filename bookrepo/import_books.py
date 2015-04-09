@@ -413,11 +413,11 @@ def get_scanned_page_start(book_folder):
     :return: integer
     """
     try:
-        scandata_pname = os.path.join(book_folder, 'scandata.xml')
+        scandata_pname = os.path.join('media/books', book_folder, 'scandata.xml')
         with open(scandata_pname) as f:
             scandata = BeautifulSoup(f, 'xml')
             return int(scandata.find('pageType', text='Title').parent['leafNum'])
-    except (IOError, AttributeError, KeyError):
+    except (AttributeError, KeyError):
         return 1
 
 
