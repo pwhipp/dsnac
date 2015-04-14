@@ -62,7 +62,7 @@
     <section>
         <div class="container">
             <div class="row">
-                <div class="col-lg-offset-2 col-lg-4 col-md-offset-2 col-md-4 col-sm-offset-3 col-sm-4 col-xs-3 book-buttons">
+                <div class="col-lg-offset-2 col-lg-4 col-md-offset-2 col-md-4 col-sm-offset-3 col-sm-4 col-xs-12 book-buttons">
                     <a class="read-now hidden-xs" href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}">read now</a>
                     <a class="borrow hidden-xs" href="{% url 'page' slug='borrowing' %}">borrow</a>
                     {% if favorite %}
@@ -73,7 +73,7 @@
                     {% endif %}
                 </div>
 
-                <div class="col-lg-6 col-md-6 col-sm-5 social-buttons">
+                <div class="col-lg-6 col-md-6 col-sm-5 col-xs-12 social-buttons">
                     <div>
                         <img src="{{ STATIC_URL }}img/theme/fb_shares.png" alt=""/>
                         <a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=/bookrepo/{{ book.identifier }}/detail/">share</a>
