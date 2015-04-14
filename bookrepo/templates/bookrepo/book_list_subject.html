@@ -1,43 +1,47 @@
-{% extends 'base.html' %}
+{% extends 'clean.html' %}
 {% load mezzanine_tags %}
 {% block meta_title %}Book List{% endblock meta_title%}
 {% block title %}Book List{% endblock title%}
 {% block main %}
-    {% for subject in subjects %}
-        <div style="height: 290px; position:relative;">
-            <h1>{{ subject }}</h1>
-            <div class="category">
-                {% for book in subject.book_set.all|slice:":7" %}
-                    <div class="single_book_category">
-                        {% if book.thumbnail_url %}
-                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="127" height="192"/></a>
-                        {% else %}
-                            {% if book.cover == 'no_cover.jpg' %}
-                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
-                                <div class="no_cover_title">
-                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                                    <b>{{ book.creator }}</b>
-                                </div>
-                            {% else %}
-                                {% if book.cover %}
-                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt="" width="127" height="192"/></a>
+    <div class="col-lg-10">
+        {% for subject in subjects %}
+            <div>
+                <h1>{{ subject }}</h1>
+                <div class="category">
+                    {% for book in subject.book_set.all|slice:":7" %}
+                        <div class="single_book_category">
+                                {% if book.thumbnail_url %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                    <div>{{ book.title }}</div>
                                 {% else %}
-                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/cover-green.jpg" alt=""/></a>
-                                    <div class="no_cover_title">
-                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}">{{ book.title }}</a> <br/> <br/>
-                                        <b>{{ book.creator }}</b>
-                                    </div>
+                                    {% if book.cover == 'no_cover.jpg' %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                        <div>{{ book.title }}</div>
+                                    {% else %}
+                                        {% if book.cover %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% else %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                            <div class="no-cover-title">{{ book.title }}</div>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        {% endif %}
-                    <div class="category_book_title">{{ book.title }}</div>
-                    <div class="category_book_creator">{{ book.creator }}</div>
-                    </div>
-                    <a href="{% url 'bookrepo_subject_detail' subject_identifier=book.subject.id %}" class="category_read_more">See more</a>
-                {% endfor %}
+                            <div class="category_book_title">{{ book.title }}</div>
+                            <div class="category_book_creator">{{ book.creator }}</div>
+                        </div>
+                        <a href="{% url 'bookrepo_subject_detail' subject_identifier=book.subject.id %}" class="category_read_more">See more</a>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    {% endfor %}
+            <div class="clearfix"></div>
+        {% endfor %}
+
+
+
+    </div>
 
     {% pagination_for books %}
+
 {% endblock main%}

@@ -67,11 +67,12 @@
     <div class=" navbar navbar-default navbar-fixed-top top-menu" role="navigation">
         <div class="container">
             <div class="row">
-                <div class="col-lg-5 col-md-6 col-sm-6 logo">
-                    <div class="logo-img"></div>
-                    <div class="logo-title"><a href="/">{{ settings.SITE_TITLE }}</a></div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-xs-11 logo">
+                    <div class="logo-img hidden-xs"></div>
+                    <div class="visible-xs col-xs-3"><img src="{{ STATIC_URL }}img/theme/small_logo.png" alt=""/></div>
+                    <div class="logo-title col-xs-8"><a href="/">{{ settings.SITE_TITLE }}</a></div>
                 </div>
-                <div class="col-lg-offset-2 col-lg-5 col-md-6 col-sm-6 pull-right hidden-xs auth">
+                <div class="col-lg-5 col-md-5 col-sm-6 pull-right hidden-xs auth">
                     <a class="donate-button">donate</a>
                     <div class="sign">
                         {% if request.user.is_authenticated %}
@@ -82,6 +83,7 @@
                         {% endif %}
                     </div>
                 </div>
+
                 <div style="position: absolute; z-index: 6; top: 0; width: 100%;">
                     <div class="visible-xs col-xs-3 pull-right xs-menu">
                         <a id="collapse_xs_menu_on" href="#collapse_xs_menu">

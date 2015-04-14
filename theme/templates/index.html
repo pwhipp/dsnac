@@ -197,8 +197,8 @@
 
                 <div class="book-slider-xs1">
                     <div>
-                        {% for book in recent_scans|slice:":3" %}
-                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 book">
+                        {% for book in recent_scans|slice:":2" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6 book">
                                 {% if book.thumbnail_url %}
                                     <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
                                     <div>{{ book.title }}</div>
@@ -364,8 +364,8 @@
 
                 <div class="book-slider-xs1">
                     <div>
-                        {% for book in ebooks|slice:":3" %}
-                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4 book">
+                        {% for book in ebooks|slice:":2" %}
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6 book">
                                 {% if book.thumbnail_url %}
                                     <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
                                     <div>{{ book.title }}</div>

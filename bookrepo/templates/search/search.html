@@ -7,30 +7,26 @@
     <section>
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="search-field-inner">
-                        <div class="search-filter-inner visible-lg visible-md">
-                            <ul>
-                                <li class="active-inner">ebooks</li>
-                                <li>magazines</li>
-                                <li>videos</li>
-                                <li>audios</li>
-                                <li>pictures</li>
-                                <li>documents</li>
-                                <li><a href="/search/">all</a></li>
-                            </ul>
-                        </div>
-                        <div class="search-input-ebooks">
-                            <form action="." method="get">
-                                <input id="id_q" name="q" type="search" placeholder="Within book words or phrase"/>
-                                <br/>
-                                <input class="search-button-ebooks" type="submit" value="Search">
-                            </form>
-                        </div>
-                        <div class="search-links hidden-xs">
-                            {#                            <a href="">Classic catalog</a>#}
-                            {#                            <a href="">Advanced Search</a>#}
-                        </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 search-field-inner">
+                    <div class="search-filter-inner visible-lg visible-md">
+                        <ul>
+                            <li class="active-inner">ebooks</li>
+                            <li>magazines</li>
+                            <li>videos</li>
+                            <li>audios</li>
+                            <li>pictures</li>
+                            <li>documents</li>
+                            <li><a href="/search/">all</a></li>
+                        </ul>
+                    </div>
+                    <div class="search-input-ebooks">
+                        <form action="." method="get">
+                            <input id="id_q" name="q" type="search" placeholder="Within book words or phrase"/>
+                            <br/>
+                            <input class="search-button-ebooks" type="submit" value="Search">
+                        </form>
+                    </div>
+                    <div class="search-links hidden-xs">
                     </div>
                 </div>
             </div>
@@ -41,10 +37,7 @@
     <section>
         <div class="container results-search-ebooks">
             <div class="row">
-                {#                <div class="results-text-header">#}
-                {#                    <a href="">Page</a>#}
-                {#                </div>#}
-                <div class="col-lg-12 results-text-ebooks">
+                <div class="col-lg-12 col-md-12 col-sm-12 hidden-xs results-text-ebooks">
 
                     {% for result in page.object_list %}
                         <div class="result-item-ebooks">
@@ -59,6 +52,19 @@
                         <div style="width: 100%; height: 450px;"></div>
                     {% endfor %}
                 </div>
+
+                <div class="visible-xs results-text-ebooks">
+                    {% for result in page.object_list %}
+                        <div class="result-item-ebooks">
+                            <span class="num">{{ result.object.num }}</span>
+                            <a href="{{ result.object.get_in_book_url }}">{{ result.object.book.title }}</a>
+                        </div>
+                        {% empty %}
+                        <p style="text-align: center; line-height: 30px; padding: 0;">No results yet. Type your search text in the box above and click the search button</p>
+                        <div style="width: 100%; height: 450px;"></div>
+                    {% endfor %}
+                </div>
+
             </div>
         </div>
     </section>
@@ -70,53 +76,5 @@
             {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
         </div>
     {% endif %}
-
-
-    {#    <div class="container">#}
-    {#        <div class="row">#}
-    {#            <div class="col-lg-12 search-results">#}
-    {#                {% if query %}#}
-    {#                    <h3>Results</h3>#}
-    {#                    {% for result in page.object_list %}#}
-    {##}
-    {#                        <div class="col-lg-2 search_results_pic">#}
-    {#                            <a href="{{ result.object.get_in_book_url }}">#}
-    {#                                <img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/>#}
-    {#                            </a>#}
-    {#                        </div>#}
-    {##}
-    {#                        <div class="col-lg-8 search_results_title">#}
-    {#                            <a href="{{ result.object.get_in_book_url }}" class="search_results_book">{{ result.object.book.title }} (Page {{ result.object.num }})</a> by <span style="font-size: 16px">{{ result.object.book.creator }}</span>#}
-    {#                            <p class="search_results_year">{{ result.object.book.published }}</p>#}
-    {#                        </div>#}
-    {##}
-    {#                        <div class="col-lg-2 ">#}
-    {#                            <a class="search_results_read" href="{{ result.object.get_in_book_url }}">Read <i class="glyphicon glyphicon-bookmark"></i></a>#}
-    {#                        </div>#}
-    {##}
-    {#                        <div class="clearfix"></div>#}
-    {##}
-    {#                        {% empty %}#}
-    {##}
-    {#                        <h3>No results found.</h3>#}
-    {##}
-    {#                    {% endfor %}#}
-    {#                    {% if page.has_previous or page.has_next %}#}
-    {#                        <div>#}
-    {#                            {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}#}
-    {#                            |#}
-    {#                            {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}#}
-    {#                        </div>#}
-    {#                    {% endif %}#}
-    {#                {% else %}#}
-    {#                    <h3>No results yet</h3>#}
-    {#                    <p>Type your search text in the box above and click the search button.</p>#}
-    {#                    <div style="width: 100%; height: 200px;"></div>#}
-    {#                {% endif %}#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
-
-
 
 {% endblock main %}
