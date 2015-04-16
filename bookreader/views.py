@@ -170,15 +170,15 @@ from django.contrib.auth.decorators import permission_required
 @permission_required('bookrepo')
 def add_book(request):
     pending = BookUploadLog.objects.filter(scanned=False)
-    count = BookPage.objects.filter(book_id=11).count()
-    data = {'response': count }
+    count = BookPage.objects.filter(book_id=966).count()
+    data = {'response': count}
     httpdata = {'pending': pending}
     if request.is_ajax():
         if request.GET.get('action', None) == 'start_task':
             from bookrepo.tasks import add, update_orm_scanned_start_pages
             add.delay()
             for p in pending:
-                # update_orm_scanned_start_pages.delay()
+                update_orm_scanned_start_pages.delay()
                 p.scanned = True
                 p.save()
         json_data = json.dumps(data)
