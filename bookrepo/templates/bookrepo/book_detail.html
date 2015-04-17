@@ -63,7 +63,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-offset-2 col-lg-4 col-md-offset-2 col-md-4 col-sm-offset-3 col-sm-4 col-xs-12 book-buttons">
-                    <a class="read-now hidden-xs" href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}">read now</a>
+                    {% if book.ebook %}
+                        <a class="read-now hidden-xs" href="{% url 'bookreader' book_identifier=book.identifier page_num=book.scanned_start_page %}">read now</a>
+                    {% endif %}
                     <a class="borrow hidden-xs" href="{% url 'page' slug='borrowing' %}">borrow</a>
                     {% if favorite %}
                         <a class="favorite" href="{% url 'bookfavorite_page' %}" title="In yours favorites"><i class="glyphicon glyphicon-ok"></i></a>

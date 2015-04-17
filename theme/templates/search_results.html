@@ -45,8 +45,13 @@
                 <div class="col-lg-10 col-md-10 col-sm-12 results-text">
                     {% for result in results.object_list %}
                         <div class="result-item">
-                            <span class="num">{{ forloop.counter0|add:results.start_index }}</span>
-                            <a href="{{ result.get_absolute_url }}">{{ result }}</a>
+                            {% if result.ebook %}
+                                <span class="num">{{ forloop.counter0|add:results.start_index }}</span>
+                                <a href="{{ result.get_absolute_url }}">{{ result }}</a>
+                            {% else %}
+                                <span class="num">{{ forloop.counter0|add:results.start_index }}</span>
+                                <a class="no-ebook" href="{{ result.get_absolute_url }}">{{ result }}</a>
+                            {% endif %}
                         </div>
                         {% empty %}
                         <p style="text-align: center; line-height: 30px; padding: 0;">No results yet. Type your search text in the box above and click the search button</p>
