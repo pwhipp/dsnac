@@ -140,7 +140,8 @@ INSTALLED_APPS = (
     'bookrepo',
     'social_auth',
     'uploader',
-    'djcelery')
+    'djcelery',
+    'mediabooks')
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its

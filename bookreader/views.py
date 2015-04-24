@@ -169,19 +169,36 @@ class ReviewView(TemplateView):
 from django.contrib.auth.decorators import permission_required
 @permission_required('bookrepo')
 def add_book(request):
-    pending = BookUploadLog.objects.filter(scanned=False)
-    count = BookPage.objects.filter(book_id=966).count()
-    data = {'response': count}
+    from bookrepo.tasks import delete_jp2_folder
+    pending = BookUploadLog.objects.filter(scanned=False).order_by('-modified')[:1]
     httpdata = {'pending': pending}
+
+    for p in pending:
+        count = BookPage.objects.filter(book_id=p.book_id).count()
+        percent = (float(count) / p.book.num_pages) * 100
+        data = {'response': percent}
+
     if request.is_ajax():
         if request.GET.get('action', None) == 'start_task':
-            from bookrepo.tasks import add, update_orm_scanned_start_pages
+            from bookrepo.tasks import add, update_start_page
             add.delay()
             for p in pending:
-                update_orm_scanned_start_pages.delay()
-                p.scanned = True
-                p.save()
+                update_start_page.delay(p.book.identifier)
+
+                start_page = update_start_page(p.book.identifier)
+                p.book.scanned_start_page = start_page
+                p.book.save()
+
+                # delete_jp2_folder.delay(p.book.identifier)
+
+                # p.scanned = True
+                # p.to_del = True
+                # p.save()
         json_data = json.dumps(data)
+        # to_del = BookUploadLog.objects.filter(to_del=True).first()
+        # if to_del:
+        #     delete_jp2_folder.delay(to_del.book.identifier)
         return HttpResponse(json_data, content_type='application/json')
+
     return render(request, 'add_book.html', httpdata)
 

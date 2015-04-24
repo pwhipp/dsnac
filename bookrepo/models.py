@@ -230,6 +230,7 @@ class MainSlider(models.Model):
 class BookUploadLog(models.Model):
     book = models.ForeignKey(Book)
     scanned = models.BooleanField(default=False)
+    to_del = models.BooleanField(default=False)
     modified = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):

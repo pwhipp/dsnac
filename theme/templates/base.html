@@ -19,6 +19,7 @@
 
     {% compress css %}
         <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+{#        <link rel="stylesheet" href="{% static "css/bootstrap-theme.css" %}">#}
 
 {#        <link rel="stylesheet" href="{% static "css/style.css" %}">#}
 
@@ -46,6 +47,8 @@
         <script src="{% static "js/bootstrap-extras.js" %}"></script>
         <script src="{% static "js/main.js" %}"></script>
 
+        <script src="{% static "audiojs/audio.min.js" %}"></script>
+
         <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
         {% block extra_js %}{% endblock %}
     {% endcompress %}
@@ -55,7 +58,7 @@
 <script src="{% static "js/respond.min.js" %}"></script>
 <![endif]-->
     <script type="text/javascript" src="{% static 'js/jquery.diyslider.min.js' %}"></script>
-    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+{#    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>#}
     <script type="text/javascript">stLight.options({publisher: "18654956-fa7e-4cb2-98ed-60d22479014b", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
 
     {% block extra_head %}{% endblock %}

@@ -6,31 +6,62 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                <div class="book-title"><h1>Pending books:</h1></div>
-                        {% for book in pending %}
-                            <ul>
-                            <li><a href="{% url 'bookrepo_detail' book_identifier=book.book.identifier %}">{{ book.book.title }}</a> (<span class="deep-blue-color">Added:</span> {{ book.modified }}) <span class="deep-blue-color">{{ book.book.num_pages }} pages to scan</span> </li>
-                            </ul>
-                            {% empty %}
-                            There is no new books to import
-                        {% endfor %}
+                    <div class="book-title"><h1>Pending books:</h1></div>
+                    {% for book in pending %}
 
-                    <br/>
-                    <br/>
+                        <div style="padding-bottom: 20px;">
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.book.identifier %}">{{ book.book.title }}</a> (<span class="deep-blue-color">Added:</span> {{ book.modified }}) <span class="deep-blue-color">{{ book.book.num_pages }} pages to scan</span>
+                        </div>
 
-                    <form action="." method="post">
-                        {% csrf_token %}
-                        <button class="btn btn-default" id="import">Begin import</button>
-                    </form>
-                    <p class="working">Working...</p>
-                    <br/>
-                    <br/>
-                <p><b id="pages">{{ response|default:'0'}}</b> pages imported so far</p>
+                        <div style="padding-bottom: 20px;">
+                            <form action="." method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-default" id="import">Begin import</button>
+                            </form>
+                            <p class="working">Working...</p>
+                        </div>
+
+                        <div class="progress">
+                            <div id="pages" class="progress-bar progress-bar-striped progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: {{ response|add:"0" }}%">
+                            </div>
+                        </div>
+
+                        {% empty %}
+
+                        There is no new books to import
+
+                    {% endfor %}
+
                 </div>
             </div>
         </div>
 
     </section>
+
+    <section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Quick Instructions</h3>
+                <ul>
+                    <li>First, you need to create a .zip file with structure like that:</li>
+                    <ul>
+                        <li>zip file name is optional. You can named whatever you want.</li>
+                        <li>_jp2 Folder with jp2 files should be named exactly like book identified + _jp2. For example: examplename_jp2</li>
+                        <li>Don't forget to place '<b>scandata.xml</b>' in that archive file with start page flag</li>
+                    </ul>
+                    <li>Choose a book im admin panel </li>
+                    <li>Upload that archive in the 'Ebook file' field</li>
+                    <li>Wait until it done</li>
+                    <br/>
+                    <li>Click on the 'Begin Import' button</li>
+                    <li>After successful importing you can reload that page. If there is more books to import: just click a button again.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </section>
+
 
     <script>
         $(document).ready(function(){
@@ -44,9 +75,9 @@
                                 url: '/bookreader/add_book/',
                                 dataType: 'json',
                                 success: function(data){
-                                    $('#pages').text(data.response)
+                                    $('#pages').css('width', (data.response));
                                 }})
-                        }, 5000);
+                        }, 500);
                         console.log(data);
                     }
                 });

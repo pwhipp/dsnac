@@ -568,21 +568,36 @@
                 <h1>RECENT videos</h1>
                 <div class="more"><a href="">more videos</a></div>
                 <div class="clearfix"></div>
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 videos">
-                    <img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs videos">
-                    <img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-4 col-md-4 hidden-sm hidden-xs videos">
-                    <img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
+
+                {% for video in videos %}
+
+
+
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 videos">
+                        <a id="video_{{ video.id }}" href="javascript:void(0)"><img src="{{ STATIC_URL }}img/theme/video.jpg" alt=""/></a>
+                        <div>{{ video.title }}</div>
+                        <div class="description">{{ video.description }}</div>
+                    </div>
+
+                    <div class="modal fade" id="{{ video.id }}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <iframe src="https://player.vimeo.com/video/{{ video.link }}?color=7a1315&title=0&byline=0&portrait=0" width="700" height="400" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+
+
             </div>
         </div>
     </section>
@@ -594,42 +609,27 @@
                 <h1>RECENT Audios</h1>
                 <div class="more"><a href="">more audios</a></div>
                 <div class="clearfix"></div>
-                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12 audios">
-                    <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 hidden-xs audios">
-                    <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-2 col-md-4 hidden-sm hidden-xs ">
-                    <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-2 visible-lg">
-                    <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-2 visible-lg">
-                    <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
-                <div class="col-lg-2 visible-lg">
-                    <img src="{{ STATIC_URL }}img/theme/audio.jpg" alt=""/>
-                    <div>Ut enim ad minim veniam</div>
-                    <div class="description">quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</div>
-                </div>
+
+                {% for audio in audios %}
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 audios">
+                        <div>
+                            <audio src="{{ MEDIA_URL }}{{ audio.mp3 }}" preload="auto" />
+                        </div>
+                        <div>{{ audio.title }}</div>
+                        <div class="description">{{ audio.description }}</div>
+
+                    </div>
+                {% endfor %}
+
             </div>
         </div>
     </section>
 
-
-
+<script>
+  audiojs.events.ready(function() {
+    var as = audiojs.createAll();
+  });
+</script>
 
     <script>
         $(document).ready(function(){
@@ -678,6 +678,22 @@
             $("#go-right-mags").bind("click", function(){
                 // Go to the previous slide
                 $(".book-slider-mags").diyslider("move", "forth");
+            });
+
+            $("#video_2").on('click', function(){
+                $("#2").modal('show');
+            });
+            $("#video_3").on('click', function(){
+                $("#3").modal('show');
+            });
+            $("#video_4").on('click', function(){
+                $("#4").modal('show');
+            });
+            $("#video_5").on('click', function(){
+                $("#5").modal('show');
+            });
+            $("#video_6").on('click', function(){
+                $("#6").modal('show');
             });
         });
     </script>

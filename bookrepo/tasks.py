@@ -16,10 +16,6 @@ from celery import shared_task, task
 from celery import Celery
 app = Celery('tasks')
 
-# @app.task(name='hello')
-# def hello():
-#     print 'hello'
-
 
 def meta_file_bname(book_identifier):
     return '{0}_meta.xml'.format(book_identifier)
@@ -317,8 +313,8 @@ def update_orm_book(meta_info, book=None, redo_ocr=False):
 
     return book
 
-
-def get_scanned_page_start(book_folder):
+@app.task(name='update_start_page')
+def update_start_page(book_folder):
     try:
         scandata_pname = os.path.join('media/books', book_folder, 'scandata.xml')
         with open(scandata_pname) as f:
@@ -327,16 +323,13 @@ def get_scanned_page_start(book_folder):
     except (IOError, AttributeError, KeyError):
         return 1
 
-@app.task()
-def update_orm_scanned_start_pages():
-    def update_orm_scanned_page(book_folder):
-        book_identifier = os.path.basename(book_folder)
-        book_start = get_scanned_page_start(book_folder)
-        return book_identifier, book_start
-    return list(map_book_folders(function=update_orm_scanned_page))
 
-import json
-from django.http import HttpResponse
+@app.task(name='delete_jp2_folder')
+def delete_jp2_folder(book_folder):
+    jp2 = '%s_jp2' % book_folder
+    shutil.rmtree((os.path.join('media/books/', book_folder, jp2)))
+    return 1
+
 
 def update_orm_book_pages(book, redo_ocr=False):
     if not book.scanned:
@@ -348,8 +341,6 @@ def update_orm_book_pages(book, redo_ocr=False):
                 page.update_text_from_image()
                 page.save()
                 sys.stdout.write('.')
-
-
 
             except IOError:
                 print('Unable to scan {title} - page {page_number}'.format(
