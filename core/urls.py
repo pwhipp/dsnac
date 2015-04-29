@@ -10,6 +10,7 @@ from mezzanine.conf import settings
 
 import bookreader.urls
 import bookrepo.urls
+import mediabooks.urls
 
 from theme.views import HomeView
 
@@ -31,6 +32,7 @@ urlpatterns += patterns(
     url("^$", HomeView.as_view(), name="home"),
     ("^bookreader", include(bookreader.urls)),
     ("^bookrepo", include(bookrepo.urls)),
+    url("^material", include(mediabooks.urls)),
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}),
     (r'^accounts/signup/$', 'mezzanine.accounts.views.signup'),
     ("^", include("mezzanine.urls")))+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

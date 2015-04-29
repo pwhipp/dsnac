@@ -1,0 +1,31 @@
+{% extends 'clean.html' %}
+{% load mezzanine_tags %}
+{% block meta_title %}Audio List{% endblock meta_title%}
+{% block title %}Audio List{% endblock title%}
+{% block main %}
+
+    <section class="all_books">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div>
+                        {% for audio in audios %}
+                            <div class="col-lg-4 col-md-3 col-sm-4 col-xs-12 books">
+                                <div><audio src="{{ MEDIA_URL }}{{ audio.mp3 }}" preload="auto" /></div>
+                                <div><a href="{% url 'audio_detail' audio_id=audio.id %}">{{ audio.title }}</a></div>
+                                <div><a href="bo{% url 'audio_detail' audio_id=audio.id %}">{{ audio.description }}</a></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        audiojs.events.ready(function() {
+            var as = audiojs.createAll();
+        });
+    </script>
+    {#    {% pagination_for books %}#}
+{% endblock main%}
