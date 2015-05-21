@@ -7,19 +7,27 @@
     <section>
         <div class="visible-xs col-xs-12 book-title"><h1>{{ book.title }}</h1></div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 book-cover">
-            {% if book.thumbnail_url %}
-                <img src="{{ book.thumbnail_url }}" alt=""/>
+
+
+            {% if book.cover %}
+                <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="">
             {% else %}
-                {% if book.cover == 'no_cover.jpg' %}
-                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/></a>
+                {% if book.thumbnail_url %}
+                    <img src="{{ book.thumbnail_url }}" alt=""/>
                 {% else %}
-                    {% if book.cover %}
-                        <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="">
+                    {% if book.cover == 'no_cover.jpg' %}
+                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/></a>
                     {% else %}
-                        <img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/>
+                        {% if book.cover %}
+                            <img src="{{ MEDIA_URL }}{{ book.cover }}" alt="">
+                        {% else %}
+                            <img src="{{ STATIC_URL }}img/theme/nocover.png" alt=""/>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             {% endif %}
+
+
         </div>
         <div class="col-lg-6 col-md-6 col-sm-5 hidden-xs book-title">
             <h1>{{ book.title }}</h1>
