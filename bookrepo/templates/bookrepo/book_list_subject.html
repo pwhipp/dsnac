@@ -3,44 +3,44 @@
 {% block meta_title %}Book List{% endblock meta_title%}
 {% block title %}Book List{% endblock title%}
 {% block main %}
-    <div class="col-lg-10">
+
+    <section class="scans">
         {% for subject in subjects %}
-            <div>
-                <h1>{{ subject }}</h1>
-                <div class="category">
-                    {% for book in subject.book_set.all|slice:":7" %}
-                        <div class="single_book_category">
-                                {% if book.thumbnail_url %}
-                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+            <hr class="c-hr"/>
+            <h1>{{ subject }}</h1>
+            <div class="more"><a href="{% url 'bookrepo_subject_detail' subject_identifier=subject.id %}">more from {{ subject }}</a></div>
+            <div class="clearfix"></div>
+
+            <div class="">
+                <div>
+                    {% for book in subject.book_set.all|slice:":6" %}
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 book">
+                            {% if book.thumbnail_url %}
+                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ book.thumbnail_url }}" alt="" width="142" height="232"/></a>
+                                <div>{{ book.title }}</div>
+                            {% else %}
+                                {% if book.cover == 'no_cover.jpg' %}
+                                    <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                    {#                                <div>{{ book.title }}</div>#}
                                     <div>{{ book.title }}</div>
                                 {% else %}
-                                    {% if book.cover == 'no_cover.jpg' %}
-                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                    {% if book.cover %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
                                         <div>{{ book.title }}</div>
                                     {% else %}
-                                        {% if book.cover %}
-                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
-                                            <div>{{ book.title }}</div>
-                                        {% else %}
-                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
-                                            <div class="no-cover-title">{{ book.title }}</div>
-                                            <div>{{ book.title }}</div>
-                                        {% endif %}
+                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                        <div class="no-cover-title">{{ book.title }}</div>
+                                        <div>{{ book.title }}</div>
                                     {% endif %}
                                 {% endif %}
-                            <div class="category_book_title">{{ book.title }}</div>
-                            <div class="category_book_creator">{{ book.creator }}</div>
+                            {% endif %}
                         </div>
-                        <a href="{% url 'bookrepo_subject_detail' subject_identifier=book.subject.id %}" class="category_read_more">See more</a>
                     {% endfor %}
                 </div>
             </div>
             <div class="clearfix"></div>
         {% endfor %}
-
-
-
-    </div>
+    </section>
 
     {% pagination_for books %}
 

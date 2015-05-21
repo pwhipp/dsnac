@@ -128,7 +128,7 @@ class BookSubjectListView(TemplateView):
 
 def subject_books(request, subject_identifier):
     books = Book.objects.filter(subject_id=subject_identifier)
-    title = Book.objects.filter(subject_id=subject_identifier)[:1]
+    title = bm.Subject.objects.get(id=subject_identifier)
     data = {'books': books, 'title': title}
     return render(request, 'bookrepo/book_detail_subject.html', data)
 
