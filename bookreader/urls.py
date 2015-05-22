@@ -20,6 +20,9 @@ urlpatterns = patterns(
     url("^/myshelves/$", bv.my_shelves, name="mybookshelf"),
     url("^/report/$", bv.report_problem, name="bookrepo_report"),
     url("^/add_book/$", bv.add_book, name="add_book"),
+
+    url("^/type/(?P<book_type>.+)$", bv.books_by_type, name="books_by_type"),
+
     url("^/(?P<book_identifier>.+)/review/$", login_required(bv.ReviewView.as_view()), name="review"),
 )
 

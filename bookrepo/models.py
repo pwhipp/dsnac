@@ -51,8 +51,6 @@ class Book(RichText, Displayable):
         ('Book', 'Book'),
         ('Magazine', 'Magazine'),
         ('Document', 'Document'),
-        ('Audio', 'Audio'),
-        ('Video', 'Video'),
     )
     identifier = models.CharField(
         max_length=255, unique=True,

@@ -202,3 +202,9 @@ def add_book(request):
 
     return render(request, 'add_book.html', httpdata)
 
+
+def books_by_type(request, book_type):
+    books = Book.objects.filter(book_type=book_type)
+    data = {'books': books}
+    return render(request, 'bookrepo/book_list.html', data)
+    pass
