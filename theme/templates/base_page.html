@@ -81,7 +81,7 @@
                             <a href="{% url "profile_update" %}">Hello, {{ request.user|username_or:"email" }}</a>|<a href="{% url 'logout' %}">logout</a>
                         {% else %}
                         <a href="{% url 'signup' %}">Sign up</a> or
-                        <a href="{% url "login" %}?next={{ request.path }}">Sing in</a>
+                        <a href="{% url "login" %}?next={{ request.path }}">Sign in</a>
                         {% endif %}
                     </div>
                 </div>
