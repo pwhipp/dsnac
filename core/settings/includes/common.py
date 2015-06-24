@@ -141,7 +141,12 @@ INSTALLED_APPS = (
     'social_auth',
     'uploader',
     'djcelery',
-    'mediabooks')
+    'mediabooks',
+    # 'paypal.standard.pdt',
+    "django_forms_bootstrap",
+    "payments",  # https://stripe.com/docs/tutorials/charges
+    'donate',
+)
 
 # List of processors used by RequestContext to populate the context.
 # Each one should be a callable that takes the request object as its
@@ -272,6 +277,41 @@ import djcelery
 djcelery.setup_loader()
 
 CELERY_IMPORTS = ('bookrepo.tasks')
+
+# PAYPAL_RECEIVER_EMAIL = 'adubnyak@gmail.com'
+# PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
+
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "<your publishable test key>")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "<your secret test key>")
+
+PAYMENTS_PLANS = {
+    "monthly": {
+        "stripe_plan_id": "pro-monthly",
+        "name": "Web App Pro ($25/month)",
+        "description": "The monthly subscription plan to WebApp",
+        "price": 25,
+        "currency": "usd",
+        "interval": "month"
+    },
+    "yearly": {
+        "stripe_plan_id": "pro-yearly",
+        "name": "Web App Pro ($199/year)",
+        "description": "The annual subscription plan to WebApp",
+        "price": 199,
+        "currency": "usd",
+        "interval": "year"
+    },
+    "monthly-trial": {
+        "stripe_plan_id": "pro-monthly-trial",
+        "name": "Web App Pro ($25/month with 30 days free)",
+        "description": "The monthly subscription plan to WebApp",
+        "price": 25,
+        "currency": "usd",
+        "interval": "month",
+        "trial_period_days": 30
+    },
+}
+
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where

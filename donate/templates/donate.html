@@ -1,0 +1,61 @@
+{% extends 'base_page.html' %}
+{% load mezzanine_tags %}
+{% load static from staticfiles %}
+{% block meta_title %}Donate{% endblock meta_title%}
+{% block title %}Donate{% endblock title%}
+{% block extra_head %}
+    <script src="{% static "js/payments.js" %}"></script>
+{% endblock %}
+{% block main %}
+    <div class="col-md-5">
+        <div class="book-title"><h1>Stripe Payments</h1></div>
+        <form action="/donate/" method="POST" class="form-inline">
+            <script src="https://checkout.stripe.com/checkout.js"></script>
+            {% csrf_token %}
+            <div class="form-group" style="float: left">
+                <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input type="text" class="form-control" name="stripe_amount" id="amount" placeholder="Amount">
+                    <div class="input-group-addon">.00</div>
+                </div>
+                <br/>
+                <br/>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-success">
+                        <input name="payment" value="10" type="radio">$10.00
+                    </label>
+                    <label class="btn btn-success">
+                        <input name="payment" value="25" type="radio">$25.00
+                    </label>
+                    <label class="btn btn-success">
+                        <input name="payment" value="50" class="active" type="radio">$50.00
+                    </label>
+                    <label class="btn btn-success">
+                        <input name="payment" value="100" class="active" type="radio">$100.00
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success" style="float: left; position: absolute; margin-left: 10px;" id="donateButton">Donate</button>
+        </form>
+    </div>
+
+    <div style="width: 100%; height: 600px; display: block"></div>
+
+
+<div class="modal fade" id="thanks_message">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #7A1315">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Thank you!</h4>
+      </div>
+      <div class="modal-body" style="background: white; color: #0c1018; font-size: 16px; padding: 10px;">
+        <p>We've received your payment!</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+{% endblock main%}

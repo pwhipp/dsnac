@@ -35,6 +35,8 @@ urlpatterns += patterns(
     url("^material", include(mediabooks.urls)),
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}),
     (r'^accounts/signup/$', 'mezzanine.accounts.views.signup'),
+    url(r"^payments/", include("payments.urls")),
+    url(r"^donate/", include('donate.urls')),
     ("^", include("mezzanine.urls")))+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error
