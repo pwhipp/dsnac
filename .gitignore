@@ -15,5 +15,3 @@ scratch.py
 src/
 whoosh_index
 dev.py
-production.py
-common.py
