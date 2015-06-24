@@ -20,7 +20,6 @@ django-social-auth==0.7.28
 django-stripe-payments==2.0.0
 filebrowser-safe==0.3.8
 future==0.9.0
-gnureadline==6.3.3
 grappelli-safe==0.3.13
 html5lib==0.99999
 httplib2==0.9.1
