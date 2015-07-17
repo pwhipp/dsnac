@@ -8,28 +8,40 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding field 'Donate.cc_number'
+        db.add_column(u'donate_donate', 'cc_number',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=123, max_length=16),
+                      keep_default=False)
+
         # Adding field 'Donate.cc_code'
         db.add_column(u'donate_donate', 'cc_code',
                       self.gf('django.db.models.fields.PositiveIntegerField')(default=123, max_length=3),
                       keep_default=False)
 
+        # Adding field 'Donate.exp_date_month'
+        db.add_column(u'donate_donate', 'exp_date_month',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=12, max_length=2),
+                      keep_default=False)
 
-        # Changing field 'Donate.cc_number'
-        db.alter_column(u'donate_donate', 'cc_number', self.gf('django.db.models.fields.PositiveIntegerField')(max_length=16))
+        # Adding field 'Donate.exp_date_year'
+        db.add_column(u'donate_donate', 'exp_date_year',
+                      self.gf('django.db.models.fields.PositiveIntegerField')(default=12, max_length=2),
+                      keep_default=False)
 
-        # Changing field 'Donate.email'
-        db.alter_column(u'donate_donate', 'email', self.gf('django.db.models.fields.EmailField')(max_length=75))
 
     def backwards(self, orm):
+        # Deleting field 'Donate.cc_number'
+        db.delete_column(u'donate_donate', 'cc_number')
+
         # Deleting field 'Donate.cc_code'
         db.delete_column(u'donate_donate', 'cc_code')
 
+        # Deleting field 'Donate.exp_date_month'
+        db.delete_column(u'donate_donate', 'exp_date_month')
 
-        # Changing field 'Donate.cc_number'
-        db.alter_column(u'donate_donate', 'cc_number', self.gf('django.db.models.fields.CharField')(max_length=255))
+        # Deleting field 'Donate.exp_date_year'
+        db.delete_column(u'donate_donate', 'exp_date_year')
 
-        # Changing field 'Donate.email'
-        db.alter_column(u'donate_donate', 'email', self.gf('django.db.models.fields.CharField')(max_length=255))
 
     models = {
         u'donate.donate': {
