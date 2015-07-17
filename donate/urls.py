@@ -2,9 +2,10 @@ from __future__ import unicode_literals
 
 from django.conf.urls import patterns, url, include
 
-from .views import donate_index
+from .views import donate_index, DonateView
 
 urlpatterns = patterns(
     '',
-    url(r'', donate_index, name='donate_index'),
+    url(r'^$', donate_index, name='donate_index'),
+    url(r'^extended/$', DonateView.as_view(), name='donate_extended'),
 )

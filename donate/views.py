@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import simplejson
+from django.views.generic import FormView
 from payments.models import Charge
 import stripe
+from .forms import DonateForm
 
 
 def donate_index(request):
@@ -31,3 +33,32 @@ def donate_index(request):
             print e
             pass
     return render(request, 'donate.html', {})
+
+
+class DonateView(FormView):
+    template_name = 'donate-extended.html'
+    form_class = DonateForm
+
+    def get_context_data(self, **kwargs):
+        context = super(DonateView, self).get_context_data(**kwargs)
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        data = {
+            'success': True
+        }
+        return HttpResponse(simplejson.dumps(data), content_type='application/json')
+
+    # def form_invalid(self, form):
+    #     return super(DonateView, self).form_invalid(form)
+        # data = {
+        #     'success': False,
+        #     'html': html
+        # }
+        # return HttpResponse(simplejson.dumps(data), content_type='application/json')
+
+    def render_to_response(self, context, **response_kwargs):
+        return super(DonateView, self).render_to_response(context, **response_kwargs)
+

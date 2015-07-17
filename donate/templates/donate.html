@@ -1,61 +1,296 @@
-{% extends 'base_page.html' %}
-{% load mezzanine_tags %}
-{% load static from staticfiles %}
-{% block meta_title %}Donate{% endblock meta_title%}
-{% block title %}Donate{% endblock title%}
-{% block extra_head %}
-    <script src="{% static "js/payments.js" %}"></script>
-{% endblock %}
-{% block main %}
-    <div class="col-md-5">
-        <div class="book-title"><h1>Stripe Payments</h1></div>
-        <form action="/donate/" method="POST" class="form-inline">
-            <script src="https://checkout.stripe.com/checkout.js"></script>
-            {% csrf_token %}
-            <div class="form-group" style="float: left">
-                <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
-                <div class="input-group">
-                    <div class="input-group-addon">$</div>
-                    <input type="text" class="form-control" name="stripe_amount" id="amount" placeholder="Amount">
-                    <div class="input-group-addon">.00</div>
-                </div>
-                <br/>
-                <br/>
-                <div class="btn-group" data-toggle="buttons">
-                    <label class="btn btn-success">
-                        <input name="payment" value="10" type="radio">$10.00
-                    </label>
-                    <label class="btn btn-success">
-                        <input name="payment" value="25" type="radio">$25.00
-                    </label>
-                    <label class="btn btn-success">
-                        <input name="payment" value="50" class="active" type="radio">$50.00
-                    </label>
-                    <label class="btn btn-success">
-                        <input name="payment" value="100" class="active" type="radio">$100.00
-                    </label>
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+{% load pages_tags mezzanine_tags i18n future staticfiles blog_tags %}
+{% load i18n future mezzanine_tags accounts_tags %}
+
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <title>{% block title %}Donate{% endblock %}{% if settings.SITE_TITLE %} | {{ settings.SITE_TITLE }}{% endif %}</title>
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+
+    {% ifinstalled mezzanine.blog %}
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url "blog_post_feed" "rss" %}">
+        <link rel="alternate" type="application/atom+xml" title="Atom" href="{% url "blog_post_feed" "atom" %}">
+    {% endifinstalled %}
+
+    {% compress css %}
+        <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+
+
+        <link rel="stylesheet/less" type="text/css" href="{% static "less/main.less" %}"/>
+
+        <link rel="stylesheet" href="{% static "css/nivo-slider.css" %}">
+
+        <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
+        {% if LANGUAGE_BIDI %}
+            <link rel="stylesheet" href="{% static "css/rtl.css" %}">
+        {% endif %}
+        {% ifinstalled cartridge.shop %}
+            <link rel="stylesheet" href="{% static "css/cartridge.css" %}">
+            {% if LANGUAGE_BIDI %}
+                <link rel="stylesheet" href="{% static "css/cartridge.rtl.css" %}">
+            {% endif %}
+        {% endifinstalled %}
+        {% block extra_css %}{% endblock %}
+    {% endcompress %}
+
+    {% compress js %}
+        <script src="{% static "js/less.min.js" %}"></script>
+        <script src="{% static "mezzanine/js/"|add:settings.JQUERY_FILENAME %}"></script>
+        <script src="{% static "js/bootstrap.js" %}"></script>
+        <script src="{% static "js/bootstrap-extras.js" %}"></script>
+        <script src="{% static "js/main.js" %}"></script>
+
+        <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
+        <script src="{% static "js/eldarion-ajax.js" %}"></script>
+
+        <script src="{% static "audiojs/audio.min.js" %}"></script>
+        <script src="{% static "js/payments.js" %}"></script>
+        <script src="https://checkout.stripe.com/checkout.js"></script>
+        {% block extra_js %}{% endblock %}
+    {% endcompress %}
+
+    <!--[if lt IE 9]>
+<script src="{% static "js/html5shiv.js" %}"></script>
+<script src="{% static "js/respond.min.js" %}"></script>
+<![endif]-->
+    <script type="text/javascript" src="{% static 'js/jquery.diyslider.min.js' %}"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body style="background: url({% static 'img/theme/bg_donate.gif' %})">
+{{ block.super }}
+
+<div class=" navbar navbar-default navbar-fixed-top top-menu" role="navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 col-md-7 col-sm-6 col-xs-11 logo">
+                <div class="logo-img hidden-xs"></div>
+                <div class="visible-xs col-xs-3"><img src="{{ STATIC_URL }}img/theme/small_logo.png" alt=""/></div>
+                <div class="logo-title col-xs-8"><a href="/">{{ settings.SITE_TITLE }}</a></div>
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-6 pull-right hidden-xs auth">
+                <a href="{% url 'donate_index' %}" class="donate-button">donate</a>
+                <div class="sign">
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url "profile_update" %}">Hello, {{ request.user|username_or:"email" }}</a>|<a href="{% url 'logout' %}">logout</a>
+                    {% else %}
+                        <a href="{% url 'signup' %}">Sign up</a> or
+                        <a href="{% url "login" %}?next={{ request.path }}">Sign in</a>
+                    {% endif %}
                 </div>
             </div>
-            <button type="submit" class="btn btn-success" style="float: left; position: absolute; margin-left: 10px;" id="donateButton">Donate</button>
-        </form>
+            <div style="position: absolute; top: 0; width: 100%;">
+                <div class="visible-xs col-xs-3 pull-right xs-menu">
+                    <a id="collapse_xs_menu_on" href="#collapse_xs_menu">
+                        <img src="{{ STATIC_URL }}img/theme/burger.png" alt=""/>
+                    </a>
+                </div>
+                <div class="" id="collapse_xs_menu" style="display: none; position: fixed; height: 100%; overflow-y: scroll; top: 65px;">
+                    <div class="col-xs-12 xs-menu-items" style="min-height: 100%;">
+                        <a class="book-lnk" href="{% url 'bookrepo_list' %}">E-Books</a>
+                        <a class="mag-lnk" href="">Magazines</a>
+                        <a class="video-lnk" href="{% url 'all_videos' %}">Videos</a>
+                        <a class="audio-lnk" href="">Audios</a>
+                        <a class="cat-lnk" href="{% url 'bookrepo_subject_list' %}">category</a>
+                        <a class="search-lnk" href="{% url 'haystack_search' %}">Search Inside books</a>
+                        <a class="signup-lnk" href="{% url 'signup' %}">SIGN UP</a>
+                        <a class="signin-lnk"  href="{% url "login" %}?next={{ request.path }}">SIGN IN</a>
+                    </div>
+                    <div class="col-xs-12 xs-menu-donate" style="min-height: 120px;">
+                        <a class="donate-lnk" href="{% url 'donate_index' %}">DONATE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div style="width: 100%; height: 600px; display: block"></div>
+<section class="mainpage-slider">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs main-menu">
+                <span class="grey-color">browse:</span>
+                <a class="book-lnk" href="{% url 'bookrepo_list' %}">e-books</a>
+                <a class="mag-lnk" href="">magazines</a>
+                <a class="doc-lnk" href="">documents</a>
+                <a class="video-lnk" href="{% url 'all_videos' %}">videos</a>
+                <a class="audio-lnk" href="{% url 'all_audios' %}">audios</a>
+                <hr class="c-hr"/>
+                <a class="cat-lnk" href="">category</a>
+                <a class="search-lnk" href="{% url 'haystack_search' %}">search inside books</a>
+            </div>
+
+            <div>
 
 
-<div class="modal fade" id="thanks_message">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header" style="background: #7A1315">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Thank you!</h4>
-      </div>
-      <div class="modal-body" style="background: white; color: #0c1018; font-size: 16px; padding: 10px;">
-        <p>We've received your payment!</p>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+
+                <section>
+                    <div class="col-lg-10 donate_top">
+                        <h1>Join us in supporting Sikh National Archives of Canada</h1>
+                        <form action="/donate/" method="POST" class="form-inline">
+                            <div class="donation_buttons">
+                                <div style="margin-left: 40px;">
+
+                                    {% csrf_token %}
+                                    <input id="25" value="25" type="radio" name="payment" hidden/>
+                                    <label for="25"><span>$25</span></label>
+                                    <input id="50" value="50" type="radio" name="payment" hidden/>
+                                    <label for="50"><span>$50</span></label>
+                                    <input id="100" value="100" type="radio" name="payment" hidden/>
+                                    <label for="100"><span>$100</span></label>
+                                    <input id="500" value="500" type="radio" name="payment" hidden/>
+                                    <label for="500"><span>$500</span></label>
+                                    <input id="1000" value="1000" type="radio" name="payment" hidden/>
+                                    <label for="1000"><span>$1000</span></label>
+                                    <a href="{% url 'donate_extended' %}">Other</a>
+{#                                    <input id="other" type="radio" name="payment" hidden/>#}
+{#                                    <label onclick="w" for="other"><span>Other</span></label>#}
+                                </div>
+                            </div>
+                            <div class="donation_buttons">
+                                <div class="row">
+                                    <div class="col-lg-5 sbmt_button">
+                                        <a href="">
+                                            <img src="{% static 'img/theme/donate_button.png' %}" alt=""/>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-5 sbmt_button">
+                                        <a href="" type="submit" style="cursor: default">
+                                            <img src="{% static 'img/theme/donate_paypal.png' %}" alt="" style="opacity: 0.4"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="addition_reqs">
+                            <div class="col-lg-6 checkers">
+                                <input type="checkbox" name="checkers" id="honor"/>Make this donation in honor or memory of someone.
+                            </div>
+                            <div class="col-lg-5 checkers">
+                                <input type="checkbox" name="checkers" id="monthly"/>Make this a monthly gift.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="col-lg-10 donate_top">
+                        <h1>Your gift will help to save Sikh National Heritage </h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
+                            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
+                            esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+                            in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+                        <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum
+                            deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non
+                            provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum
+                            fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta
+                            nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus,
+                            omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut
+                            officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et
+                            molestiae non recusandae.
+                            Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores
+                            alias consequatur aut perferendis doloribus asperiores repellat.</p>
+                    </div>
+                </section>
 
 
-{% endblock main%}
+
+                {#        <div class="col-md-5 ">#}
+                {#            <div class="book-title"><h1>Stripe Payments</h1></div>#}
+                {#            <form action="/donate/" method="POST" class="form-inline">#}
+                {#                <script src="https://checkout.stripe.com/checkout.js"></script>#}
+                {#                {% csrf_token %}#}
+                {#                <div class="form-group" style="float: left">#}
+                {#                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>#}
+                {#                    <div class="input-group">#}
+                {#                        <div class="input-group-addon">$</div>#}
+                {#                        <input type="text" class="form-control" name="stripe_amount" id="amount" placeholder="Amount">#}
+                {#                        <div class="input-group-addon">.00</div>#}
+                {#                    </div>#}
+                {#                    <br/>#}
+                {#                    <br/>#}
+                {#                    <div class="btn-group" data-toggle="buttons">#}
+                {#                        <label class="btn btn-success">#}
+                {#                            <input name="payment" value="10" type="radio">$10.00#}
+                {#                        </label>#}
+                {#                        <label class="btn btn-success">#}
+                {#                            <input name="payment" value="25" type="radio">$25.00#}
+                {#                        </label>#}
+                {#                        <label class="btn btn-success">#}
+                {#                            <input name="payment" value="50" class="active" type="radio">$50.00#}
+                {#                        </label>#}
+                {#                        <label class="btn btn-success">#}
+                {#                            <input name="payment" value="100" class="active" type="radio">$100.00#}
+                {#                        </label>#}
+                {#                    </div>#}
+                {#                </div>#}
+                {#                <button type="submit" class="btn btn-success" style="float: left; position: absolute; margin-left: 10px;" id="donateButton">Donate</button>#}
+                {#            </form>#}
+                {#        </div>#}
+
+
+                <div class="modal fade" id="thanks_message">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: #7A1315">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Thank you!</h4>
+                            </div>
+                            <div class="modal-body" style="background: white; color: #0c1018; font-size: 16px; padding: 10px;">
+                                <p>We've received your payment!</p>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+
+                {% block main %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="red-footer hidden-xs">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-9 footer-menu">
+                    <ul>
+                        <li><a href="{% url 'bookrepo_list' %}">top books</a></li>
+                        <li><a href="{% url 'haystack_search' %}">discover</a></li>
+                        <li><a href="{% url 'bookrepo_subject_list' %}">category</a></li>
+                        <li><a href="/about/">about project</a></li>
+                        <li><a href="/blog/">what's new</a></li>
+                        {#                            <li>feedback</li>#}
+                        <li><a href="/get-in-touch/">contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="black-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-offset-4 col-lg-4 col-md-offset-4 col-md-8 col-sm-offset-2 col-sm-9">
+                    SIKH NATIONAL ARCHIVES OF CANADA  ©  ALL RIGHTS RESERVED
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% include "includes/footer_scripts.html" %}
+
+</body>
+</html>
+
+
