@@ -1,3 +1,5 @@
+import json
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import simplejson
@@ -5,11 +7,13 @@ from django.views.generic import FormView
 from payments.models import Charge
 import stripe
 from .forms import DonateForm
-
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
 
 def donate_index(request):
     """ public key is in payments.js file """
-    stripe.api_key = "sk_test_bD1Ol81vyl1cfdKXZxY8jPHf"
+    # stripe.api_key = "sk_test_bD1Ol81vyl1cfdKXZxY8jPHf"
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     if request.POST:
         token = request.POST['stripeToken']
         stripe_amount = request.POST['stripe_amount']
@@ -36,6 +40,7 @@ def donate_index(request):
 
 
 class DonateView(FormView):
+    """ Extended page for donations. Using DonateForm """
     template_name = 'donate-extended.html'
     form_class = DonateForm
 
@@ -51,14 +56,34 @@ class DonateView(FormView):
         }
         return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
-    # def form_invalid(self, form):
-    #     return super(DonateView, self).form_invalid(form)
-        # data = {
-        #     'success': False,
-        #     'html': html
-        # }
-        # return HttpResponse(simplejson.dumps(data), content_type='application/json')
+    def form_invalid(self, form):
+        # html = render_to_string(self.template_name, self.get_context_data(form=form))
+        html = json.dumps(form.errors)
+        data = {
+            'success': False,
+            'html': html
+        }
+        return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
     def render_to_response(self, context, **response_kwargs):
         return super(DonateView, self).render_to_response(context, **response_kwargs)
+
+def donate_paypal(request):
+
+    # What you want the button to do.
+    paypal_dict = {
+        "business": settings.PAYPAL_RECEIVER_EMAIL,
+        "amount": "10.00",
+        "item_name": "Donation to Sikh National Archives",
+        "invoice": "unique-invoice-id",
+        "notify_url": reverse('paypal-ipn'),
+        "return_url": "/donate/",
+        "cancel_return": "h/",
+
+    }
+
+    # Create the instance.
+    form = PayPalPaymentsForm(initial=paypal_dict)
+    context = {"form": form}
+    return render(request, "paypal.html", context)
 

@@ -133,9 +133,6 @@
                     <form action="{% url 'donate_extended' %}" method="post" id="donation_form">
                         {% csrf_token %}
                         <h1 class="h1_heading">You're donating $ <span id="top_amount"></span>  by credit card</h1>
-                        {% if form.errors %}
-                            {{ form.errors }}
-                        {% endif %}
                         <div class="col-lg-10 donate_top">
                             <h2>Your Gift *</h2>
                             <hr/>
@@ -313,7 +310,7 @@
                                         <button class="donate_now" onclick="return false">Donate Now ></button>
                                     </div>
                                     <div class="col-lg-4">
-                                        <a class="donate_lnks" href="">Reset Fields</a>
+                                        <a class="donate_lnks" id="reset_fields" href="">Reset Fields</a>
                                     </div>
                                 </div>
                             </div>
@@ -404,6 +401,9 @@
                     if (data.success){
                         $('#thanks_message').modal('show');
                     } else {
+                        $('.modal-title').text('Error');
+                        $('.modal-body').html(data.html);
+                        $('#thanks_message').modal('show');
                         console.log('errors')
                     }
                 },
@@ -414,6 +414,10 @@
         $('.close').on('click', function(){
             window.location.href = "/";
         });
+
+        $('#reset_fields').on('click', function(){
+            $('#donation_form').trigger("reset");
+        })
 
     });
 </script>

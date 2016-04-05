@@ -142,7 +142,7 @@ INSTALLED_APPS = (
     'uploader',
     'djcelery',
     'mediabooks',
-    # 'paypal.standard.pdt',
+    'paypal.standard.ipn',  # https://django-paypal.readthedocs.org/en/stable/
     "django_forms_bootstrap",
     "payments",  # https://stripe.com/docs/tutorials/charges
     'donate',
@@ -278,11 +278,12 @@ djcelery.setup_loader()
 
 CELERY_IMPORTS = ('bookrepo.tasks')
 
-# PAYPAL_RECEIVER_EMAIL = 'adubnyak@gmail.com'
-# PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
+PAYPAL_RECEIVER_EMAIL = 'sandeepsahota@gmail.com'
+PAYPAL_TEST = False
+PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
 
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "<your publishable test key>")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "<your secret test key>")
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "sk_live_Vs9pcTv9P7JTfdDPQyKOsGxN")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_live_pvAiVzt4gkXmbxj69eknGHKv")
 
 PAYMENTS_PLANS = {
     "monthly": {
