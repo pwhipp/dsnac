@@ -79,21 +79,31 @@ class DonateForm(forms.ModelForm):
     last_name = forms.CharField()
     last_name.widget.attrs['placeholder'] = 'Your Last Name'
 
-    email = forms.CharField()
+    email = forms.CharField(required=False)
     email.widget.attrs['placeholder'] = 'Your Email'
-    phone = forms.CharField()
+    phone = forms.CharField(required=False)
     phone.widget.attrs['placeholder'] = 'Your Phone Number'
 
     # widget=forms.PasswordInput()
-    password1 = forms.CharField()
+    password1 = forms.CharField(required=False)
     password1.widget.attrs['placeholder'] = 'Your Password'
-    password2 = forms.CharField()
+    password2 = forms.CharField(required=False)
     password2.widget.attrs['placeholder'] = 'Repeat Password'
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
+        kwargs.setdefault('initial', {})
+        if user.is_authenticated():
+            kwargs['initial']['email'] = user.email
+            kwargs['initial']['first_name'] = user.first_name
+            kwargs['initial']['last_name'] = user.last_name
+
+            kwargs['initial']['cc_number'] = 'XXXX-XXXX-XXXX-%s' % user.profile.card_last
+            kwargs['initial']['cc_first_name'] = user.profile.first_name
+            kwargs['initial']['cc_last_name'] = user.profile.last_name
+            kwargs['initial']['cc_code'] = 'XXX'
+            self.fields['cc_code'].widget.attrs['readonly'] = True
+
         super(DonateForm, self).__init__(*args, **kwargs)
-        self.initial['exp_date_month'] = '----'
-        self.initial['exp_date_year'] = '----'
 
     class Meta:
         model = Donate

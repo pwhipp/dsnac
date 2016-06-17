@@ -241,63 +241,68 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-10 donate_top">
-                            <h2>Billing Information *</h2>
-                            <hr/>
-                            <div class="select_amount">
-                                <div class="col-lg-6">
-                                    <small>{{ form.bill_street.errors.as_text }}</small>
-                                    {{ form.bill_street }}
-                                    <small>{{ form.bill_city.errors.as_text }}</small>
-                                    {{ form.bill_city }}
-                                    <small>{{ form.bill_zip.errors.as_text }}</small>
-                                    {{ form.bill_zip }}
-                                </div>
-                                <div class="col-lg-6">
-                                    <small>{{ form.bill_apt.errors.as_text }}</small>
-                                    {{ form.bill_apt }}
-                                    <small>{{ form.bill_state.errors.as_text }}</small>
-                                    {{ form.bill_state }}
-                                    <small>{{ form.bill_country.errors.as_text }}</small>
-                                    {{ form.bill_country }}
-                                </div>
-                            </div>
-                        </div>
+                        {% if not user.is_authenticated %}
 
-                        <div class="col-lg-10 donate_top">
-                            <h2>Personal Information *</h2>
-                            <hr/>
-                            <div class="select_amount">
-                                <div class="col-lg-6">
-                                    <small>{{ form.first_name.errors.as_text }}</small>
-                                    {{ form.first_name }}
-                                </div>
-                                <div class="col-lg-6">
-                                    <small>{{ form.last_name.errors.as_text }}</small>
-                                    {{ form.last_name }}
-                                </div>
-                            </div>
-                            <div class="select_amount">
-                                <div class="col-lg-6">
-                                    <small>{{ form.email.errors.as_text }}</small>
-                                    {{ form.email }}
-                                </div>
-                                <div class="col-lg-6">
-                                    <small>{{ form.phone.errors.as_text }}</small>
-                                    {{ form.phone }}
-                                </div>
-                            </div>
-                            <div class="select_amount">
-                                <div class="col-lg-6">
-                                    <small>{{ form.password1.errors.as_text }}</small>
-                                    {{ form.password1 }}
-                                </div>
-                                <div class="col-lg-6">
-                                    <small>{{ form.password2.errors.as_text }}</small>
-                                    {{ form.password2 }}
+                            <div class="col-lg-10 donate_top">
+                                <h2>Billing Information *</h2>
+                                <hr/>
+                                <div class="select_amount">
+                                    <div class="col-lg-6">
+                                        <small>{{ form.bill_street.errors.as_text }}</small>
+                                        {{ form.bill_street }}
+                                        <small>{{ form.bill_city.errors.as_text }}</small>
+                                        {{ form.bill_city }}
+                                        <small>{{ form.bill_zip.errors.as_text }}</small>
+                                        {{ form.bill_zip }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <small>{{ form.bill_apt.errors.as_text }}</small>
+                                        {{ form.bill_apt }}
+                                        <small>{{ form.bill_state.errors.as_text }}</small>
+                                        {{ form.bill_state }}
+                                        <small>{{ form.bill_country.errors.as_text }}</small>
+                                        {{ form.bill_country }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+
+
+                            <div class="col-lg-10 donate_top">
+                                <h2>Personal Information *</h2>
+                                <hr/>
+                                <div class="select_amount">
+                                    <div class="col-lg-6">
+                                        <small>{{ form.first_name.errors.as_text }}</small>
+                                        {{ form.first_name }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <small>{{ form.last_name.errors.as_text }}</small>
+                                        {{ form.last_name }}
+                                    </div>
+                                </div>
+                                <div class="select_amount">
+                                    <div class="col-lg-6">
+                                        <small>{{ form.email.errors.as_text }}</small>
+                                        {{ form.email }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <small>{{ form.phone.errors.as_text }}</small>
+                                        {{ form.phone }}
+                                    </div>
+                                </div>
+                                <div class="select_amount">
+                                    <div class="col-lg-6">
+                                        <small>{{ form.password1.errors.as_text }}</small>
+                                        {{ form.password1 }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <small>{{ form.password2.errors.as_text }}</small>
+                                        {{ form.password2 }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
 
                         <div class="col-lg-10 donate_top">
                             <h2>Monthly Gift</h2>
