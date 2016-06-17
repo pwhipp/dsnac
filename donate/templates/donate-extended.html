@@ -139,15 +139,15 @@
                             <div class="select_amount">
                                 <p>Select Your Donation Amount:</p>
                                 <input class="amount_values" id="25" value="25" type="radio" name="payment" hidden/>
-                                <label for="25"><span>$25</span></label>
+                                <label for="25"><span>&nbsp;$25</span></label>
                                 <input class="amount_values" id="50" value="50" type="radio" name="payment" hidden/>
-                                <label for="50"><span>$50</span></label>
+                                <label for="50"><span>&nbsp;$50</span></label>
                                 <input class="amount_values" id="100" value="100" type="radio" name="payment" hidden/>
-                                <label for="100"><span>$100</span></label>
+                                <label for="100"><span>&nbsp;$100</span></label>
                                 <input class="amount_values" id="500" value="500" type="radio" name="payment" hidden/>
-                                <label for="500"><span>$500</span></label>
+                                <label for="500"><span>&nbsp;$500</span></label>
                                 <input class="amount_values" id="1000" value="1000" type="radio" name="payment" hidden/>
-                                <label for="1000"><span>$1000</span></label>
+                                <label for="1000"><span>&nbsp;$1000</span></label>
                                 <br/>
                                 <div class="col-lg-2 input_label">
                                     <label for="id_amount">Other Amount:</label>
@@ -213,19 +213,25 @@
                             <hr/>
                             <div class="select_amount">
                                 <div class="col-lg-6">
+                                    <small>{{ form.cc_first_name.errors.as_text }}</small>
                                     {{ form.cc_first_name }}
+                                    <small>{{ form.cc_number.errors.as_text }}</small>
                                     {{ form.cc_number }}
+                                    <small>{{ form.cc_code.errors.as_text }}</small>
                                     {{ form.cc_code }}
                                 </div>
 
                                 <div class="col-lg-6">
+                                    <small>{{ form.cc_last_name.errors.as_text }}</small>
                                     {{ form.cc_last_name }}
                                     <div class="col-lg-2" style="margin-top: 15px;">
                                         <p>Exp. Date:</p>
                                     </div>
+                                    <small>{{ form.exp_date_month.errors.as_text }}</small>
                                     <div class="col-lg-5" style="margin-top: 15px;">
                                         {{ form.exp_date_month }}
                                     </div>
+                                    <small>{{ form.exp_date_year.errors.as_text }}</small>
                                     <div class="col-lg-5" style="margin-top: 15px;">
                                         {{ form.exp_date_year }}
                                     </div>
@@ -240,13 +246,19 @@
                             <hr/>
                             <div class="select_amount">
                                 <div class="col-lg-6">
+                                    <small>{{ form.bill_street.errors.as_text }}</small>
                                     {{ form.bill_street }}
+                                    <small>{{ form.bill_city.errors.as_text }}</small>
                                     {{ form.bill_city }}
+                                    <small>{{ form.bill_zip.errors.as_text }}</small>
                                     {{ form.bill_zip }}
                                 </div>
                                 <div class="col-lg-6">
+                                    <small>{{ form.bill_apt.errors.as_text }}</small>
                                     {{ form.bill_apt }}
+                                    <small>{{ form.bill_state.errors.as_text }}</small>
                                     {{ form.bill_state }}
+                                    <small>{{ form.bill_country.errors.as_text }}</small>
                                     {{ form.bill_country }}
                                 </div>
                             </div>
@@ -257,10 +269,32 @@
                             <hr/>
                             <div class="select_amount">
                                 <div class="col-lg-6">
+                                    <small>{{ form.first_name.errors.as_text }}</small>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <small>{{ form.last_name.errors.as_text }}</small>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.email.errors.as_text }}</small>
                                     {{ form.email }}
                                 </div>
                                 <div class="col-lg-6">
+                                    <small>{{ form.phone.errors.as_text }}</small>
                                     {{ form.phone }}
+                                </div>
+                            </div>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.password1.errors.as_text }}</small>
+                                    {{ form.password1 }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <small>{{ form.password2.errors.as_text }}</small>
+                                    {{ form.password2 }}
                                 </div>
                             </div>
                         </div>
@@ -274,7 +308,7 @@
                                     <label for="id_monthly_gift">Make this a monthly gift</label>
                                 </div>
                                 <div class="col-lg-8">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                    {{ form.errors }}
                                     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                                     exercitation ullamco laboris
                                     nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
@@ -304,10 +338,11 @@
                             <div class="donation_buttons">
                                 <div class="row">
                                     <div class="col-lg-4">
-                                        <a class="donate_lnks" href="">Donor Bill of Rights</a>
+                                        <a class="donate_lnks" href="" onclick="return false">Donor Bill of Rights</a>
                                     </div>
                                     <div class="col-lg-4">
-                                        <button class="donate_now" onclick="return false">Donate Now ></button>
+{#                                        <button class="donate_now" onclick="return false">Donate Now ></button>#}
+                                        <button class="">Donate Now ></button>
                                     </div>
                                     <div class="col-lg-4">
                                         <a class="donate_lnks" id="reset_fields" href="">Reset Fields</a>

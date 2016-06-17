@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     "django_forms_bootstrap",
     "payments",  # https://stripe.com/docs/tutorials/charges
     'donate',
+    'userprofile'
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -282,8 +283,11 @@ PAYPAL_RECEIVER_EMAIL = 'sandeepsahota@gmail.com'
 PAYPAL_TEST = False
 PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
 
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "sk_live_Vs9pcTv9P7JTfdDPQyKOsGxN")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_live_pvAiVzt4gkXmbxj69eknGHKv")
+# STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "sk_live_Vs9pcTv9P7JTfdDPQyKOsGxN")
+# STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_live_pvAiVzt4gkXmbxj69eknGHKv")
+
+STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_lvQ40oIEm0JqVmqE5wNmVNS5")
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_BS2t9JImRsscT1vyWNsPYGLK")
 
 PAYMENTS_PLANS = {
     "monthly": {

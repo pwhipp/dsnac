@@ -1,3 +1,5 @@
+import stripe
+
 from django import forms
 from .models import Donate, IN_MEMORY_CHOICES
 
@@ -19,11 +21,14 @@ MONTH_CHOICES = (
 )
 
 YEAR_CHOICES = (
-    (15, '2015'),
     (16, '2016'),
     (17, '2017'),
     (18, '2018'),
+    (19, '2019'),
+    (20, '2020'),
+    (21, '2021'),
 )
+
 
 class DonateForm(forms.ModelForm):
     memory_of_type = forms.ChoiceField(choices=IN_MEMORY_CHOICES, widget=forms.RadioSelect(), required=False)
@@ -69,12 +74,30 @@ class DonateForm(forms.ModelForm):
     bill_country = forms.CharField()
     bill_country.widget.attrs['placeholder'] = 'Select a Country'
 
+    first_name = forms.CharField()
+    first_name.widget.attrs['placeholder'] = 'Your First Name'
+    last_name = forms.CharField()
+    last_name.widget.attrs['placeholder'] = 'Your Last Name'
+
     email = forms.CharField()
     email.widget.attrs['placeholder'] = 'Your Email'
     phone = forms.CharField()
     phone.widget.attrs['placeholder'] = 'Your Phone Number'
 
+    # widget=forms.PasswordInput()
+    password1 = forms.CharField()
+    password1.widget.attrs['placeholder'] = 'Your Password'
+    password2 = forms.CharField()
+    password2.widget.attrs['placeholder'] = 'Repeat Password'
+
+    def __init__(self, *args, **kwargs):
+        super(DonateForm, self).__init__(*args, **kwargs)
+        self.initial['exp_date_month'] = '----'
+        self.initial['exp_date_year'] = '----'
+
     class Meta:
         model = Donate
-        exclude = ('added', )
+        exclude = ('added', 'user')
+
+
 

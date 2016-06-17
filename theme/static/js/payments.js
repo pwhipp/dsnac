@@ -28,64 +28,64 @@ $(document).ready(function(){
         }
     });
 
-
-    var handler = StripeCheckout.configure({
-        key: 'pk_test_PHJ2QiEjhAH5QZg85GhRZNRx',
-        image: '/static/img/theme/snac_logo.png',
-        token: function(token) {
-            $.ajax({
-                url: "/donate/",
-                type: "POST",
-                data: {
-                    stripeToken : token.id,
-                    csrfmiddlewaretoken: csrftoken,
-                    stripe_amount: $('#amount').val()
-                },
-                success: function(data) {
-                    if (data.success) {
-                        console.log('Success');
-                        $('#thanks_message').modal('show');
-                    }
-                },
-                dataType: "json"
-            });
-            // You can access the token ID with `token.id`
-        }
-    });
-
-    var button_handler = StripeCheckout.configure({
-        key: 'pk_test_PHJ2QiEjhAH5QZg85GhRZNRx',
-        image: '/static/img/theme/snac_logo.png',
-        token: function(token) {
-            $.ajax({
-                url: "/donate/",
-                type: "POST",
-                data: {
-                    stripeToken : token.id,
-                    csrfmiddlewaretoken: csrftoken,
-                    stripe_amount: $("input:radio[name='payment']:checked").val()
-                },
-                success: function(data) {
-                    if (data.success) {
-                        console.log('Success');
-                        $('#thanks_message').modal('show');
-                    }
-                },
-                dataType: "json"
-            });
-            // You can access the token ID with `token.id`
-        }
-    });
-
-    $('#donateButton').on('click', function(e) {
-        // Open Checkout with further options
-        button_handler.open({
-            name: 'sikhnationalarchives.com',
-            description: '',
-            amount: $('#amount').val() + '00'
-        });
-        e.preventDefault();
-    });
+    //
+    // var handler = StripeCheckout.configure({
+    //     key: 'pk_test_lvQ40oIEm0JqVmqE5wNmVNS5',
+    //     image: '/static/img/theme/snac_logo.png',
+    //     token: function(token) {
+    //         $.ajax({
+    //             url: "/donate/",
+    //             type: "POST",
+    //             data: {
+    //                 stripeToken : token.id,
+    //                 csrfmiddlewaretoken: csrftoken,
+    //                 stripe_amount: $('#amount').val()
+    //             },
+    //             success: function(data) {
+    //                 if (data.success) {
+    //                     console.log('Success');
+    //                     $('#thanks_message').modal('show');
+    //                 }
+    //             },
+    //             dataType: "json"
+    //         });
+    //         // You can access the token ID with `token.id`
+    //     }
+    // });
+    //
+    // var button_handler = StripeCheckout.configure({
+    //     key: 'pk_test_lvQ40oIEm0JqVmqE5wNmVNS5',
+    //     image: '/static/img/theme/snac_logo.png',
+    //     token: function(token) {
+    //         $.ajax({
+    //             url: "/donate/",
+    //             type: "POST",
+    //             data: {
+    //                 stripeToken : token.id,
+    //                 csrfmiddlewaretoken: csrftoken,
+    //                 stripe_amount: $("input:radio[name='payment']:checked").val()
+    //             },
+    //             success: function(data) {
+    //                 if (data.success) {
+    //                     console.log('Success');
+    //                     $('#thanks_message').modal('show');
+    //                 }
+    //             },
+    //             dataType: "json"
+    //         });
+    //         // You can access the token ID with `token.id`
+    //     }
+    // });
+    //
+    // $('#donateButton').on('click', function(e) {
+    //     // Open Checkout with further options
+    //     button_handler.open({
+    //         name: 'sikhnationalarchives.com',
+    //         description: '',
+    //         amount: $('#amount').val() + '00'
+    //     });
+    //     e.preventDefault();
+    // });
 
     $("input[name='payment']").on('change', function(e) {
         button_handler.open({

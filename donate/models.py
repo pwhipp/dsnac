@@ -1,11 +1,14 @@
 from django.db import models
+from userprofile.models import Profile
 
 IN_MEMORY_CHOICES = (
     ('1', 'In Honor Of'),
     ('2', 'In Memory Of'),
 )
 
+
 class Donate(models.Model):
+    user = models.ForeignKey(Profile)
     amount = models.CharField(max_length=255)
     memory_of = models.BooleanField(default=False)
     memory_of_type = models.CharField(max_length=255, choices=IN_MEMORY_CHOICES, blank=True, null=True)
@@ -18,20 +21,13 @@ class Donate(models.Model):
     message_notification = models.CharField(max_length=255, blank=True, null=True)
     cc_first_name = models.CharField(max_length=255)
     cc_last_name = models.CharField(max_length=255)
-    cc_number = models.PositiveIntegerField(max_length=16)
-    cc_code = models.PositiveIntegerField(max_length=3)
-    exp_date_month = models.PositiveIntegerField(max_length=2)
-    exp_date_year = models.PositiveIntegerField(max_length=2)
     bill_street = models.CharField(max_length=255)
     bill_city = models.CharField(max_length=255)
     bill_zip = models.CharField(max_length=255)
     bill_apt = models.CharField(max_length=255, blank=True, null=True)
     bill_state = models.CharField(max_length=255)
     bill_country = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone = models.CharField(max_length=255)
     monthly_gift = models.BooleanField(default=True)
-    subscribe = models.BooleanField(default=True)
     added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -39,5 +35,5 @@ class Donate(models.Model):
         verbose_name_plural = 'Donations'
 
     def __unicode__(self):
-        return self.email
+        return u'%s' % self.amount
 
