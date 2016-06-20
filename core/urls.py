@@ -8,9 +8,9 @@ from django.contrib import admin
 from mezzanine.core.views import direct_to_template
 from mezzanine.conf import settings
 
-import bookreader.urls
-import bookrepo.urls
-import mediabooks.urls
+import apps.bookreader.urls
+import apps.bookrepo.urls
+import apps.mediabooks.urls
 
 from theme.views import HomeView
 
@@ -30,13 +30,13 @@ urlpatterns += patterns(
     '',
     url(r'', include('social_auth.urls')),
     url("^$", HomeView.as_view(), name="home"),
-    ("^bookreader", include(bookreader.urls)),
-    ("^bookrepo", include(bookrepo.urls)),
-    url("^material", include(mediabooks.urls)),
+    ("^bookreader", include(apps.bookreader.urls)),
+    ("^bookrepo", include(apps.bookrepo.urls)),
+    url("^material", include(apps.mediabooks.urls)),
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}),
     (r'^accounts/signup/$', 'mezzanine.accounts.views.signup'),
     url(r"^payments/", include("payments.urls")),
-    url(r"^donate/", include('donate.urls')),
+    url(r"^donate/", include('apps.donate.urls')),
     ("^", include("mezzanine.urls")))+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error

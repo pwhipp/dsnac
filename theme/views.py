@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
-import bookrepo.models as bm
-from mediabooks.models import Video, Audio
+import apps.bookrepo.models as bm
+from apps.mediabooks.models import Video, Audio
 
 
 class HomeView(TemplateView):

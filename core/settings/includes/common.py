@@ -136,17 +136,18 @@ INSTALLED_APPS = (
     "mezzanine.pages",
     "mezzanine.galleries",
     "mezzanine.accounts",
-    'bookreader',
-    'bookrepo',
     'social_auth',
-    'uploader',
     'djcelery',
-    'mediabooks',
     'paypal.standard.ipn',  # https://django-paypal.readthedocs.org/en/stable/
-    "django_forms_bootstrap",
+    'django_forms_bootstrap',
     "payments",  # https://stripe.com/docs/tutorials/charges
-    'donate',
-    'userprofile'
+
+    'apps.bookrepo',
+    'apps.bookreader',
+    'apps.uploader',
+    'apps.mediabooks',
+    'apps.donate',
+    'apps.userprofile',
 )
 
 # List of processors used by RequestContext to populate the context.
@@ -317,6 +318,7 @@ PAYMENTS_PLANS = {
     },
 }
 
+AUTH_USER_MODEL = 'auth.User'
 
 # set_dynamic_settings() will rewrite globals based on what has been
 # defined so far, in order to provide some better defaults where
