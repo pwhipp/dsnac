@@ -11,6 +11,7 @@ from mezzanine.conf import settings
 
 import sys, zipfile, os, os.path
 
+
 class UniqueNamed(models.Model):
     name = models.CharField(max_length=512, unique=True)
 
