@@ -1,49 +1,24 @@
 import stripe
 
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render, render_to_response, redirect
 from django.template.loader import render_to_string
 import simplejson
 from django.views.generic import FormView
 from django.conf import settings
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login
 
 from paypal.standard.forms import PayPalPaymentsForm
 
 from apps.userprofile.models import Profile
-from .forms import DonateForm
+from .forms import DonateForm, CustomerDonateForm
 from .models import Donate
-
-
-def donate_index(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    if request.POST:
-        token = request.POST['stripeToken']
-        stripe_amount = request.POST['stripe_amount']
-        stripe_amount = '%d00' % int(stripe_amount)
-        if stripe_amount == 0.00:
-            stripe_amount = request.POST['payment']
-            stripe_amount = '%d00' % int(stripe_amount)
-        try:
-            stripe.Charge.create(
-                amount=stripe_amount,
-                currency="usd",
-                source=token,
-                description='Payment from a website'
-            )
-            data = {
-                'success': True,
-            }
-            return HttpResponse(simplejson.dumps(data), content_type='application/json')
-        except stripe.error.CardError, e:
-            print 'The card has been declined'
-            print e
-            pass
-    return render(request, 'donate.html', {})
 
 
 class DonateView(FormView):
@@ -51,10 +26,10 @@ class DonateView(FormView):
     template_name = 'donate-extended.html'
     form_class = DonateForm
 
-    def get_form_kwargs(self):
-        kwargs = super(DonateView, self).get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect('donate_customer')
+        return super(DonateView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
 
@@ -64,7 +39,7 @@ class DonateView(FormView):
         payment = int(form.cleaned_data['amount'])
 
         notify_from = form.cleaned_data.get('from_notification')
-        notify_to = form.cleaned_data.get('recipient_notification')
+        notify_to = list(form.cleaned_data.get('recipient_notification'))
         notify_is_anonymous = form.cleaned_data.get('anonymous')
         notify_from_name = form.cleaned_data.get('full_name_notification')
         notify_message = form.cleaned_data.get('message_notification')
@@ -84,25 +59,24 @@ class DonateView(FormView):
 
         customer = stripe.Customer.create(source=token.id, description="Donation from  %s" % fullname)
 
-        if self.request.user.is_authenticated():
-            user = self.request.user
-        else:
+        try:
             user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
                                             password=form.cleaned_data['password1'])
+        except IntegrityError:
+            errors = form._errors.setdefault("email", ErrorList())
+            errors.append('User with this email is already exists. Please log in or recover password if needed.')
+            return self.form_invalid(form)
 
         card = customer['sources']['data'][0]
         subscribe = False
         if form.cleaned_data.get('subscribe'):
             subscribe = True
 
-        if Profile.objects.filter(user=user).exists():
-            profile = Profile.objects.get(user=user)
-        else:
-            profile = Profile.objects.create(user=user, first_name=first_name, last_name=last_name,
-                                             stripe_id=customer['id'], default_card=customer['default_source'],
-                                             card_last=card['last4'],
-                                             card_expiry='%s/%s' % (str(card['exp_month']), str(card['exp_year'])),
-                                             subscribe=subscribe, payment_active=True)
+        profile = Profile.objects.create(user=user, first_name=first_name, last_name=last_name,
+                                         stripe_id=customer['id'], default_card=customer['default_source'],
+                                         card_last=card['last4'],
+                                         card_expiry='%s/%s' % (str(card['exp_month']), str(card['exp_year'])),
+                                         subscribe=subscribe, payment_active=True)
 
         donate = Donate.objects.create(user=profile, amount=payment,
                                        memory_of=form.cleaned_data['memory_of'],
@@ -140,14 +114,64 @@ class DonateView(FormView):
         if all([notify_from, notify_to]):
             if notify_is_anonymous:
                 notify_from = 'donations@sikhnationalarchives.org'
-            send_mail(
-                'Donation alert from Sikh National Archives',
-                notify_message,
-                notify_from,
-                notify_to,
-                fail_silently=False,
-            )
+                try:
+                    send_mail(
+                        'Donation alert from Sikh National Archives',
+                        notify_message,
+                        notify_from,
+                        notify_to,
+                        fail_silently=True,
+                    )
+                except Exception as e:
+                    print e
 
+        new_user = authenticate(username=user.username,
+                                password=form.cleaned_data['password1'])
+
+        login(self.request, new_user)
+
+        return redirect('donation', donation_id=donate.id)
+
+
+class CustomerDonateView(FormView):
+    template_name = 'donate-customer.html'
+    form_class = CustomerDonateForm
+
+    def form_valid(self, form):
+        payment = int(form.cleaned_data['amount'])
+        notify_from = form.cleaned_data.get('from_notification')
+        notify_to = list(form.cleaned_data.get('recipient_notification'))
+        notify_is_anonymous = form.cleaned_data.get('anonymous')
+        notify_from_name = form.cleaned_data.get('full_name_notification')
+        notify_message = form.cleaned_data.get('message_notification')
+        profile = Profile.objects.get(user=self.request.user)
+
+        donate = Donate.objects.create(user=profile, amount=payment,
+                                       memory_of=form.cleaned_data['memory_of'],
+                                       memory_of_type=form.cleaned_data['memory_of_type'],
+                                       first_name_memory=form.cleaned_data['first_name_memory'],
+                                       last_name_memory=form.cleaned_data['last_name_memory'],
+                                       full_name_notification=notify_from_name,
+                                       from_notification=notify_from,
+                                       recipient_notification=notify_to,
+                                       anonymous=notify_is_anonymous,
+                                       message_notification=notify_message,
+                                       monthly_gift=form.cleaned_data['monthly_gift']
+                                       )
+
+        if all([notify_from, notify_to]):
+            if notify_is_anonymous:
+                notify_from = 'donations@sikhnationalarchives.org'
+            try:
+                send_mail(
+                    'Donation alert from Sikh National Archives',
+                    notify_message,
+                    notify_from,
+                    notify_to,
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print e
         return redirect('donation', donation_id=donate.id)
 
 

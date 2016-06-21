@@ -76,7 +76,7 @@
                 <div class="logo-title col-xs-8"><a href="/">{{ settings.SITE_TITLE }}</a></div>
             </div>
             <div class="col-lg-5 col-md-5 col-sm-6 pull-right hidden-xs auth">
-                <a href="{% url 'donate_index' %}" class="donate-button">donate</a>
+                <a href="{% url 'donate_extended' %}" class="donate-button">donate</a>
                 <div class="sign">
                     {% if request.user.is_authenticated %}
                         <a href="{% url "profile_update" %}">Hello, {{ request.user|username_or:"email" }}</a>|<a href="{% url 'logout' %}">logout</a>
@@ -104,7 +104,7 @@
                         <a class="signin-lnk"  href="{% url "login" %}?next={{ request.path }}">SIGN IN</a>
                     </div>
                     <div class="col-xs-12 xs-menu-donate" style="min-height: 120px;">
-                        <a class="donate-lnk" href="{% url 'donate_index' %}">DONATE</a>
+                        <a class="donate-lnk" href="{% url 'donate_extended' %}">DONATE</a>
                     </div>
                 </div>
             </div>

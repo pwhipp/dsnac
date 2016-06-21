@@ -79,35 +79,43 @@ class DonateForm(forms.ModelForm):
     last_name = forms.CharField()
     last_name.widget.attrs['placeholder'] = 'Your Last Name'
 
-    email = forms.CharField(required=False)
+    email = forms.CharField()
     email.widget.attrs['placeholder'] = 'Your Email'
-    phone = forms.CharField(required=False)
+    phone = forms.CharField()
     phone.widget.attrs['placeholder'] = 'Your Phone Number'
 
     # widget=forms.PasswordInput()
-    password1 = forms.CharField(required=False)
+    password1 = forms.CharField()
     password1.widget.attrs['placeholder'] = 'Your Password'
-    password2 = forms.CharField(required=False)
+    password2 = forms.CharField()
     password2.widget.attrs['placeholder'] = 'Repeat Password'
-
-    def __init__(self, user, *args, **kwargs):
-        kwargs.setdefault('initial', {})
-        if user.is_authenticated():
-            kwargs['initial']['email'] = user.email
-            kwargs['initial']['first_name'] = user.first_name
-            kwargs['initial']['last_name'] = user.last_name
-
-            kwargs['initial']['cc_number'] = 'XXXX-XXXX-XXXX-%s' % user.profile.card_last
-            kwargs['initial']['cc_first_name'] = user.profile.first_name
-            kwargs['initial']['cc_last_name'] = user.profile.last_name
-            kwargs['initial']['cc_code'] = 'XXX'
-            self.fields['cc_code'].widget.attrs['readonly'] = True
-
-        super(DonateForm, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Donate
         exclude = ('added', 'user')
 
 
+class CustomerDonateForm(DonateForm):
+    def __init__(self, *args, **kwargs):
 
+        super(CustomerDonateForm, self).__init__(*args, **kwargs)
+        self.fields['cc_first_name'].required = False
+        self.fields['cc_last_name'].required = False
+        self.fields['cc_number'].required = False
+        self.fields['cc_code'].required = False
+        self.fields['exp_date_month'].required = False
+        self.fields['exp_date_year'].required = False
+
+        self.fields['bill_street'].required = False
+        self.fields['bill_city'].required = False
+        self.fields['bill_zip'].required = False
+        self.fields['bill_apt'].required = False
+        self.fields['bill_state'].required = False
+        self.fields['bill_country'].required = False
+
+        self.fields['first_name'].required = False
+        self.fields['last_name'].required = False
+        self.fields['email'].required = False
+        self.fields['phone'].required = False
+        self.fields['password1'].required = False
+        self.fields['password2'].required = False
