@@ -129,11 +129,290 @@
             </div>
 
             <div>
+                <section>
+                    <h1 class="h1_heading">Please Choose Payment Method</h1>
+                    <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                        <div class="payments_methods">
+                            <div class="col-lg-5" style="padding-top: 10px; padding-left: 110px;">
+                                <a href="{% url 'donate_extended' %}">
+                                    <img src="{% static 'img/theme/cc-icons1.png' %}" alt="">
+                                </a>
+                            </div>
+                            <div class="col-lg-5 active">
+                                <img src="{% static 'img/theme/paypal-icon.png' %}" alt="">
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </section>
 
                 <section>
-                    <h1>Pay with PayPal</h1>
-                    <!-- writes out the form tag automatically -->
-                    {{ form.render }}
+                    <form action="{% url 'donate_paypal' %}" method="post" id="donation_paypal_form">
+                        {% csrf_token %}
+                        <h1 class="h1_heading">You're donating $ <span id="top_amount"></span></h1>
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                            <h2>Your Gift *</h2>
+                            <hr/>
+                            <div class="donation_buttons">
+                                <div style="margin-left: 80px; margin-top: 8px;">
+                                    <input id="25" class="amount_values" value="25" type="radio" name="payment" hidden/>
+                                    <label for="25"><span>$25</span></label>
+                                    <input id="50" class="amount_values" value="50" type="radio" name="payment" hidden/>
+                                    <label for="50"><span>$50</span></label>
+                                    <input id="100" class="amount_values" value="100" type="radio" name="payment" hidden/>
+                                    <label for="100"><span>$100</span></label>
+                                    <input id="500" class="amount_values" value="500" type="radio" name="payment" hidden/>
+                                    <label for="500"><span>$500</span></label>
+                                    <input id="1000" class="amount_values" value="1000" type="radio" name="payment" hidden/>
+                                    <label for="1000"><span>$1000</span></label>
+                                </div>
+                            </div>
+
+                            <div class="select_amount">
+                                <div class="col-lg-2 input_label">
+                                    <label for="id_amount">Other Amount:</label>
+                                </div>
+
+                                <div class="col-lg-10">
+                                    {{ form.amount }}
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                            <h2>In Honor or Memory of</h2>
+                            <hr/>
+                            <div class="select_amount">
+                                {{ form.memory_of }}
+                                <label for="memory">
+                                    <p>Make this donation in honor or memory of someone</p>
+                                </label>
+                                <div id="memory_types" style="display: none;">
+                                    <p>type:</p>
+
+                                    {{ form.memory_of_type }}
+
+                                    <br/>
+
+                                    <div class="col-lg-6">
+                                        {{ form.first_name_memory }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {{ form.last_name_memory }}
+                                    </div>
+                                </div>
+
+                                <div class="clearfix"></div>
+
+                                <hr/>
+
+                                <p>Please send notification of my gift to:</p>
+
+                                <div class="col-lg-6">
+                                    {{ form.full_name_notification }}
+                                    {{ form.from_notification }}
+                                </div>
+
+                                <div class="col-lg-6">
+                                    {{ form.recipient_notification }}
+                                </div>
+
+                                {{ form.anonymous }}
+                                <label for="id_anonymous">DISPLAY MY NAME AS ANONYMOUS</label>
+                                <div class="clearfix"></div>
+
+                                <div class="col-lg-12">
+                                    <p>Message:</p>
+                                    {{ form.message_notification }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                            <h2>Credit Card Information *</h2>
+                            <hr/>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.cc_first_name.errors.as_text }}</small>
+                                    {{ form.cc_first_name }}
+                                    <small>{{ form.cc_number.errors.as_text }}</small>
+                                    {{ form.cc_number }}
+                                    <small>{{ form.cc_code.errors.as_text }}</small>
+                                    {{ form.cc_code }}
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <small>{{ form.cc_last_name.errors.as_text }}</small>
+                                    {{ form.cc_last_name }}
+                                    <div class="col-lg-2" style="margin-top: 15px;">
+                                        <p>Exp. Date:</p>
+                                    </div>
+                                    <small>{{ form.exp_date_month.errors.as_text }}</small>
+                                    <div class="col-lg-5" style="margin-top: 15px;">
+                                        {{ form.exp_date_month }}
+                                    </div>
+                                    <small>{{ form.exp_date_year.errors.as_text }}</small>
+                                    <div class="col-lg-5" style="margin-top: 15px;">
+                                        {{ form.exp_date_year }}
+                                    </div>
+
+                                    <p class="cc_info">What is this ?
+                                        <img src="{% static 'img/theme/cc_info.png'%}" alt=""/></p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-10 col-md-1 col-sm-10 donate_top">
+                            <h2>Billing Information *</h2>
+                            <hr/>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.bill_street.errors.as_text }}</small>
+                                    {{ form.bill_street }}
+                                    <small>{{ form.bill_city.errors.as_text }}</small>
+                                    {{ form.bill_city }}
+                                    <small>{{ form.bill_zip.errors.as_text }}</small>
+                                    {{ form.bill_zip }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <small>{{ form.bill_apt.errors.as_text }}</small>
+                                    {{ form.bill_apt }}
+                                    <small>{{ form.bill_state.errors.as_text }}</small>
+                                    {{ form.bill_state }}
+                                    <small>{{ form.bill_country.errors.as_text }}</small>
+                                    {{ form.bill_country }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                            <h2>Personal Information *</h2>
+                            <hr/>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.first_name.errors.as_text }}</small>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <small>{{ form.last_name.errors.as_text }}</small>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.email.errors.as_text }}</small>
+                                    {{ form.email }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <small>{{ form.phone.errors.as_text }}</small>
+                                    {{ form.phone }}
+                                </div>
+                            </div>
+                            <div class="select_amount">
+                                <div class="col-lg-6">
+                                    <small>{{ form.password1.errors.as_text }}</small>
+                                    {{ form.password1 }}
+                                </div>
+                                <div class="col-lg-6">
+                                    <small>{{ form.password2.errors.as_text }}</small>
+                                    {{ form.password2 }}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                            <h2>Monthly Gift</h2>
+                            <hr/>
+                            <div class="select_amount">
+                                <div class="col-lg-4">
+                                    {{ form.monthly_gift }}
+                                    <label for="id_monthly_gift">Make this a monthly gift</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    Your card will be charged monthly. You can change it in your personal cabinet.
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+                            <p></p>
+                            <p> Established in 1999 as a registered charity, Sikh National Archives of Canada’s (SNAC)
+                                mission has been to collect, store and archive historic, religious, and cultural
+                                literature, scriptures, books, articles, (including published and unpublished)
+                                materials relating to the Sikh religion and Canadian Sikh experience. This vast
+                                collection promotes awareness and understanding of the cultural heritage and values
+                                of the Sikh Canadians.
+                            </p>
+                            <p>SNAC is in the process of building a multi-purpose website which will allow easy
+                                access to their entire physical collection which since 1984 has been housed at the
+                                SNAC head office in Ottawa. The first phase of this website is complete but in order
+                                to complete this vast project we need YOUR support. Upon completion you will be able
+                                to:</p>
+                            <p>
+                                • Read the entire SNAC collection online <br/>
+                                • Search catalogued item listings with complete descriptive details <br/>
+                                • Search collection catalogue using title, author, publisher, subject, place <br/>
+                                • Search any word or term inside individual books, magazines, articles <br/>
+                                • Fully search Panjabi books, magazines, newspapers and documents <br/>
+                                • Share items easily via social media <br/>
+                                • Use the flip book reader to make books easily readable <br/>
+                                • Use the read aloud feature for greater accessibility <br/>
+                                • Download books in different formats (Online Book Reader, PDF, Plain Text, ePub,
+                                Djvu, MOBI or Kindle). <br/>
+                            </p>
+
+                            <p>When you support Sikh National Archives of Canada you are supporting:</p>
+
+                            <p>Inclusion
+                                Sikh National Archives creates a more inclusive society by documenting, preserving,
+                                and sharing stories
+                                that represent the unique and diverse experiences of Canadian Sikhs.</p>
+
+                            <p>Innovation
+                                Our innovative approach will allow individuals access to a wealth of digital content.
+                                This can be used as a tool for empowerment and identity formation.</p>
+
+                            <p>Grassroots
+                                More than 95% of our financial support comes from individual donors just like you.
+                                The organization is run by a small number of dedicated volunteers.</p>
+
+                            <p>A vision for the future
+                                We believe that Canadian Sikh narrative is an integral part of Canadian history and
+                                our mission is to ensure that Canadian Sikh stories are documented, preserved,and
+                                made easily available for greater public good.</p>
+                        </div>
+
+                        <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
+
+                            <h2>Donating</h2>
+                            <hr/>
+                            <div class="donation_buttons">
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-3">
+                                        <a class="donate_lnks" href="" onclick="return false">Donor Bill of Rights</a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-3">
+                                        <button class="donate_now">Donate Now ></button>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-3">
+                                        <a class="donate_lnks" id="reset_fields" href="">Reset Fields</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="select_amount">
+                                {{ form.subscribe }}
+                                <label for="id_subscribe">I would like to receive news and updates from the
+                                    sikh national archives of canada</label>
+                            </div>
+
+                        </div>
+                    </form>
                 </section>
 
                 <div class="modal fade" id="thanks_message">
@@ -189,7 +468,37 @@
 {% include "includes/footer_scripts.html" %}
 
 <script>
+    $(document).ready(function(){
+        $('.amount_values').on('change', function(){
+            $('#top_amount').text($(this).val());
+            $('#id_amount').val($(this).val())
+        });
+        $('#id_memory_of').on('change', function(){
+            $('#memory_types').toggle();
+        });
+        // Todo
+        $('#id_anonymous').on('change', function(){
+            var anon = $('#id_full_name_notification');
+            if (anon.prop('checked', true)) {
+                anon.prop('readonly', true);
+            } else {
+                anon.prop('readonly', false);
+            }
 
+        });
+        $('.donate_now').on('click', function(){
+            $(this).hide();
+        });
+
+        $('.close').on('click', function(){
+            window.location.href = "/";
+        });
+
+        $('#reset_fields').on('click', function(){
+            $('#donation_form').trigger("reset");
+        })
+
+    });
 </script>
 
 </body>
