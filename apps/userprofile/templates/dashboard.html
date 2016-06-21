@@ -1,0 +1,93 @@
+{% extends 'base_page.html' %}
+{% block title %}{{ user.username }}'s dashboard {% endblock title%}
+{% block main %}
+
+    <section>
+        <h1>Your donation history</h1>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 book-data">
+            {% if transactions %}
+                <table class="table table-striped ">
+                    <tr>
+                        <th>Transaction id</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Is monthly</th>
+                    </tr>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.id }}</td>
+                            <td>${{ transaction.amount }}</td>
+                            <td>{{ transaction.added }}</td>
+                            <td>{{ transaction.monthly_gift }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <h1>Your total contribution is: ${{ total.amount__sum }}. Thank you!</h1>
+            {% else %}
+                There is no donations :( You can make your first donation
+                <a href="{% url 'donate_extended' %}">here</a>.
+            {% endif %}
+        </div>
+    </section>
+
+    <div class="clearfix"></div>
+
+    <section>
+        <div class="col-lg-offset-2 col-lg-10 col-md-10 col-sm-10 col-xs-12 book-data">
+            <h1>Your info</h1>
+            {{ user.profile.first_name }} {{ user.profile.last_name }} <br>
+            Email subscription - {{ user.profile.subscribe }} <br>
+            Active credit card - **** **** **** {{ user.profile.card_last }} <br>
+        </div>
+    </section>
+
+    <div class="clearfix"></div>
+
+    <section>
+        <div class="col-lg-offset-2 col-lg-10 col-md-10 col-sm-10 col-xs-12 book-data">
+            <h1>Favorite books</h1>
+
+            <table class="table table-striped ">
+                <tr>
+                    <th>Book</th>
+                    <th>Date</th>
+                </tr>
+                {% for favorite_book in favorite_books %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'bookrepo_detail' book_identifier=favorite_book.book_identifier.identifier %}">
+                                {{ favorite_book.book_identifier.title }}
+                            </a>
+                        </td>
+                        <td>{{ favorite_book.added}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <div class="col-lg-offset-2 col-lg-10 col-md-10 col-sm-10 col-xs-12 book-data">
+            <h1>Currently reading books</h1>
+            <table class="table table-striped ">
+                <tr>
+                    <th>Book</th>
+                    <th>Date</th>
+                </tr>
+                {% for book in reading %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'bookrepo_detail' book_identifier=book.book_identifier.identifier %}">
+                                {{ book.book_identifier.title }}
+                            </a>
+                        </td>
+                        <td>{{ book.added}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </section>
+
+
+
+{% endblock main %}
