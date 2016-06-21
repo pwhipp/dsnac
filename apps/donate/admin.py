@@ -1,4 +1,8 @@
 from django.contrib import admin
 from .models import Donate
 
-admin.site.register(Donate)
+
+class DonateAdmin(admin.ModelAdmin):
+    list_display = ('user', 'added', 'amount')
+
+admin.site.register(Donate, DonateAdmin)

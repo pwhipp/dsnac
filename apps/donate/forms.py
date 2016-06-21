@@ -84,7 +84,6 @@ class DonateForm(forms.ModelForm):
     phone = forms.CharField()
     phone.widget.attrs['placeholder'] = 'Your Phone Number'
 
-    # widget=forms.PasswordInput()
     password1 = forms.CharField()
     password1.widget.attrs['placeholder'] = 'Your Password'
     password2 = forms.CharField()

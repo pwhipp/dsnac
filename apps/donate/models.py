@@ -35,5 +35,5 @@ class Donate(models.Model):
         verbose_name_plural = 'Donations'
 
     def __unicode__(self):
-        return u'%s' % self.amount
+        return u'%s %s' % (self.user.first_name, self.user.last_name)
 

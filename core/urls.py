@@ -37,6 +37,7 @@ urlpatterns += patterns(
     (r'^accounts/signup/$', 'mezzanine.accounts.views.signup'),
     url(r"^payments/", include("payments.urls")),
     url(r"^donate/", include('apps.donate.urls')),
+    url(r"^profile/", include('apps.userprofile.urls')),
     ("^", include("mezzanine.urls")))+static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 # Adds ``STATIC_URL`` to the context of error pages, so that error
