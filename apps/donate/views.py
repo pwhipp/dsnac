@@ -19,7 +19,6 @@ from .forms import DonateForm, CustomerDonateForm
 from .models import Donate
 
 
-# todo: create credit card CRUD
 # todo: celery charge
 # todo: email sending
 

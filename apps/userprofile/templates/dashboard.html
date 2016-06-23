@@ -2,6 +2,18 @@
 {% block title %}{{ user.username }}'s dashboard {% endblock title%}
 {% block main %}
 
+    {% if card_is_invalid %}
+        <section>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 book-data text-center">
+                <div class="alert alert-warning fade in">
+                    <a title="close" aria-label="close" data-dismiss="alert" class="close" href="#">×</a>
+                    <strong>Warning!</strong>
+                    <p>We are unable to process your credit card. <a href="{% url 'add_card' %}">Please add a payment information.</a></p>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
     <section>
         <h1>Your donation history</h1>
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12 book-data">
@@ -22,7 +34,7 @@
                         </tr>
                     {% endfor %}
                 </table>
-                <h1>Your total contribution is: ${{ total.amount__sum }}. Thank you!</h1>
+                <h1>Your total contribution is: ${{ total }}. Thank you!</h1>
             {% else %}
                 There is no donations :( You can make your first donation
                 <a href="{% url 'donate_extended' %}">here</a>.
@@ -38,6 +50,8 @@
             {{ user.profile.first_name }} {{ user.profile.last_name }} <br>
             Email subscription - {{ user.profile.subscribe }} <br>
             Active credit card - **** **** **** {{ user.profile.card_last }} <br>
+            Expire on - {{ user.profile.card_expiry }} <br>
+            <a href="{% url 'add_card' %}">Edit your payment information</a><br>
         </div>
     </section>
 

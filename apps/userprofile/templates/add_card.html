@@ -1,0 +1,63 @@
+{% extends 'base_page.html' %}
+{% block meta_title %}{{ book.title }}{% endblock meta_title%}
+{% block title %}Credit card{% endblock title%}
+{% block main %}
+    <div class="col-lg-10 col-md-10">
+        <div class="pane">
+            <div class="pane-controls">
+                <h1 class="pane-title">Edit Your Payment Setting</h1>
+            </div>
+            <div class="subpane">
+                <div class="row">
+
+                    <div class="edit-wrapper clearfix">
+                        <div class="col-lg-12">
+
+                            <div class="bio-graph-info col-md-12">
+                                <form action="" method="post">
+                                    {% if host.card_last %}
+                                        <div class="col-md-10">
+                                            <label for="">Current Card</label>
+                                            <input class="form-control" type="text"
+                                                   readonly disabled value="{{ host.card_type }} XXXXXXXX{{ host.card_last|default:"" }} Exp {{ host.card_expiry }}">
+
+                                        </div>
+                                    {% endif %}
+
+                                    {% csrf_token %}
+
+                                    <div class="col-md-10">
+                                        <label for="">Card Number</label>
+                                        <input class="form-control" type="number" value="{{ form.card_number.value|default:"" }}" name="card_number">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <i style="color: red">{{ form.card_number.errors.as_text }}</i>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <label for="">CVC</label>
+                                        <input class="form-control" type="number" value="{{ form.cvc.value|default:"" }}" name="cvc">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <i style="color: red">{{ form.cvc.errors.as_text }}</i>
+                                    </div>
+
+                                    <div class="col-md-10 ">
+                                        <label for="">Card Expiry </label>{{ form.expiration }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <i style="color: red">{{ form.expiration.errors.as_text }}</i>
+                                    </div>
+
+                                    <div class="col-md-10" style="text-align:center;margin-left: 25%">
+                                        <input type="submit" value="Update" class="finish btn
+    btn-success">
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+{% endblock %}
