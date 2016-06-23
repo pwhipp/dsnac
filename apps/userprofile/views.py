@@ -1,7 +1,7 @@
 import stripe
 from django.forms.utils import ErrorList
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import FormView
 from django.db.models import Sum
 
@@ -13,37 +13,43 @@ from models import Profile
 
 def dashboard(request):
     if request.user.is_authenticated():
-        user = request.user
-        transactions = Donate.objects.filter(user=user.profile)
-        favorite_books = FavoriteBook.objects.filter(user=user)
-        # total = Donate.objects.filter(user=user.profile).aggregate(Sum('amount'))
-        # todo: change `amount` field to integer and use Sum
-        all_amounts = Donate.objects.filter(user=user.profile).values_list('amount', flat=True)
-        total = 0
-        for amount in all_amounts:
-            try:
-                donation = int(amount)
-                total += donation
-            except ValueError:
-                pass
-        reading = BookReading.objects.filter(user=user)
+        try:
+            Profile.objects.get(user=request.user)
+            user = request.user
+            transactions = Donate.objects.filter(user=user.profile)
+            favorite_books = FavoriteBook.objects.filter(user=user)
+            # total = Donate.objects.filter(user=user.profile).aggregate(Sum('amount'))
+            # todo: change `amount` field to integer and use Sum
+            all_amounts = Donate.objects.filter(user=user.profile).values_list('amount', flat=True)
+            total = 0
+            for amount in all_amounts:
+                try:
+                    donation = int(amount)
+                    total += donation
+                except ValueError:
+                    pass
+            reading = BookReading.objects.filter(user=user)
 
-        card_is_invalid = False
-        if not user.profile.payment_active:
-            card_is_invalid = True
+            card_is_invalid = False
+            if not user.profile.payment_active:
+                card_is_invalid = True
 
-        if not user.profile.default_card:
-            card_is_invalid = True
+            if not user.profile.default_card:
+                card_is_invalid = True
 
-        data = {
-            'user': user,
-            'transactions': transactions,
-            'favorite_books': favorite_books,
-            'total': total,
-            'reading': reading,
-            'card_is_invalid': card_is_invalid
-        }
-        return render(request, 'dashboard.html', data)
+            data = {
+                'user': user,
+                'transactions': transactions,
+                'favorite_books': favorite_books,
+                'total': total,
+                'reading': reading,
+                'card_is_invalid': card_is_invalid
+            }
+            return render(request, 'dashboard.html', data)
+        except Profile.DoesNotExist:
+            Profile.objects.create(user=request.user, first_name=request.user.first_name,
+                                   last_name=request.user.last_name, subscribe=True)
+            return redirect('dashboard')
     return render(request, 'dashboard.html', {})
 
 
