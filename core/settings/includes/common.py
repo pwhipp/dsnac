@@ -291,11 +291,9 @@ PAYPAL_IDENTITY_TOKEN = 'AVGIUS9goQDjVsvbAnWV3nRbap53tTjfHEBABDJfpKq7_28vDyqLaDu
 PAYPAL_CLIENT_SECRET = 'ENcHz13UU5ml-jNEKm6cb4cF0h7rJas80MRAPUhYrjgu3BQ7p2ncCTFA_UO_Is-_QW6YYXCxSUyrTdVN'
 PAYPAL_ACCESS_TOKEN = 'access_token$sandbox$tdyqc9w53w22yj38$1e5abc59f1832e2c2b2f5b30a1c4b4b9'
 
-# STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "sk_live_Vs9pcTv9P7JTfdDPQyKOsGxN")
-# STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_live_pvAiVzt4gkXmbxj69eknGHKv")
+STRIPE_PUBLIC_KEY = 'sk_live_Vs9pcTv9P7JTfdDPQyKOsGxN'
+STRIPE_SECRET_KEY = 'pk_live_pvAiVzt4gkXmbxj69eknGHKv'
 
-STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_PUBLIC_KEY", "pk_test_lvQ40oIEm0JqVmqE5wNmVNS5")
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_BS2t9JImRsscT1vyWNsPYGLK")
 
 PAYMENTS_PLANS = {
     "monthly": {
@@ -339,3 +337,8 @@ except ImportError:
     pass
 else:
     set_dynamic_settings(globals())
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

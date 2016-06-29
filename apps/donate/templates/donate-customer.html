@@ -131,6 +131,15 @@
             <div>
                 <section>
                     <form action="{% url 'donate_customer' %}" method="post" id="donation_customer_form">
+
+                        {% if form.amount.errors %}
+                            <div class="alert alert-danger col-lg-10 col-md-10">
+                                    <p>We are unable to charge your card. Reason: </p>
+                                    <p>{{ form.amount.errors.as_text }}</p>
+                                    <p>Please update your <a href="{% url 'add_card' %}">payment information</a>.</p>
+                            </div>
+                        {% endif %}
+
                         {% csrf_token %}
                         <h1 class="h1_heading">You're donating $ <span id="top_amount"></span>  by credit card</h1>
                         <div class="col-lg-10 col-md-10 col-sm-10 donate_top">

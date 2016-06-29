@@ -71,10 +71,17 @@ class ChangeCardView(FormView):
             errors.append(e._message)
             return self.form_invalid(form)
 
-        customer = stripe.Customer.create(source=token.id,
-                                          description="Payment for  %s %s" %
-                                                      (self.request.user.profile.first_name,
-                                                       self.request.user.profile.last_name))
+        try:
+            customer = stripe.Customer.create(source=token.id,
+                                              description="Payment for  %s %s" %
+                                                          (self.request.user.profile.first_name,
+                                                           self.request.user.profile.last_name))
+        except Exception as e:
+            errors = form._errors.setdefault("card_number", ErrorList())
+            errors.append(e._message)
+            return self.form_invalid(form)
+
+
 
         user = Profile.objects.get(user=self.request.user)
         user.stripe_id = customer['id']

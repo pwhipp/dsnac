@@ -111,6 +111,7 @@ class DonateView(FormView):
         except Exception as e:
             errors = form._errors.setdefault("cc_number", ErrorList())
             errors.append(e)
+            donate.delete()
             return self.form_invalid(form)
 
         if all([notify_from, notify_to]):
@@ -139,6 +140,12 @@ class CustomerDonateView(FormView):
     template_name = 'donate-customer.html'
     form_class = CustomerDonateForm
 
+    def get(self, request, *args, **kwargs):
+        profile = Profile.objects.get(user=self.request.user)
+        if not profile.payment_active:
+            return redirect('add_card')
+        return super(CustomerDonateView, self).post(request, *args, **kwargs)
+
     def form_valid(self, form):
         payment = int(form.cleaned_data['amount'])
         notify_from = form.cleaned_data.get('from_notification')
@@ -160,6 +167,19 @@ class CustomerDonateView(FormView):
                                        message_notification=notify_message,
                                        monthly_gift=form.cleaned_data['monthly_gift']
                                        )
+
+        try:
+            stripe.Charge.create(
+                amount=payment * 100,
+                currency="usd",
+                customer=profile.stripe_id,
+                description="Charge for donation #%s" % donate.id,
+            )
+        except Exception as e:
+            errors = form._errors.setdefault("amount", ErrorList())
+            errors.append(e)
+            donate.delete()
+            return self.form_invalid(form)
 
         if all([notify_from, notify_to]):
             if notify_is_anonymous:
