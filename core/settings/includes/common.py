@@ -11,12 +11,10 @@ PAGE_MENU_TEMPLATES = (
     (1, "Top navigation bar", "pages/menus/dropdown.html"),
     (2, "Footer", "pages/menus/footer.html"))
 
-USE_SOUTH = True
 
-
-ADMINS = (('Paul Whipp', 'paul.whipp@gmail.com'),
-            ('Alexey Dubnyak', 'adubnyak@gmail.com'),
-            )
+ADMINS = (
+    ('Alexey Dubnyak', 'adubnyak@gmail.com'),
+)
 MANAGERS = ADMINS
 
 ALLOWED_HOSTS = ['sikhnationalarchives.com']
@@ -36,12 +34,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 SITE_ID = 1
 
-# Tuple of IP addresses, as strings, that:
-#   * See debug comments, when DEBUG is true
-#   * Receive x-headers
 INTERNAL_IPS = ("127.0.0.1",)
 
-# List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     "django.template.loaders.filesystem.Loader",
     "django.template.loaders.app_directories.Loader")
@@ -68,8 +62,6 @@ AUTHENTICATION_BACKENDS = (
     'social_auth.backends.OpenIDBackend',
 )
 
-# List of finder classes that know how to find static files in
-# various locations.
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder")
@@ -77,11 +69,6 @@ STATICFILES_FINDERS = (
 # The numeric mode to set newly-uploaded files to. The value should be
 # a mode you'd pass directly to os.chmod.
 FILE_UPLOAD_PERMISSIONS = 0o644
-
-
-#########
-# PATHS #
-#########
 
 import os
 
@@ -101,21 +88,11 @@ BOOKS_ROOT = os.path.join(MEDIA_ROOT, 'books')
 BOOKS_URL = MEDIA_URL + 'books/'
 BOOKS_NO_COVER_IMAGE = os.path.join(MEDIA_URL, 'no_cover_image.png')
 
-# Package/module name to import the root urlpatterns from for the project.
 ROOT_URLCONF = 'core.urls'
 
-# Put strings here, like "/home/html/django_templates"
-# or "C:/www/django/templates".
-# Always use forward slashes, even on Windows.
-# Don't forget to use absolute paths, not relative paths.
 TEMPLATE_DIRS = ()
 
-
-################
-# APPLICATIONS #
-################
-
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -148,11 +125,8 @@ INSTALLED_APPS = (
     'apps.mediabooks',
     'apps.donate',
     'apps.userprofile',
-)
+]
 
-# List of processors used by RequestContext to populate the context.
-# Each one should be a callable that takes the request object as its
-# only parameter and returns a dictionary to add to the context.
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
@@ -170,9 +144,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social_auth.context_processors.social_auth_login_redirect',
 )
 
-# List of middleware classes to use. Order is important; in the request phase,
-# these middleware classes will be applied in the order given, and in the
-# response phase the middleware will be applied in reverse order.
 MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.UpdateCacheMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -193,24 +164,8 @@ MIDDLEWARE_CLASSES = (
     "mezzanine.core.middleware.FetchFromCacheMiddleware",
 )
 
-# Store these package names here as they may change in the future since
-# at the moment we are using custom forks of them.
 PACKAGE_NAME_FILEBROWSER = "filebrowser_safe"
 PACKAGE_NAME_GRAPPELLI = "grappelli_safe"
-
-#########################
-# OPTIONAL APPLICATIONS #
-#########################
-
-# These will be added to ``INSTALLED_APPS``, only if available.
-OPTIONAL_APPS = (
-    "debug_toolbar",
-    "django_extensions",
-    "compressor",
-    PACKAGE_NAME_FILEBROWSER,
-    PACKAGE_NAME_GRAPPELLI,
-)
-
 
 SEARCH_MODEL_CHOICES = (
     'bookrepo.Book',
@@ -232,28 +187,16 @@ HAYSTACK_CONNECTIONS = {
     }
 }
 
-####################
-# DYNAMIC SETTINGS #
-####################
-
-# DATABASES is just here to keep set_dynamic_settings happy - see other settings files for the real thing.
 DATABASES = {
     "default": {
-        # Add "postgresql_psycopg2", "mysql", "sqlite3" or "oracle".
         "ENGINE": "django.db.backends.",
-        # DB name or path to database file if using sqlite3.
         "NAME": "",
-        # Not used with sqlite3.
         "USER": "",
-        # Not used with sqlite3.
         "PASSWORD": "",
-        # Set to empty string for localhost. Not used with sqlite3.
         "HOST": "",
-        # Set to empty string for default. Not used with sqlite3.
         "PORT": "",
     }
 }
-# https://console.developers.google.com/project/third-being-859/apiui/credential?clientType#
 
 TWITTER_CONSUMER_KEY = 'rj3AxmjrcWT06n0sbCj5GdSr4'
 TWITTER_CONSUMER_SECRET = 'lwFInmiSRHcOtqOYRxkvEDCJuEsFfHK7qMY332zWM12IOeAW6B'
@@ -325,12 +268,6 @@ PAYMENTS_PLANS = {
 
 AUTH_USER_MODEL = 'auth.User'
 
-# set_dynamic_settings() will rewrite globals based on what has been
-# defined so far, in order to provide some better defaults where
-# applicable. We also allow this settings module to be imported
-# without Mezzanine installed, as the case may be when using the
-# fabfile, where setting the dynamic settings below isn't strictly
-# required.
 try:
     from mezzanine.utils.conf import set_dynamic_settings
 except ImportError:
