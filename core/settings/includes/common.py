@@ -267,7 +267,13 @@ PAYMENTS_PLANS = {
 }
 
 AUTH_USER_MODEL = 'auth.User'
-
+OPTIONAL_APPS = (
+    "debug_toolbar",
+    "django_extensions",
+    "compressor",
+    PACKAGE_NAME_FILEBROWSER,
+    PACKAGE_NAME_GRAPPELLI,
+)
 try:
     from mezzanine.utils.conf import set_dynamic_settings
 except ImportError:
