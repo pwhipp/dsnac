@@ -231,7 +231,7 @@ class PayPalDonateView(FormView):
         try:
             user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
                                             password=form.cleaned_data['password1'])
-        except IntegrityError:
+        except (User.MultipleObjectsReturned, IntegrityError):
             errors = form._errors.setdefault("email", ErrorList())
             errors.append('User with this email is already exists. Please log in or recover password if needed.')
             return self.form_invalid(form)
