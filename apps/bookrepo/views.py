@@ -100,7 +100,7 @@ def serve_jpg(pathname):
     mime_type = 'image/jpg'
     if os.path.exists(pathname):
         with open(pathname, 'rb') as f:
-            response = HttpResponse(f.read(), mimetype=mime_type)
+            response = HttpResponse(f.read())
             response['Content-Disposition'] = 'inline;filename={0}'.format(os.path.basename(pathname))
             return response
     else:
