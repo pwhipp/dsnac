@@ -211,49 +211,8 @@ class PayPalDonateView(FormView):
         if request.user.is_authenticated():
             return redirect('donate_customer')
 
-
-
         # https://github.com/paypal/PayPal-Python-SDK
         # https://developer.paypal.com/developer/dashboard/sandbox/
-        paypalrestsdk.configure({
-            "mode": "sandbox",  # sandbox or live
-            "client_id": settings.PAYPAL_IDENTITY_TOKEN,
-            "client_secret": settings.PAYPAL_CLIENT_SECRET})
-
-        payment = paypalrestsdk.Payment({
-            "intent": "sale",
-            "payer": {
-                "payment_method": "credit_card",
-                "funding_instruments": [{
-                    "credit_card": {
-                        "type": "visa",
-                        "number": "4417119669820331",
-                        "expire_month": "11",
-                        "expire_year": "2018",
-                        "cvv2": "874",
-                        "first_name": "Joe",
-                        "last_name": "Shopper"}}]},
-            "transactions": [{
-                "item_list": {
-                    "items": [{
-                        "name": "item",
-                        "sku": "item",
-                        "price": "1.00",
-                        "currency": "USD",
-                        "quantity": 1}]},
-                "amount": {
-                    "total": "1.00",
-                    "currency": "USD"},
-                "description": "This is the payment transaction description."}]})
-
-        if payment.create():
-            print("Payment created successfully")
-        else:
-            print(payment.error)
-
-
-
-
         return super(PayPalDonateView, self).get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -282,7 +241,7 @@ class PayPalDonateView(FormView):
             subscribe = True
 
         profile = Profile.objects.create(user=user, first_name=first_name, last_name=last_name,
-                                         subscribe=subscribe, payment_active=True)
+                                         subscribe=subscribe, payment_active=False)
 
         donate = Donate.objects.create(user=profile, amount=payment,
                                        memory_of=form.cleaned_data['memory_of'],
@@ -304,6 +263,44 @@ class PayPalDonateView(FormView):
                                        bill_country=form.cleaned_data['bill_country'],
                                        monthly_gift=form.cleaned_data['monthly_gift']
                                        )
+        paypalrestsdk.configure({
+            "mode": "sandbox",  # sandbox or live
+            "client_id": settings.PAYPAL_IDENTITY_TOKEN,
+            "client_secret": settings.PAYPAL_CLIENT_SECRET})
+
+        payment_dict = {
+            "intent": "sale",
+            "payer": {
+                "payment_method": "credit_card",
+                "funding_instruments": [{
+                    "credit_card": {
+                        "type": "visa",
+                        "number": "{}".format(form.cleaned_data['cc_number']),
+                        "expire_month": "{}".format(form.cleaned_data["exp_date_month"]),
+                        "expire_year": "{}".format(form.cleaned_data["exp_date_year"]),
+                        "cvv2": "{}".format(form.cleaned_data['cc_code']),
+                        "first_name": "{}".format(first_name),
+                        "last_name": "{}".format(last_name)}}]},
+            "transactions": [{
+                "item_list": {
+                    "items": [{
+                        "name": "item",
+                        "sku": "item",
+                        "price": "{}.00".format(payment),
+                        "currency": "USD",
+                        "quantity": 1}]},
+                "amount": {
+                    "total": "{}.00".format(payment),
+                    "currency": "USD"},
+                "description": "Donation from {} via PayPal".format(fullname)}]
+        }
+
+        paypal_payment = paypalrestsdk.Payment(payment_dict)
+
+        if paypal_payment.create():
+            print("Payment created successfully")
+        else:
+            print(paypal_payment.error)
 
         if all([notify_from, notify_to]):
             if notify_is_anonymous:
