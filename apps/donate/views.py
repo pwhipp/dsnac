@@ -1,5 +1,6 @@
 import stripe
 import paypalrestsdk
+import urllib
 
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
@@ -202,6 +203,14 @@ def donation(request, donation_id):
     return render(request, 'thank-donation.html', {'donation': donation})
 
 
+def build_url(*args, **kwargs):
+    get = kwargs.pop('get', {})
+    url = reverse(*args, **kwargs)
+    if get:
+        url += '?' + urllib.urlencode(get)
+    return url
+
+
 class PayPalDonateView(FormView):
     """ Extended page for donations. Using DonateForm """
     template_name = 'paypal.html'
@@ -228,41 +237,41 @@ class PayPalDonateView(FormView):
         notify_from_name = form.cleaned_data.get('full_name_notification')
         notify_message = form.cleaned_data.get('message_notification')
 
-        try:
-            user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
-                                            password=form.cleaned_data['password1'])
-        except (User.MultipleObjectsReturned, IntegrityError):
-            errors = form._errors.setdefault("email", ErrorList())
-            errors.append('User with this email is already exists. Please log in or recover password if needed.')
-            return self.form_invalid(form)
+        # try:
+        # user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
+        #                                     password=form.cleaned_data['password1'])
+        # except (User.MultipleObjectsReturned, IntegrityError):
+        #     errors = form._errors.setdefault("email", ErrorList())
+        #     errors.append('User with this email is already exists. Please log in or recover password if needed.')
+        #     return self.form_invalid(form)
 
-        subscribe = False
-        if form.cleaned_data.get('subscribe'):
-            subscribe = True
+        # subscribe = False
+        # if form.cleaned_data.get('subscribe'):
+        #     subscribe = True
 
-        profile = Profile.objects.create(user=user, first_name=first_name, last_name=last_name,
-                                         subscribe=subscribe, payment_active=False)
-
-        donate = Donate.objects.create(user=profile, amount=payment,
-                                       memory_of=form.cleaned_data['memory_of'],
-                                       memory_of_type=form.cleaned_data['memory_of_type'],
-                                       first_name_memory=form.cleaned_data['first_name_memory'],
-                                       last_name_memory=form.cleaned_data['last_name_memory'],
-                                       full_name_notification=notify_from_name,
-                                       from_notification=notify_from,
-                                       recipient_notification=notify_to,
-                                       anonymous=notify_is_anonymous,
-                                       message_notification=notify_message,
-                                       cc_first_name=form.cleaned_data['cc_first_name'],
-                                       cc_last_name=form.cleaned_data['cc_last_name'],
-                                       bill_street=form.cleaned_data['bill_street'],
-                                       bill_city=form.cleaned_data['bill_city'],
-                                       bill_zip=form.cleaned_data['bill_zip'],
-                                       bill_apt=form.cleaned_data['bill_apt'],
-                                       bill_state=form.cleaned_data['bill_state'],
-                                       bill_country=form.cleaned_data['bill_country'],
-                                       monthly_gift=form.cleaned_data['monthly_gift']
-                                       )
+        # profile = Profile.objects.create(user=user, first_name=first_name, last_name=last_name,
+        #                                  subscribe=subscribe, payment_active=False)
+        #
+        # donate = Donate.objects.create(user=profile, amount=payment,
+        #                                memory_of=form.cleaned_data['memory_of'],
+        #                                memory_of_type=form.cleaned_data['memory_of_type'],
+        #                                first_name_memory=form.cleaned_data['first_name_memory'],
+        #                                last_name_memory=form.cleaned_data['last_name_memory'],
+        #                                full_name_notification=notify_from_name,
+        #                                from_notification=notify_from,
+        #                                recipient_notification=notify_to,
+        #                                anonymous=notify_is_anonymous,
+        #                                message_notification=notify_message,
+        #                                cc_first_name=form.cleaned_data['cc_first_name'],
+        #                                cc_last_name=form.cleaned_data['cc_last_name'],
+        #                                bill_street=form.cleaned_data['bill_street'],
+        #                                bill_city=form.cleaned_data['bill_city'],
+        #                                bill_zip=form.cleaned_data['bill_zip'],
+        #                                bill_apt=form.cleaned_data['bill_apt'],
+        #                                bill_state=form.cleaned_data['bill_state'],
+        #                                bill_country=form.cleaned_data['bill_country'],
+        #                                monthly_gift=form.cleaned_data['monthly_gift']
+        #                                )
         paypalrestsdk.configure({
             "mode": "sandbox",  # sandbox or live
             "client_id": settings.PAYPAL_IDENTITY_TOKEN,
@@ -316,29 +325,31 @@ class PayPalDonateView(FormView):
                 except Exception as e:
                     print e
 
-        new_user = authenticate(username=user.username,
-                                password=form.cleaned_data['password1'])
+        # new_user = authenticate(username=user.username,
+        #                         password=form.cleaned_data['password1'])
 
-        login(self.request, new_user)
+        # login(self.request, new_user)
 
-        return redirect('donation', donation_id=donate.id)
+        url = build_url('donate_extended', get={'success': True})
+
+        return redirect(url)
 
 
-def donate_paypal(request):
-
-    paypal_dict = {
-        "business": settings.PAYPAL_RECEIVER_EMAIL,
-        "amount": "10.00",
-        "item_name": "Donation to Sikh National Archives",
-        "invoice": "unique-invoice-id",
-        "notify_url": reverse('paypal-ipn'),
-        "return_url": "/donate/",
-        "cancel_return": "h/",
-
-    }
-
-    # Create the instance.
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    context = {"form": form}
-    return render(request, "paypal.html", context)
+# def donate_paypal(request):
+#
+#     paypal_dict = {
+#         "business": settings.PAYPAL_RECEIVER_EMAIL,
+#         "amount": "10.00",
+#         "item_name": "Donation to Sikh National Archives",
+#         "invoice": "unique-invoice-id",
+#         "notify_url": reverse('paypal-ipn'),
+#         "return_url": "/donate/",
+#         "cancel_return": "h/",
+#
+#     }
+#
+#     # Create the instance.
+#     form = PayPalPaymentsForm(initial=paypal_dict)
+#     context = {"form": form}
+#     return render(request, "paypal.html", context)
 

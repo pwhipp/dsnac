@@ -340,7 +340,7 @@
 
 
                         <div class="col-lg-10 col-md-10 col-sm-10 donate_top">
-                            <p></p>
+                            <p>{{ form.errors }}</p>
                             <p> Established in 1999 as a registered charity, Sikh National Archives of Canada’s (SNAC)
                                 mission has been to collect, store and archive historic, religious, and cultural
                                 literature, scriptures, books, articles, (including published and unpublished)
@@ -496,7 +496,7 @@
 
         $('#reset_fields').on('click', function(){
             $('#donation_form').trigger("reset");
-        })
+        });
 
     });
 </script>
