@@ -13,8 +13,6 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login
 
-from paypal.standard.forms import PayPalPaymentsForm
-
 from apps.userprofile.models import Profile
 from .forms import DonateForm, CustomerDonateForm
 from .models import Donate
@@ -278,38 +276,46 @@ class PayPalDonateView(FormView):
             "client_secret": settings.PAYPAL_CLIENT_SECRET})
 
         payment_dict = {
+
             "intent": "sale",
             "payer": {
                 "payment_method": "credit_card",
-                "funding_instruments": [{
-                    "credit_card": {
-                        "type": "visa",
-                        "number": "{}".format(form.cleaned_data['cc_number']),
-                        "expire_month": "{}".format(form.cleaned_data["exp_date_month"]),
-                        "expire_year": "{}".format(form.cleaned_data["exp_date_year"]),
-                        "cvv2": "{}".format(form.cleaned_data['cc_code']),
-                        "first_name": "{}".format(first_name),
-                        "last_name": "{}".format(last_name)}}]},
-            "transactions": [{
-                "item_list": {
-                    "items": [{
-                        "name": "item",
-                        "sku": "item",
-                        "price": "{}.00".format(payment),
-                        "currency": "USD",
-                        "quantity": 1}]},
-                "amount": {
-                    "total": "{}.00".format(payment),
-                    "currency": "USD"},
-                "description": "Donation from {} via PayPal".format(fullname)}]
+                "funding_instruments": [
+                    {
+                        "credit_card": {
+                            "number": "{}".format(form.cleaned_data['cc_number']),
+                            "type": "visa",
+                            "expire_month": "{}".format(form.cleaned_data["exp_date_month"]),
+                            "expire_year": "{}".format(form.cleaned_data["exp_date_year"]),
+                            "cvv2": "{}".format(form.cleaned_data['cc_code']),
+                            "first_name": "{}".format(first_name),
+                            "last_name": "{}".format(last_name)
+                        }
+                    }
+                ]
+            },
+            "transactions": [
+                {
+                    "amount": {
+                        "total": "{}.00".format(payment),
+                        "currency": "USD"
+                    },
+                    "description": "Donation from {} via PayPal".format(fullname)
+                }
+            ]
+
         }
 
         paypal_payment = paypalrestsdk.Payment(payment_dict)
 
-        if paypal_payment.create():
-            print("Payment created successfully")
-        else:
-            print(paypal_payment.error)
+        try:
+            if paypal_payment.create():
+                print("Payment created successfully")
+            else:
+                print(paypal_payment.error)
+        except Exception as e:
+            print(e)
+            pass
 
         if all([notify_from, notify_to]):
             if notify_is_anonymous:
@@ -333,23 +339,3 @@ class PayPalDonateView(FormView):
         url = build_url('donate_extended', get={'success': True})
 
         return redirect(url)
-
-
-# def donate_paypal(request):
-#
-#     paypal_dict = {
-#         "business": settings.PAYPAL_RECEIVER_EMAIL,
-#         "amount": "10.00",
-#         "item_name": "Donation to Sikh National Archives",
-#         "invoice": "unique-invoice-id",
-#         "notify_url": reverse('paypal-ipn'),
-#         "return_url": "/donate/",
-#         "cancel_return": "h/",
-#
-#     }
-#
-#     # Create the instance.
-#     form = PayPalPaymentsForm(initial=paypal_dict)
-#     context = {"form": form}
-#     return render(request, "paypal.html", context)
-
