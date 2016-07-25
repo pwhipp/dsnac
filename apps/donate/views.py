@@ -284,7 +284,7 @@ class PayPalDonateView(FormView):
         #                                monthly_gift=form.cleaned_data['monthly_gift']
         #                                )
         paypalrestsdk.configure({
-            "mode": "sandbox",  # sandbox or live
+            "mode": "live",  # sandbox or live
             "client_id": settings.PAYPAL_IDENTITY_TOKEN,
             "client_secret": settings.PAYPAL_CLIENT_SECRET})
 

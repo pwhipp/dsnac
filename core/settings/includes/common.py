@@ -225,11 +225,10 @@ djcelery.setup_loader()
 
 CELERY_IMPORTS = ('bookrepo.tasks')
 
-# PAYPAL_RECEIVER_EMAIL = 'sandeepsahota@gmail.com'
-# PAYPAL_TEST = False
 # PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
 
-PAYPAL_RECEIVER_EMAIL = 'adubnyak-facilitator@gmail.com'
+# PAYPAL_RECEIVER_EMAIL = 'adubnyak-facilitator@gmail.com'
+PAYPAL_RECEIVER_EMAIL = 'sandeepsahota@gmail.com'
 PAYPAL_IDENTITY_TOKEN = 'AVGIUS9goQDjVsvbAnWV3nRbap53tTjfHEBABDJfpKq7_28vDyqLaDusimbjDpt3b0Eufl-wHlej05sr'
 PAYPAL_CLIENT_SECRET = 'ENcHz13UU5ml-jNEKm6cb4cF0h7rJas80MRAPUhYrjgu3BQ7p2ncCTFA_UO_Is-_QW6YYXCxSUyrTdVN'
 PAYPAL_ACCESS_TOKEN = 'access_token$sandbox$tdyqc9w53w22yj38$1e5abc59f1832e2c2b2f5b30a1c4b4b9'
