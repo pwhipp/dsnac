@@ -235,6 +235,18 @@ class PayPalDonateView(FormView):
         notify_from_name = form.cleaned_data.get('full_name_notification')
         notify_message = form.cleaned_data.get('message_notification')
         exp_date_year = '20{}'.format(form.cleaned_data["exp_date_year"])
+        card_number = form.cleaned_data['cc_number']
+
+        if card_number[0] == '4':
+            credit_card_type = 'visa'
+        elif card_number[0] == '5':
+            credit_card_type = 'mastercard'
+        elif card_number[0] == '6':
+            credit_card_type = 'discover'
+        elif card_number[0] == '3':
+            credit_card_type = 'amex'
+        else:
+            credit_card_type = 'visa'
 
         # try:
         # user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
@@ -284,8 +296,8 @@ class PayPalDonateView(FormView):
                 "funding_instruments": [
                     {
                         "credit_card": {
-                            "number": "{}".format(form.cleaned_data['cc_number']),
-                            # "type": "visa",
+                            "number": "{}".format(card_number),
+                            "type": "{}".format(credit_card_type),
                             "expire_month": "{}".format(form.cleaned_data["exp_date_month"]),
                             "expire_year": "{}".format(exp_date_year),
                             "cvv2": "{}".format(form.cleaned_data['cc_code']),
