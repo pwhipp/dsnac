@@ -234,6 +234,7 @@ class PayPalDonateView(FormView):
         notify_is_anonymous = form.cleaned_data.get('anonymous')
         notify_from_name = form.cleaned_data.get('full_name_notification')
         notify_message = form.cleaned_data.get('message_notification')
+        exp_date_year = '20{}'.format(form.cleaned_data["exp_date_year"])
 
         # try:
         # user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
@@ -284,9 +285,9 @@ class PayPalDonateView(FormView):
                     {
                         "credit_card": {
                             "number": "{}".format(form.cleaned_data['cc_number']),
-                            "type": "visa",
+                            # "type": "visa",
                             "expire_month": "{}".format(form.cleaned_data["exp_date_month"]),
-                            "expire_year": "{}".format(form.cleaned_data["exp_date_year"]),
+                            "expire_year": "{}".format(exp_date_year),
                             "cvv2": "{}".format(form.cleaned_data['cc_code']),
                             "first_name": "{}".format(first_name),
                             "last_name": "{}".format(last_name)
