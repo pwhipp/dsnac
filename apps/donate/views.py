@@ -248,41 +248,6 @@ class PayPalDonateView(FormView):
         else:
             credit_card_type = 'visa'
 
-        # try:
-        # user = User.objects.create_user(username=form.cleaned_data['email'], email=form.cleaned_data['email'],
-        #                                     password=form.cleaned_data['password1'])
-        # except (User.MultipleObjectsReturned, IntegrityError):
-        #     errors = form._errors.setdefault("email", ErrorList())
-        #     errors.append('User with this email is already exists. Please log in or recover password if needed.')
-        #     return self.form_invalid(form)
-
-        # subscribe = False
-        # if form.cleaned_data.get('subscribe'):
-        #     subscribe = True
-
-        # profile = Profile.objects.create(user=user, first_name=first_name, last_name=last_name,
-        #                                  subscribe=subscribe, payment_active=False)
-        #
-        # donate = Donate.objects.create(user=profile, amount=payment,
-        #                                memory_of=form.cleaned_data['memory_of'],
-        #                                memory_of_type=form.cleaned_data['memory_of_type'],
-        #                                first_name_memory=form.cleaned_data['first_name_memory'],
-        #                                last_name_memory=form.cleaned_data['last_name_memory'],
-        #                                full_name_notification=notify_from_name,
-        #                                from_notification=notify_from,
-        #                                recipient_notification=notify_to,
-        #                                anonymous=notify_is_anonymous,
-        #                                message_notification=notify_message,
-        #                                cc_first_name=form.cleaned_data['cc_first_name'],
-        #                                cc_last_name=form.cleaned_data['cc_last_name'],
-        #                                bill_street=form.cleaned_data['bill_street'],
-        #                                bill_city=form.cleaned_data['bill_city'],
-        #                                bill_zip=form.cleaned_data['bill_zip'],
-        #                                bill_apt=form.cleaned_data['bill_apt'],
-        #                                bill_state=form.cleaned_data['bill_state'],
-        #                                bill_country=form.cleaned_data['bill_country'],
-        #                                monthly_gift=form.cleaned_data['monthly_gift']
-        #                                )
         paypalrestsdk.configure({
             "mode": "live",  # sandbox or live
             "client_id": settings.PAYPAL_IDENTITY_TOKEN,
@@ -328,7 +293,9 @@ class PayPalDonateView(FormView):
                 print(paypal_payment.error)
         except Exception as e:
             print(e)
-            pass
+            errors = form._errors.setdefault("cc_number", ErrorList())
+            errors.append(e)
+            return self.form_invalid(form)
 
         if all([notify_from, notify_to]):
             if notify_is_anonymous:
@@ -342,12 +309,7 @@ class PayPalDonateView(FormView):
                         fail_silently=True,
                     )
                 except Exception as e:
-                    print e
-
-        # new_user = authenticate(username=user.username,
-        #                         password=form.cleaned_data['password1'])
-
-        # login(self.request, new_user)
+                    print(e)
 
         url = build_url('donate_extended', get={'success': True})
 
