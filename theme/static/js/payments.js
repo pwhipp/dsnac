@@ -28,78 +28,62 @@ $(document).ready(function(){
         }
     });
 
-    //
-    // var handler = StripeCheckout.configure({
-    //     key: 'pk_test_lvQ40oIEm0JqVmqE5wNmVNS5',
-    //     image: '/static/img/theme/snac_logo.png',
-    //     token: function(token) {
-    //         $.ajax({
-    //             url: "/donate/",
-    //             type: "POST",
-    //             data: {
-    //                 stripeToken : token.id,
-    //                 csrfmiddlewaretoken: csrftoken,
-    //                 stripe_amount: $('#amount').val()
-    //             },
-    //             success: function(data) {
-    //                 if (data.success) {
-    //                     console.log('Success');
-    //                     $('#thanks_message').modal('show');
-    //                 }
-    //             },
-    //             dataType: "json"
-    //         });
-    //         // You can access the token ID with `token.id`
-    //     }
-    // });
-    //
-    // var button_handler = StripeCheckout.configure({
-    //     key: 'pk_test_lvQ40oIEm0JqVmqE5wNmVNS5',
-    //     image: '/static/img/theme/snac_logo.png',
-    //     token: function(token) {
-    //         $.ajax({
-    //             url: "/donate/",
-    //             type: "POST",
-    //             data: {
-    //                 stripeToken : token.id,
-    //                 csrfmiddlewaretoken: csrftoken,
-    //                 stripe_amount: $("input:radio[name='payment']:checked").val()
-    //             },
-    //             success: function(data) {
-    //                 if (data.success) {
-    //                     console.log('Success');
-    //                     $('#thanks_message').modal('show');
-    //                 }
-    //             },
-    //             dataType: "json"
-    //         });
-    //         // You can access the token ID with `token.id`
-    //     }
-    // });
-    //
-    // $('#donateButton').on('click', function(e) {
-    //     // Open Checkout with further options
-    //     button_handler.open({
-    //         name: 'sikhnationalarchives.com',
-    //         description: '',
-    //         amount: $('#amount').val() + '00'
-    //     });
-    //     e.preventDefault();
-    // });
-
-    $("input[name='payment']").on('change', function(e) {
-        button_handler.open({
-            name: 'sikhnationalarchives.com',
-            description: '',
-            amount: $("input:radio[name='payment']:checked").val() + '00'
-        });
-        e.preventDefault();
-    });
-
 
     // Close Checkout on page navigation
     $(window).on('popstate', function() {
         handler.close();
+    });
+
+
+    $('.amount_values').on('change', function(){
+        $('#top_amount').text($(this).val());
+        $('#id_amount').val($(this).val())
+    });
+    $('#id_memory_of').on('change', function(){
+        $('#memory_types').toggle();
+    });
+    // Todo
+    $('#id_anonymous').on('change', function(){
+        var anon = $('#id_full_name_notification');
+        if (anon.prop('checked', true)) {
+            anon.prop('readonly', true);
+        } else {
+            anon.prop('readonly', false);
+        }
+
+    });
+    $('.donate_now').on('click', function(){
+        $(this).hide();
+    });
+
+    $('.close').on('click', function(){
+        window.location.href = "/";
+    });
+
+    $('#reset_fields').on('click', function(){
+        $('#donation_form').trigger("reset");
+    });
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    $(document).ready(function () {
+        var result = getUrlParameter('success');
+        if(result){
+            $('#thanks_message').modal('show');
+        }
     });
 
 });
