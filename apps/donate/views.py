@@ -37,7 +37,7 @@ class DonateView(FormView):
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
         fullname = '%s %s' % (first_name, last_name)
-        payment = int(form.cleaned_data['amount'])
+        payment = float(form.cleaned_data['amount'])
 
         notify_from = form.cleaned_data.get('from_notification')
         notify_to = list(form.cleaned_data.get('recipient_notification'))
@@ -146,7 +146,7 @@ class CustomerDonateView(FormView):
         return super(CustomerDonateView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        payment = int(form.cleaned_data['amount'])
+        payment = float(form.cleaned_data['amount'])
         notify_from = form.cleaned_data.get('from_notification')
         notify_to = list(form.cleaned_data.get('recipient_notification'))
         notify_is_anonymous = form.cleaned_data.get('anonymous')
@@ -227,7 +227,7 @@ class PayPalDonateView(FormView):
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
         fullname = '%s %s' % (first_name, last_name)
-        payment = int(form.cleaned_data['amount'])
+        payment = float(form.cleaned_data['amount'])
 
         notify_from = form.cleaned_data.get('from_notification')
         notify_to = list(form.cleaned_data.get('recipient_notification'))
