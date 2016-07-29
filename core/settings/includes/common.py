@@ -118,6 +118,7 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',  # https://django-paypal.readthedocs.org/en/stable/
     'django_forms_bootstrap',
     "payments",  # https://stripe.com/docs/tutorials/charges
+    'colorfield',
 
     'apps.bookrepo',
     'apps.bookreader',
@@ -125,6 +126,7 @@ INSTALLED_APPS = [
     'apps.mediabooks',
     'apps.donate',
     'apps.userprofile',
+    'apps.colours',
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -142,6 +144,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_by_type_backends',
     'social_auth.context_processors.social_auth_login_redirect',
+    'apps.colours.context_processors.colour_theme_processor'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -226,44 +229,15 @@ djcelery.setup_loader()
 CELERY_IMPORTS = ('bookrepo.tasks')
 
 # PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
-
 # PAYPAL_RECEIVER_EMAIL = 'adubnyak-facilitator@gmail.com'
-PAYPAL_RECEIVER_EMAIL = 'sandeepsahota@gmail.com'
+
+PAYPAL_RECEIVER_EMAIL = 'sandeepsahota@gmail.com'  # '#Tf6*]w`!(juv}]
 PAYPAL_IDENTITY_TOKEN = 'AVGIUS9goQDjVsvbAnWV3nRbap53tTjfHEBABDJfpKq7_28vDyqLaDusimbjDpt3b0Eufl-wHlej05sr'
 PAYPAL_CLIENT_SECRET = 'ENcHz13UU5ml-jNEKm6cb4cF0h7rJas80MRAPUhYrjgu3BQ7p2ncCTFA_UO_Is-_QW6YYXCxSUyrTdVN'
 PAYPAL_ACCESS_TOKEN = 'access_token$sandbox$tdyqc9w53w22yj38$1e5abc59f1832e2c2b2f5b30a1c4b4b9'
 
 STRIPE_PUBLIC_KEY = 'pk_live_pvAiVzt4gkXmbxj69eknGHKv'
 STRIPE_SECRET_KEY = 'sk_live_Vs9pcTv9P7JTfdDPQyKOsGxN'
-
-
-PAYMENTS_PLANS = {
-    "monthly": {
-        "stripe_plan_id": "pro-monthly",
-        "name": "Web App Pro ($25/month)",
-        "description": "The monthly subscription plan to WebApp",
-        "price": 25,
-        "currency": "usd",
-        "interval": "month"
-    },
-    "yearly": {
-        "stripe_plan_id": "pro-yearly",
-        "name": "Web App Pro ($199/year)",
-        "description": "The annual subscription plan to WebApp",
-        "price": 199,
-        "currency": "usd",
-        "interval": "year"
-    },
-    "monthly-trial": {
-        "stripe_plan_id": "pro-monthly-trial",
-        "name": "Web App Pro ($25/month with 30 days free)",
-        "description": "The monthly subscription plan to WebApp",
-        "price": 25,
-        "currency": "usd",
-        "interval": "month",
-        "trial_period_days": 30
-    },
-}
 
 AUTH_USER_MODEL = 'auth.User'
 OPTIONAL_APPS = (

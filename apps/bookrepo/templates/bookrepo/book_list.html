@@ -16,16 +16,34 @@
                                     <div>{{ book.title }}</div>
                                 {% else %}
                                     {% if book.cover == 'no_cover.jpg' %}
-                                        <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
-                                        <div>{{ book.title }}</div>
+                                        {% if theme == 'default' %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt="" width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% elif theme == 'orange' %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/orange/book_cover.png" alt="" width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% elif theme == 'green' %}
+                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/green/book_cover.png" alt="" width="142" height="232"/></a>
+                                            <div>{{ book.title }}</div>
+                                        {% endif %}
                                     {% else %}
                                         {% if book.cover %}
                                             <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ MEDIA_URL }}{{ book.cover }}" alt=""  width="142" height="232"/></a>
                                             <div>{{ book.title }}</div>
                                         {% else %}
-                                            <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
-                                            <div class="no-cover-title">{{ book.title }}</div>
-                                            <div>{{ book.title }}</div>
+                                            {% if theme == 'default' %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/book_cover.png" alt=""  width="142" height="232"/></a>
+                                                <div class="no-cover-title">{{ book.title }}</div>
+                                                <div>{{ book.title }}</div>
+                                            {% elif theme == 'orange' %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/orange/book_cover.png" alt=""  width="142" height="232"/></a>
+                                                <div class="no-cover-title">{{ book.title }}</div>
+                                                <div>{{ book.title }}</div>
+                                            {% elif theme == 'green' %}
+                                                <a href="{% url 'bookrepo_detail' book_identifier=book.identifier %}"><img src="{{ STATIC_URL }}img/theme/green/book_cover.png" alt=""  width="142" height="232"/></a>
+                                                <div class="no-cover-title">{{ book.title }}</div>
+                                                <div>{{ book.title }}</div>
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
