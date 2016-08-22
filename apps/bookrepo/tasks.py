@@ -313,6 +313,7 @@ def update_orm_book(meta_info, book=None, redo_ocr=False):
 
     return book
 
+
 @app.task(name='update_start_page')
 def update_start_page(book_folder):
     try:

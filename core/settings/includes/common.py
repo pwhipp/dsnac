@@ -226,7 +226,7 @@ SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 import djcelery
 djcelery.setup_loader()
 
-CELERY_IMPORTS = ('bookrepo.tasks')
+CELERY_IMPORTS = ('apps.bookrepo.tasks', )
 
 # PAYPAL_IDENTITY_TOKEN = 'AFcWxV21C7fd0v3bYYYRCpSSRl31AMrrMzliq4Yg5vTJIk2Ru-TIjf-f'
 # PAYPAL_RECEIVER_EMAIL = 'adubnyak-facilitator@gmail.com'

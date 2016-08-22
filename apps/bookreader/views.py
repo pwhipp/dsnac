@@ -166,10 +166,11 @@ class ReviewView(TemplateView):
             return render(request, 'review.html', data)
         return redirect('bookrepo_detail', book_identifier=book.identifier)
 
+
 from django.contrib.auth.decorators import permission_required
 @permission_required('bookrepo')
 def add_book(request):
-    from bookrepo.tasks import delete_jp2_folder
+    from apps.bookrepo.tasks import delete_jp2_folder
     pending = BookUploadLog.objects.filter(scanned=False).order_by('-modified')[:1]
     httpdata = {'pending': pending}
 
@@ -180,7 +181,7 @@ def add_book(request):
 
     if request.is_ajax():
         if request.GET.get('action', None) == 'start_task':
-            from bookrepo.tasks import add, update_start_page
+            from apps.bookrepo.tasks import add, update_start_page
             add.delay()
             for p in pending:
                 update_start_page.delay(p.book.identifier)
