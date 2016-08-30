@@ -3,10 +3,7 @@ import sys, zipfile, os, os.path
 
 from django.db import models
 from django.core.urlresolvers import reverse
-# sudo apt-get install python-wand
-# sudo apt-get install ghostscript
 from PIL import Image
-from wand.image import Image as wand_image
 from pytesseract import image_to_string
 
 
