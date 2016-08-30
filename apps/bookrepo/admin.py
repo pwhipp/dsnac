@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-import apps.bookrepo.models as bm
+from apps.bookrepo.models import Book, Creator, Contributor, Subject, MainSlider, BookPage
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -20,6 +20,7 @@ class BookAdmin(admin.ModelAdmin):
                                     'book_type',
                                     'ebook_file',
                                     ('published', 'num_pages'),
+                                    ('is_panjabi'),
                                     ('scanned', 'ebook'))}),
                  ('WebData', {'classes': ('collapse-closed',),
                               'fields': ('_meta_title',
@@ -32,9 +33,9 @@ class BookAdmin(admin.ModelAdmin):
                                          'expiry_date')}))
 
 
-admin.site.register(bm.Book, BookAdmin)
-admin.site.register(bm.Creator, admin.ModelAdmin)
-admin.site.register(bm.Contributor, admin.ModelAdmin)
-admin.site.register(bm.Subject, admin.ModelAdmin)
-admin.site.register(bm.MainSlider)
-admin.site.register(bm.BookPage)
+admin.site.register(Book, BookAdmin)
+admin.site.register(Creator, admin.ModelAdmin)
+admin.site.register(Contributor, admin.ModelAdmin)
+admin.site.register(Subject, admin.ModelAdmin)
+admin.site.register(MainSlider)
+admin.site.register(BookPage)

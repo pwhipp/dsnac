@@ -6,6 +6,7 @@ try:
 except ImportError:
     raise ImproperlyConfigured('You need a secrets.py file - contact paul.whipp@gmail.com')
 
+USE_CELERY = True
 
 PAGE_MENU_TEMPLATES = (
     (1, "Top navigation bar", "pages/menus/dropdown.html"),
