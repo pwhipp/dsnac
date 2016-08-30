@@ -44,7 +44,6 @@ def rename_files(book, jp2_path, jpg_path):
 
 
 def count_pages(book_id):
-    num_pages = 0
     b = Book.objects.get(id=book_id)
     path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, b.identifier)
     path, dirs, files = os.walk(path).next()
@@ -66,6 +65,11 @@ def run_get_book_ocr():
         fullpath = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, book.identifier)
         jp2_path = os.path.join(fullpath, 'jp2')
         jpg_path = os.path.join(fullpath, 'jpgs')
+
+        if not os.path.exists(jp2_path):
+            os.makedirs(jp2_path)
+        if not os.path.exists(jpg_path):
+            os.makedirs(jpg_path)
 
         convert_pdf_to_jpg(fullpath, jpg_path)
         convert_jp2_to_jpg(jp2_path, jpg_path)
