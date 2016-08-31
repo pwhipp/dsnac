@@ -1,15 +1,55 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from __future__ import absolute_import
 
 import subprocess
 import sys, os
+import re
+import pyPdf
+
 from datetime import timedelta
 from django.conf import settings
 from celery import Celery, task
+from haystack.management.commands import update_index
 
 from .models import Book, BookPage
 
 
 app = Celery('tasks')
+
+common_words = [
+    'the', 'and', 'while', 'very', 'that', 'have', 'shall', 'for', 'not', 'strike', 'death', 'The',
+    'with', 'you', 'this', 'but', 'his', 'from', 'they', 'say', 'return', 'move', 'gold', 'Them', 'country',
+    'will', 'one', 'all', 'would', 'there', 'their', 'what', 'What', 'great', 'They', 'Shall', 'she is',
+    'out', 'about', 'who', 'get', 'which', 'when', 'make', 'can', 'like', 'time', 'head', 'Sikh', 'hero',
+    'just', 'him', 'know', 'take', 'person', 'into', 'year', 'your', 'good', 'some', 'could', 'he is',
+    'them', 'see', 'other', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'Such',
+    'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'self', 'Full', 'much'
+    'want', 'because', 'any', 'these', 'give', 'day', 'shot', 'blood', 'Punjab', 'It', 'gate', 'There']
+
+
+def get_pdf_content(book, pages):
+    path = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, book.identifier)
+    for p in os.listdir(path):
+        if p.endswith('pdf'):
+            pdf_file = os.path.join(path, p)
+            pdf = pyPdf.PdfFileReader(file(pdf_file, "rb"))
+            for i in range(0, pages):
+                page, created = BookPage.objects.get_or_create(book=book, num=i)
+                if created:
+                    content = pdf.getPage(i).extractText() + "\n"
+                    splitted = re.findall('[A-Z][^A-Z]*', content)
+                    content = ' '.join(splitted)
+                    for c in common_words:
+                        content = content.replace(c, ' ' + c + ' ')
+                    try:
+                        content = content.decode('utf-8').encode('utf-8')
+                        cleaned_content = " ".join(content.replace("\xa0", " ").strip().split())
+                    except UnicodeEncodeError:
+                        cleaned_content = content
+                    page.text = cleaned_content
+                    page.save()
 
 
 def rename_files(book, jp2_path, jpg_path):
@@ -59,6 +99,11 @@ def get_book_ocr():
         return run_get_book_ocr()
 
 
+@task.periodic_task(run_every=timedelta(hours=1))
+def update_haystack_index():
+    update_index.Command().handle()
+
+
 def run_get_book_ocr():
     unprocessed_books = Book.objects.filter(scanned=False)
     for book in unprocessed_books:
@@ -75,7 +120,10 @@ def run_get_book_ocr():
         convert_jp2_to_jpg(jp2_path, jpg_path)
         rename_files(book, jp2_path, jpg_path)
         pages = count_pages(book.id)
-        text_from_image(book, pages)
+        if convert_pdf_to_jpg:
+            get_pdf_content(book, pages)
+        else:
+            text_from_image(book, pages)
 
 
 def text_from_image(book, pages):
@@ -112,8 +160,11 @@ def convert_pdf_to_jpg(fullpath, jpg_path):
     for p in os.listdir(fullpath):
         if p.endswith('pdf'):
             if jpg_folder_is_empty:
-                subprocess.call(['convert', os.path.join(fullpath, p), '-resize', '2048>',
+                subprocess.call(['convert', os.path.join(fullpath, p), '-resize', '3840x2160',
                                  os.path.join(jpg_path, '0.jpg')])
+            return True
+        else:
+            return False
 
 
 def convert_jp2_to_jpg(jp2_path, jpg_path):
@@ -125,7 +176,7 @@ def convert_jp2_to_jpg(jp2_path, jpg_path):
     for p in os.listdir(jp2_path):
         if jpg_folder_is_empty:
             try:
-                subprocess.call(['convert', os.path.join(jp2_path, p), '-crop', '805X972+34+94>',
+                subprocess.call(['convert', os.path.join(jp2_path, p), '-resize', '2048x1152',
                                  os.path.join(jpg_path, '0.jpg')])
             except Exception as e:
                 print(e)
