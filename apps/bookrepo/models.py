@@ -233,8 +233,10 @@ class BookPage(models.Model):
         Update text attribute using ocr
         :return:
         """
-        # image = Image.open(self.jp2_pathname)
-        image = Image.open(self.jpg_pathname)
+        try:
+            image = Image.open(self.jp2_pathname)
+        except:
+            image = Image.open(self.jpg_pathname)
         try:
             self.text = image_to_string(image)
         finally:
@@ -250,7 +252,10 @@ class BookPage(models.Model):
         return '%s - page %s' % (self.book, self.num)
 
     def update_punjabi_text_from_image(self):
-        image = Image.open(self.jpg_pathname)
+        try:
+            image = Image.open(self.jp2_pathname)
+        except:
+            image = Image.open(self.jpg_pathname)
         try:
             self.text = image_to_string(image, lang='pan')
         finally:
