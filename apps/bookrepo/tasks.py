@@ -93,7 +93,7 @@ def count_pages(book_id):
     return len(files)
 
 
-@task.periodic_task(run_every=timedelta(seconds=5))
+@task.periodic_task(run_every=timedelta(seconds=60))
 def get_book_ocr():
     if settings.USE_CELERY:
         return run_get_book_ocr()
