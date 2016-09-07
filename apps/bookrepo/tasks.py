@@ -50,6 +50,7 @@ def get_pdf_content(book, pages):
                         cleaned_content = content
                     page.text = cleaned_content
                     page.save()
+    book.num_pages = pages
     book.ebook = True
     book.scanned = True
     book.save()
@@ -66,7 +67,6 @@ def rename_files(book, jp2_path, jpg_path):
                 jp_correct_names = True
 
     if not jp_correct_names and jp2_folder_has_files:
-        print(' > Renaming jp2 files')
         for fname in os.listdir(jp2_path):
             name_to_replace = fname.split('_')[0]
             setting_identifier = fname.replace(name_to_replace, str(book.identifier))
@@ -82,7 +82,6 @@ def rename_files(book, jp2_path, jpg_path):
                 jpgs_has_correct_names = True
 
     if not jpgs_has_correct_names and jpgs_folder_has_files:
-        print(' > Renaming jpg files')
         i = 0
         for f_name in os.listdir(jpg_path):
             name_to_replace = f_name.split('.jpg')[0]
@@ -99,7 +98,6 @@ def count_pages(book_id):
     if len(files):
         b.num_pages = len(files)
         b.save()
-    print(' > Page num: %s' % len(files))
     return len(files)
 
 
@@ -117,7 +115,6 @@ def update_haystack_index():
 def run_get_book_ocr():
     unprocessed_books = Book.objects.filter(scanned=False)
     for book in unprocessed_books:
-        print('*** Working on %s ***' % book.title)
         fullpath = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, book.identifier)
         jp2_path = os.path.join(fullpath, 'jp2')
         jpg_path = os.path.join(fullpath, 'jpgs')
@@ -136,9 +133,7 @@ def run_get_book_ocr():
         for p in os.listdir(fullpath):
             if p.endswith('pdf'):
                 is_pdf = True
-                print(' > PDF found')
                 if jpg_folder_is_empty:
-                    print(' > Converting PDF to JPG')
                     subprocess.call(['convert', os.path.join(fullpath, p), '-resize', '3840x2160',
                                      os.path.join(jpg_path, '0.jpg')])
 
@@ -147,12 +142,9 @@ def run_get_book_ocr():
         pages = count_pages(book.id)
 
         if is_pdf:
-            print(' > PDF processing')
             get_pdf_content(book, pages)
         else:
-            print(' > OCR processing')
             text_from_image(book, pages)
-        print
 
 
 def text_from_image(book, pages):
@@ -164,7 +156,6 @@ def text_from_image(book, pages):
                     try:
                         page.update_punjabi_text_from_image()
                         page.save()
-                        print(' > Scanned [pun] %s:%s' % (book.title, page_number))
                     except IOError:
                         print(' > Unable to scan Punjabi {title} - page {page_number}'.format(
                             title=book.title,
@@ -173,7 +164,6 @@ def text_from_image(book, pages):
                     try:
                         page.update_text_from_image()
                         page.save()
-                        print(' > Scanned [eng] %s:%s' % (book.title, page_number))
                     except IOError:
                         print(' > Unable to scan English {title} - page {page_number}'.format(
                             title=book.title,
