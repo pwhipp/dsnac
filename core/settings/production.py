@@ -14,8 +14,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "dsnac",
         "USER": "dsnac",
-        "PASSWORD": '',
-        "HOST": "",
+        "PASSWORD": 'miem4Vo6',
+        "HOST": "localhost",
         "PORT": ""}}
 
 SITE_TITLE = 'Sikh National Archives of Canada'

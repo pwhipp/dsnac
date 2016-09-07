@@ -48,3 +48,4 @@ stripe==1.35.0
 tzlocal==1.0
 wsgiref==0.1.2
 django-colorfield==0.1.10
+pyPdf==1.13

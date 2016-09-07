@@ -1,15 +1,14 @@
 import subprocess
-
-from PIL import Image
-from pytesseract import image_to_string
+import sys, zipfile, os, os.path
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from PIL import Image
+from pytesseract import image_to_string
+
 
 from mezzanine.core.models import RichText, Displayable
 from mezzanine.conf import settings
-
-import sys, zipfile, os, os.path
 
 
 class UniqueNamed(models.Model):
@@ -42,6 +41,10 @@ class Subject(UniqueNamed):
     The subject of the book
     """
     pass
+
+
+def content_file_name(instance, filename):
+    return '/'.join(['books/', instance.identifier, filename])
 
 
 class Book(RichText, Displayable):
@@ -79,48 +82,67 @@ class Book(RichText, Displayable):
         help_text="Number of physical copies held by the library")
     scanned = models.BooleanField(default=False)
     scanned_start_page = models.IntegerField(default=0)
-    ebook_file = models.FileField(upload_to=lambda instance, filename: '/'.join(['books/%s/%s_jp2' % (str(instance.identifier), str(instance.identifier)),  filename]),
-                                  null=True, blank=True, help_text='Only zip files accepted')
+    ebook_file = models.FileField(upload_to=content_file_name, null=True, blank=True)
     ebook = models.BooleanField(default=False)
     cover = models.ImageField(upload_to='cover/', default=None, blank=True, null=True)
     book_type = models.CharField(max_length=255, choices=TYPE_CHOICES, blank=True, null=True, default=None,
                                  verbose_name='Material Type')
+    is_panjabi = models.BooleanField(default=False, help_text='Select it if book is on Punjabi')
+
     search_fields = ('title', 'creator__name', 'content')
 
     def save(self, *args, **kwargs):
         try:
-            if zipfile.is_zipfile(self.ebook_file):
-                zfobj = zipfile.ZipFile(self.ebook_file)
-                fullpath = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, self.identifier)
-                if not os.path.exists(fullpath):
-                    os.makedirs(fullpath)
-                jpg_path = os.path.join('%s/books/%s/jpgs/') % (settings.MEDIA_ROOT, self.identifier)
-                if not os.path.exists(jpg_path):
-                    os.makedirs(jpg_path)
-                BookUploadLog.objects.create(book_id=self.id, scanned=False)
-                for name in zfobj.namelist():
-                    if name.endswith('/'):
-                        pass
-                        try:
-                            os.mkdir(os.path.join(fullpath, name))
-                        except:
-                            pass
-                    else:
-                        jp2file = open(os.path.join(fullpath, name), 'w+')
+            fullpath, jp2_folder, jpg_folder = self.prepare_book_folders()
+
+            if zipfile.is_zipfile(self.ebook_file.file):
+                self.handle_zip_file(fullpath, jp2_folder, jpg_folder)
+                # self.remove_file(fullpath, 'zip')
+
+            super(Book, self).save(*args, **kwargs)
+        except Exception as e:
+            print(e)
+            super(Book, self).save(*args, **kwargs)
+
+    def handle_zip_file(self, fullpath, jp2_folder, jpg_folder):
+        zfobj = zipfile.ZipFile(self.ebook_file)
+
+        jpg_folder_is_empty = True
+        path, dirs, files = os.walk(jpg_folder).next()
+        if files:
+            jpg_folder_is_empty = False
+
+        jp2_folder_is_empty = True
+        path, dirs, files = os.walk(jp2_folder).next()
+        if files:
+            jp2_folder_is_empty = False
+
+        for name in zfobj.namelist():
+            if name.endswith('/'):
+                try:
+                    os.mkdir(os.path.join(fullpath, name))
+                except:
+                    pass
+
+            if name.endswith('jp2'):
+                if not name.startswith('__MACOSX'):
+                    if jp2_folder_is_empty:
+                        jp2file = open(os.path.join(jp2_folder, name), 'w+')
                         jp2file.write(zfobj.read(name))
                         jp2file.close()
-                super(Book, self).save(*args, **kwargs)
-                # Removing zip file
-                jp2_path = os.path.join('%s/books/%s/%s_jp2') % (settings.MEDIA_ROOT, self.identifier, self.identifier)
-                for name in os.listdir(jp2_path):
-                    if name.endswith('zip'):
-                        os.remove(os.path.join(jp2_path, name))
-            else:
-                return None
-        except:
-            super(Book, self).save(*args, **kwargs)
-        super(Book, self).save(*args, **kwargs)
 
+            elif name.endswith('jpg'):
+                if not name.startswith('__MACOSX'):
+                    if jpg_folder_is_empty:
+                        jpg_file = open(os.path.join(jpg_folder, name), 'w+')
+                        jpg_file.write(zfobj.read(name))
+                        jpg_file.close()
+
+    @staticmethod
+    def remove_file(path, file_type):
+        for name in os.listdir(path):
+            if name.endswith(file_type):
+                os.remove(os.path.join(path, name))
 
     def get_absolute_url(self):
         return reverse("bookrepo_detail", args=(self.identifier,))
@@ -130,6 +152,21 @@ class Book(RichText, Displayable):
         return os.path.join(settings.BOOKS_ROOT,
                             self.identifier,
                             self.identifier + '_cover_thumbnail.jpg')
+
+    def prepare_book_folders(self):
+        fullpath = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, self.identifier)
+        if not os.path.exists(fullpath):
+            os.makedirs(fullpath)
+
+        jp2_folder = os.path.join(fullpath, 'jp2')
+        if not os.path.exists(jp2_folder):
+            os.makedirs(jp2_folder)
+
+        jpg_path = os.path.join(fullpath, 'jpgs')
+        if not os.path.exists(jpg_path):
+            os.makedirs(jpg_path)
+
+        return fullpath, jp2_folder, jpg_path
 
     @property
     def thumbnail_url(self):
@@ -146,6 +183,7 @@ class Book(RichText, Displayable):
         else:
             # return settings.BOOKS_NO_COVER_IMAGE
             return None
+
 
 # Override inherited verbose content name
 Book._meta.get_field('content').help_text = 'Brief description of the books content for searching and web display'
@@ -164,10 +202,7 @@ class BookPage(models.Model):
 
     @property
     def _jpg_pathname(self):
-        return os.path.join(settings.BOOKS_ROOT,
-                            self.book.identifier,
-                            'jpgs',
-                            self.basename + '.jpg')
+        return os.path.join(settings.BOOKS_ROOT, self.book.identifier, 'jpgs', self.basename + '.jpg')
 
     @property
     def jpg_pathname(self):
@@ -177,16 +212,14 @@ class BookPage(models.Model):
         pathname = self._jpg_pathname
         if not os.path.exists(pathname):  # create it from the jp2
             jp2_pathname = self.jp2_pathname
+
             if not subprocess.call(['convert', jp2_pathname, '-resize', '800>', pathname]) == 0:
                 raise IOError('{0} conversion failed'.format(jp2_pathname))
         return pathname
 
     @property
     def _jp2_pathname(self):
-        return os.path.join(settings.BOOKS_ROOT,
-                            self.book.identifier,
-                            '{0}_jp2'.format(self.book.identifier),
-                            self.basename + '.jp2')
+        return os.path.join(settings.BOOKS_ROOT, self.book.identifier, 'jp2', self.basename + '.jp2')
 
     @property
     def jp2_pathname(self):
@@ -200,7 +233,10 @@ class BookPage(models.Model):
         Update text attribute using ocr
         :return:
         """
-        image = Image.open(self.jpg_pathname)
+        try:
+            image = Image.open(self.jp2_pathname)
+        except:
+            image = Image.open(self.jpg_pathname)
         try:
             self.text = image_to_string(image)
         finally:
@@ -211,6 +247,19 @@ class BookPage(models.Model):
 
     def get_in_book_url(self):
         return reverse("bookreader", args=(self.book.identifier, self.num))
+
+    def __unicode__(self):
+        return '%s - page %s' % (self.book, self.num)
+
+    def update_punjabi_text_from_image(self):
+        try:
+            image = Image.open(self.jp2_pathname)
+        except:
+            image = Image.open(self.jpg_pathname)
+        try:
+            self.text = image_to_string(image, lang='pan')
+        finally:
+            image.close()
 
 
 class MainSlider(models.Model):

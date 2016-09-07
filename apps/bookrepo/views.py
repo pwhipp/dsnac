@@ -90,14 +90,16 @@ def page(request, book_identifier, page_number):
         book_page = get_object_or_404(bm.BookPage, book=book, num=page_number)
         return serve_jpg(book_page.jpg_pathname)
     except IOError:
-        raise Http404
+        book = get_object_or_404(bm.Book, identifier=book_identifier)
+        book_page = get_object_or_404(bm.BookPage, book=book, num=page_number)
+        return serve_jpg(book_page._jpg_pathname)
+        # raise Http404
 
 
 def serve_jpg(pathname):
     """
     Return the jpg image in a response
     """
-    mime_type = 'image/jpg'
     if os.path.exists(pathname):
         with open(pathname, 'rb') as f:
             response = HttpResponse(f.read())
