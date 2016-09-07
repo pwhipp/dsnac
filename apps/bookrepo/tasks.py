@@ -50,30 +50,39 @@ def get_pdf_content(book, pages):
                         cleaned_content = content
                     page.text = cleaned_content
                     page.save()
+    book.ebook = True
+    book.scanned = True
+    book.save()
 
 
 def rename_files(book, jp2_path, jpg_path):
     jp_correct_names = False
+    jp2_folder_has_files = False
     for f in os.walk(jp2_path):
-        if f:
+        if f[2]:
+            jp2_folder_has_files = True
             file_pattern = '%s_0000.jp2' % book.identifier
             if file_pattern in f[2]:
                 jp_correct_names = True
 
-    if not jp_correct_names:
+    if not jp_correct_names and jp2_folder_has_files:
+        print(' > Renaming jp2 files')
         for fname in os.listdir(jp2_path):
             name_to_replace = fname.split('_')[0]
             setting_identifier = fname.replace(name_to_replace, str(book.identifier))
             os.rename(os.path.join(jp2_path, fname), os.path.join(jp2_path, setting_identifier))
 
     jpgs_has_correct_names = False
+    jpgs_folder_has_files = False
     for f in os.walk(jpg_path):
-        if f:
+        if f[2]:
+            jpgs_folder_has_files = True
             file_pattern = '%s_0000.jpg' % book.identifier
             if file_pattern in f[2]:
                 jpgs_has_correct_names = True
 
-    if not jpgs_has_correct_names:
+    if not jpgs_has_correct_names and jpgs_folder_has_files:
+        print(' > Renaming jpg files')
         i = 0
         for f_name in os.listdir(jpg_path):
             name_to_replace = f_name.split('.jpg')[0]
@@ -90,10 +99,11 @@ def count_pages(book_id):
     if len(files):
         b.num_pages = len(files)
         b.save()
+    print(' > Page num: %s' % len(files))
     return len(files)
 
 
-@task.periodic_task(run_every=timedelta(seconds=60))
+@task.periodic_task(run_every=timedelta(minutes=5))
 def get_book_ocr():
     if settings.USE_CELERY:
         return run_get_book_ocr()
@@ -107,6 +117,7 @@ def update_haystack_index():
 def run_get_book_ocr():
     unprocessed_books = Book.objects.filter(scanned=False)
     for book in unprocessed_books:
+        print('*** Working on %s ***' % book.title)
         fullpath = os.path.join('%s/books/%s/') % (settings.MEDIA_ROOT, book.identifier)
         jp2_path = os.path.join(fullpath, 'jp2')
         jpg_path = os.path.join(fullpath, 'jpgs')
@@ -116,14 +127,32 @@ def run_get_book_ocr():
         if not os.path.exists(jpg_path):
             os.makedirs(jpg_path)
 
-        convert_pdf_to_jpg(fullpath, jpg_path)
+        jpg_folder_is_empty = True
+        path, dirs, files = os.walk(jpg_path).next()
+        if files:
+            jpg_folder_is_empty = False
+
+        is_pdf = False
+        for p in os.listdir(fullpath):
+            if p.endswith('pdf'):
+                is_pdf = True
+                print(' > PDF found')
+                if jpg_folder_is_empty:
+                    print(' > Converting PDF to JPG')
+                    subprocess.call(['convert', os.path.join(fullpath, p), '-resize', '3840x2160',
+                                     os.path.join(jpg_path, '0.jpg')])
+
         convert_jp2_to_jpg(jp2_path, jpg_path)
         rename_files(book, jp2_path, jpg_path)
         pages = count_pages(book.id)
-        if convert_pdf_to_jpg:
+
+        if is_pdf:
+            print(' > PDF processing')
             get_pdf_content(book, pages)
         else:
+            print(' > OCR processing')
             text_from_image(book, pages)
+        print
 
 
 def text_from_image(book, pages):
@@ -134,37 +163,25 @@ def text_from_image(book, pages):
                 if book.is_panjabi:
                     try:
                         page.update_punjabi_text_from_image()
+                        page.save()
+                        print(' > Scanned [pun] %s:%s' % (book.title, page_number))
                     except IOError:
-                        print('Unable to scan Punjabi {title} - page {page_number}'.format(
+                        print(' > Unable to scan Punjabi {title} - page {page_number}'.format(
                             title=book.title,
                             page_number=page_number))
                 else:
                     try:
                         page.update_text_from_image()
                         page.save()
+                        print(' > Scanned [eng] %s:%s' % (book.title, page_number))
                     except IOError:
-                        print('Unable to scan {title} - page {page_number}'.format(
+                        print(' > Unable to scan English {title} - page {page_number}'.format(
                             title=book.title,
                             page_number=page_number, ))
+        book.num_pages = pages
         book.scanned = True
         book.ebook = True
         book.save()
-
-
-def convert_pdf_to_jpg(fullpath, jpg_path):
-    jpg_folder_is_empty = True
-    path, dirs, files = os.walk(jpg_path).next()
-    if files:
-        jpg_folder_is_empty = False
-
-    for p in os.listdir(fullpath):
-        if p.endswith('pdf'):
-            if jpg_folder_is_empty:
-                subprocess.call(['convert', os.path.join(fullpath, p), '-resize', '3840x2160',
-                                 os.path.join(jpg_path, '0.jpg')])
-            return True
-        else:
-            return False
 
 
 def convert_jp2_to_jpg(jp2_path, jpg_path):
