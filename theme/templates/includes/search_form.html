@@ -1,6 +1,6 @@
 {% load mezzanine_tags i18n future %}
 <form action="{% url "search" %}" class="" role="search">
-    <input class="" placeholder="{% trans "Title, Author, Topic, Genre, Year, etc." %}" type="text" name="q" value="{{ request.REQUEST.q }}" id="keyboard">
+    <input class="" placeholder="{% trans "Title, Author, Topic, Genre, Year, etc." %}" type="text" name="q" value="{{ request.REQUEST.q }}">
 
     {% if search_model_choices %}
         {% if search_model_choices|length == 1 %}

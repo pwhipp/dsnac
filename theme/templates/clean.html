@@ -28,6 +28,8 @@
         {% endif %}
         <link rel="stylesheet" href="{% static "css/nivo-slider.css" %}">
         <link rel="stylesheet" href="{% static "css/mezzanine.css" %}">
+        <link rel="stylesheet" href="{% static "mottie/keyboard.css" %}">
+        <link rel="stylesheet" href="{% static "mottie/jquery-ui.css" %}">
 
         {% if LANGUAGE_BIDI %}
             <link rel="stylesheet" href="{% static "css/rtl.css" %}">
@@ -52,6 +54,10 @@
 
         <script src="{% static "audiojs/audio.min.js" %}"></script>
         <script src="{% static "js/eldarion-ajax.js" %}"></script>
+        <script type="text/javascript" src="{% static 'mottie/keyboard.js' %}"></script>
+        <script type="text/javascript" src="{% static 'mottie/jquery.keyboard.js' %}"></script>
+        <script type="text/javascript" src="{% static 'mottie/jquery.keyboard.extension-typing.js' %}"></script>
+        <script type="text/javascript" src="{% static 'mottie/jquery-ui.js' %}"></script>
         {% block extra_js %}{% endblock %}
     {% endcompress %}
 
