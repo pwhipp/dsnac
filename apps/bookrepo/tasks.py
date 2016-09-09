@@ -43,6 +43,7 @@ def get_pdf_content(book, pages):
                     content = ' '.join(splitted)
                     for c in common_words:
                         content = content.replace(c, ' ' + c + ' ')
+                        print(content)
                     try:
                         content = content.decode('utf-8').encode('utf-8')
                         cleaned_content = " ".join(content.replace("\xa0", " ").strip().split())
@@ -142,7 +143,20 @@ def run_get_book_ocr():
         pages = count_pages(book.id)
 
         if is_pdf:
-            get_pdf_content(book, pages)
+            if book.is_panjabi:
+                for page_number in range(pages + 1):
+                    page, created = BookPage.objects.get_or_create(book=book, num=page_number)
+                    if created:
+                        try:
+                            page.update_punjabi_text_from_image()
+                            page.save()
+                        except IOError:
+                            print(' > Unable to scan Punjabi {title} - page {page_number}'.format(
+                                title=book.title,
+                                page_number=page_number))
+
+            else:
+                get_pdf_content(book, pages)
         else:
             text_from_image(book, pages)
 
