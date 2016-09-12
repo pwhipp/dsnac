@@ -14,7 +14,7 @@ PAGE_MENU_TEMPLATES = (
 
 
 ADMINS = (
-    ('Alexey Dubnyak', 'adubnyak@gmail.com'),
+    ('Paul Whipp', 'paul.whipp@gmail.com'),
 )
 MANAGERS = ADMINS
 
@@ -116,18 +116,9 @@ INSTALLED_APPS = [
     "mezzanine.accounts",
     'social_auth',
     'djcelery',
-    'paypal.standard.ipn',  # https://django-paypal.readthedocs.org/en/stable/
     'django_forms_bootstrap',
-    "payments",  # https://stripe.com/docs/tutorials/charges
-    'colorfield',
-
     'apps.bookrepo',
     'apps.bookreader',
-    'apps.uploader',
-    'apps.mediabooks',
-    'apps.donate',
-    'apps.userprofile',
-    'apps.colours',
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -145,7 +136,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_by_type_backends',
     'social_auth.context_processors.social_auth_login_redirect',
-    'apps.colours.context_processors.colour_theme_processor'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -52,12 +52,7 @@
 
         <script src="{% static "js/jquery.nivo.slider.js" %}"></script>
 
-        <script src="{% static "audiojs/audio.min.js" %}"></script>
         <script src="{% static "js/eldarion-ajax.js" %}"></script>
-        <script type="text/javascript" src="{% static 'mottie/keyboard.js' %}"></script>
-        <script type="text/javascript" src="{% static 'mottie/jquery.keyboard.js' %}"></script>
-        <script type="text/javascript" src="{% static 'mottie/jquery.keyboard.extension-typing.js' %}"></script>
-        <script type="text/javascript" src="{% static 'mottie/jquery-ui.js' %}"></script>
         {% block extra_js %}{% endblock %}
     {% endcompress %}
 
@@ -82,7 +77,6 @@
                     <div class="logo-title col-xs-8"><a href="/">{{ settings.SITE_TITLE }}</a></div>
                 </div>
                 <div class="col-lg-5 col-md-5 col-sm-6 pull-right hidden-xs auth">
-                    <a href="{% url 'donate_extended' %}" class="donate-button">donate</a>
                     <div class="sign">
                         {% if request.user.is_authenticated %}
                             <a href="{% url "dashboard" %}">Hello, {{ request.user|username_or:"email" }}</a>|<a href="{% url 'logout' %}">logout</a>
@@ -103,15 +97,12 @@
                         <div class="col-xs-12 xs-menu-items" style="min-height: 100%;">
                             <a class="book-lnk" href="{% url 'bookrepo_list' %}">E-Books</a>
                             <a class="mag-lnk" href="">Magazines</a>
-                            <a class="video-lnk" href="{% url 'all_videos' %}">Videos</a>
-                            <a class="audio-lnk" href="{% url 'all_audios' %}">Audios</a>
                             <a class="cat-lnk" href="{% url 'bookrepo_subject_list' %}">category</a>
                             <a class="search-lnk" href="{% url 'haystack_search' %}">Search Inside books</a>
                             <a class="signup-lnk" href="{% url 'signup' %}">SIGN UP</a>
                             <a class="signin-lnk"  href="{% url "login" %}?next={{ request.path }}">SIGN IN</a>
                         </div>
                         <div class="col-xs-12 xs-menu-donate" style="min-height: 120px;">
-                            <a class="donate-lnk" href="{% url 'donate_extended' %}">DONATE</a>
                         </div>
                     </div>
                 </div>

@@ -20,8 +20,6 @@
                     <a class="book-lnk" href="{% url 'bookrepo_list' %}">e-books</a>
                     <a class="mag-lnk" href="">magazines</a>
                     <a class="doc-lnk" href="">documents</a>
-                    <a class="video-lnk" href="{% url 'all_videos' %}">videos</a>
-                    <a class="audio-lnk" href="{% url 'all_audios' %}">audios</a>
                     <hr class="c-hr"/>
                     <a class="cat-lnk" href="{% url 'bookrepo_subject_list' %}">category</a>
                     <a class="search-lnk" href="{% url 'haystack_search' %}">search inside books</a>
@@ -752,7 +750,6 @@
             <div class="row media">
                 <hr class="c-hr"/>
                 <h1>RECENT videos</h1>
-                <div class="more"><a href="{% url 'all_videos' %}">more videos</a></div>
                 <div class="clearfix"></div>
 
                 {% for video in videos %}
@@ -787,7 +784,6 @@
             <div class="row media">
                 <hr class="c-hr"/>
                 <h1>RECENT Audios</h1>
-                <div class="more"><a href="{% url 'all_audios' %}">more audios</a></div>
                 <div class="clearfix"></div>
 
                 {% for audio in audios %}
